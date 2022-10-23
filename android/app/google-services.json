@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "300632133861",
+    "project_id": "test-uniqart-app",
+    "storage_bucket": "test-uniqart-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:300632133861:android:993bfb1e665ee3fca3440c",
+        "android_client_info": {
+          "package_name": "app.uniqart.test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "300632133861-13c0vmqot3vbp0qr5tfa51u1e1p063gi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0NMX8I2n5CSvpzZAfYWjW3HLxuXvIimM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "300632133861-13c0vmqot3vbp0qr5tfa51u1e1p063gi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

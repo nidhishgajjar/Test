@@ -54,7 +54,7 @@ class FirebaseUserCloudStorage {
       subscriberFieldName: false,
       trialFieldName: false,
       subscriptionStartDateFieldName: null,
-      subscriptionExpiryDateFieldName: null,
+      subscriptionExpiryDateFieldName: Timestamp.now(),
       accountCreationTimeStampFieldName: Timestamp.now(),
     });
 
@@ -70,7 +70,7 @@ class FirebaseUserCloudStorage {
       subscriber: false,
       trial: false,
       subStartDate: null,
-      subExpiryDate: null,
+      subExpiryDate: Timestamp.now(),
       accountCreation: Timestamp.now(),
     );
   }

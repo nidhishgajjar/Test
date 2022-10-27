@@ -29,12 +29,12 @@ class UpcomingRidesView extends StatelessWidget {
         final status = ride.tripStatus;
 
         return Container(
-          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
           child: Card(
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
-            color: CupertinoColors.extraLightBackgroundGray,
+            color: uniqartBackgroundWhite,
             child: Stack(
               children: [
                 const SizedBox(

@@ -45,6 +45,7 @@ class _HomeViewState extends State<HomeView> {
 
     return Scaffold(
       // key: _scaffoldKey,
+      backgroundColor: CupertinoColors.white,
       appBar: AppBar(
         title: const Text("Uniqart"),
         centerTitle: true,
@@ -52,62 +53,64 @@ class _HomeViewState extends State<HomeView> {
       ),
       body: ListView(
         children: [
-          nestedStreams(applicationBloc),
+          // Top half 2 nested streams (users/rides) to calculate remaining rides
+          nestedStreamsTopHalf(applicationBloc),
+
+          // Bottom section for scheduled trips
           const SizedBox(
-            height: 50,
+            height: 25,
           ),
-          Container(
-            height: 500,
-            padding: const EdgeInsets.fromLTRB(20, 35, 20, 0),
-            decoration: const BoxDecoration(
-              color: CupertinoColors.white,
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(30),
-                topLeft: Radius.circular(30),
+          const Center(
+            child: Text(
+              "Scheduled Trips",
+              style: TextStyle(
+                color: uniqartOnSurface,
               ),
             ),
-            child: StreamBuilder(
-              stream: _ridesService.allRides(
-                ownerUID: userId,
-              ),
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                  case ConnectionState.active:
-                    if (snapshot.hasData) {
-                      final allRides = snapshot.data as Iterable<CloudRide>;
-                      return UpcomingRidesView(
-                        rides: allRides.where(
-                          (element) => true,
-                        ),
-                        onCancelRide: (ride) async {
-                          await _ridesService.updateRide(
-                            documentId: ride.documentId,
-                            dateDropOff: ride.dateDropOff,
-                            locationDropOff: ride.locationDropOff,
-                            locationPickup: ride.locationPickup,
-                            timeDropOff: ride.timeDropOff,
-                            timePickUp: ride.timePickUp,
-                            cancellationStatus: true,
-                          );
-                        },
-                      );
-                    } else {
-                      return const CircularProgressIndicator();
-                    }
-                  default:
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          StreamBuilder(
+            stream: _ridesService.allRides(
+              ownerUID: userId,
+            ),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                case ConnectionState.active:
+                  if (snapshot.hasData) {
+                    final allRides = snapshot.data as Iterable<CloudRide>;
+                    return UpcomingRidesView(
+                      rides: allRides.where(
+                        (element) => true,
+                      ),
+                      onCancelRide: (ride) async {
+                        await _ridesService.updateRide(
+                          documentId: ride.documentId,
+                          datesDropOff: ride.datesDropOff,
+                          locationDropOff: ride.locationDropOff,
+                          locationPickup: ride.locationPickup,
+                          timeDropOff: ride.timeDropOff,
+                          timePickUp: ride.timePickUp,
+                          cancellationStatus: true,
+                        );
+                      },
+                    );
+                  } else {
                     return const CircularProgressIndicator();
-                }
-              },
-            ),
+                  }
+                default:
+                  return const CircularProgressIndicator();
+              }
+            },
           ),
         ],
       ),
     );
   }
 
-  StreamBuilder<Iterable<CloudUserProfile>> nestedStreams(
+  StreamBuilder<Iterable<CloudUserProfile>> nestedStreamsTopHalf(
       ApplicationBloc applicationBloc) {
     return StreamBuilder(
       stream: _userProfileService.userDoc(
@@ -122,73 +125,172 @@ class _HomeViewState extends State<HomeView> {
               final doc = allUser.where((element) => true);
               final retrieveDocument = doc.elementAt(0);
               final allowedRides = retrieveDocument.ridesLimit;
+              final expiryDate = retrieveDocument.subExpiryDate.toDate();
 
               return StreamBuilder(
-                stream: _ridesService
-                    .allRides(
-                      ownerUID: userId,
-                    )
-                    .getLength,
-                builder: (context, AsyncSnapshot<int> snapshot) {
+                stream: _ridesService.allRides(
+                  ownerUID: userId,
+                ),
+                builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
                     case ConnectionState.active:
                       if (snapshot.hasData) {
-                        final rideCount = snapshot.data ?? 0;
+                        int counter = 0;
+                        final allRides = snapshot.data as Iterable<CloudRide>;
+                        final getDocs = allRides.where((element) => true);
 
-                        final remainder = allowedRides - rideCount;
+                        for (var i = 0; i < getDocs.length; i++) {
+                          final loopDocs = getDocs.elementAt(i);
+                          final count = loopDocs.numOfRides;
+                          counter += count;
+                        }
+
+                        final remainder = allowedRides - counter;
 
                         return Center(
-                          child: Column(
+                          child: Stack(
                             children: [
-                              const SizedBox(
-                                height: 35,
+                              // Box container
+                              Container(
+                                width: double.infinity,
+                                height: 375,
+                                decoration: const BoxDecoration(
+                                  color: uniqartBackgroundWhite,
+                                ),
                               ),
-                              remainingRides(remainder),
-                              const SizedBox(
-                                height: 50,
-                              ),
-                              if (remainder <= 0)
-                                SizedBox(
-                                  height: 25,
-                                  width: 225,
-                                  child: CupertinoButton(
-                                    color: uniqartPrimary,
-                                    padding: EdgeInsets.zero,
-                                    borderRadius: BorderRadius.circular(10),
-                                    onPressed: () {},
-                                    child: const Text(
-                                      'SUBSCRIBE',
-                                      style: TextStyle(
-                                          fontSize: 11,
-                                          color: uniqartOnSurface,
-                                          letterSpacing: 1),
+
+                              // Circle box container
+                              Positioned(
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 75,
+                                child: Center(
+                                  child: Container(
+                                    width: 175,
+                                    height: 175,
+                                    decoration: const BoxDecoration(
+                                      color: CupertinoColors.white,
+                                      shape: BoxShape.circle,
                                     ),
                                   ),
                                 ),
-                              if (remainder > 0)
-                                SizedBox(
-                                  height: 25,
-                                  width: 225,
-                                  child: CupertinoButton(
-                                    color: uniqartPrimary,
-                                    padding: EdgeInsets.zero,
-                                    borderRadius: BorderRadius.circular(10),
-                                    onPressed: () {
-                                      Navigator.of(
-                                        context,
-                                      ).pushNamed(
-                                        createABookingRoute,
-                                      );
-                                      applicationBloc
-                                          .clearSelectedPickupLocation();
-                                    },
-                                    child: const Text(
-                                      'REQUEST AN EXPERIENCE',
+                              ),
+
+                              // 00 rides (text) with condition
+                              if (remainder <= 0 ||
+                                  DateTime.now().isAfter(expiryDate))
+                                const Positioned(
+                                  top: 0,
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 90,
+                                  child: Center(
+                                    child: Text(
+                                      "00",
                                       style: TextStyle(
-                                          fontSize: 11,
-                                          color: uniqartOnSurface,
-                                          letterSpacing: 1),
+                                          fontSize: 50,
+                                          color: uniqartOnSurface),
+                                    ),
+                                  ),
+                                ),
+
+                              // Remaining rides with condition (text)
+                              if (remainder > 0 &&
+                                  DateTime.now().isBefore(expiryDate))
+                                Positioned(
+                                  top: 0,
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 90,
+                                  child: Center(
+                                    child: Text(
+                                      "$remainder",
+                                      style: const TextStyle(
+                                          fontSize: 50,
+                                          color: uniqartOnSurface),
+                                    ),
+                                  ),
+                                ),
+
+                              // Text
+                              const Positioned(
+                                top: 10,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                child: Center(
+                                  child: Text(
+                                    "remaining rides",
+                                    style: TextStyle(
+                                        fontSize: 13, color: uniqartOnSurface),
+                                  ),
+                                ),
+                              ),
+
+                              // Subscribe button with condition
+                              if (remainder <= 0 ||
+                                  DateTime.now().isAfter(expiryDate))
+                                Positioned(
+                                  top: 285,
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Center(
+                                    child: SizedBox(
+                                      height: 25,
+                                      width: 225,
+                                      child: CupertinoButton(
+                                        color: uniqartPrimary,
+                                        padding: EdgeInsets.zero,
+                                        borderRadius: BorderRadius.circular(10),
+                                        onPressed: () {},
+                                        child: const Text(
+                                          'SUBSCRIBE',
+                                          style: TextStyle(
+                                              fontSize: 11,
+                                              color: uniqartOnSurface,
+                                              letterSpacing: 1),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                              // Book ride button with condition
+                              if (remainder > 0 &&
+                                  DateTime.now().isBefore(expiryDate))
+                                Positioned(
+                                  top: 285,
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Center(
+                                    child: SizedBox(
+                                      height: 25,
+                                      width: 225,
+                                      child: CupertinoButton(
+                                        color: uniqartPrimary,
+                                        padding: EdgeInsets.zero,
+                                        borderRadius: BorderRadius.circular(10),
+                                        onPressed: () {
+                                          Navigator.of(
+                                            context,
+                                          ).pushNamed(
+                                            createABookingRoute,
+                                          );
+                                          applicationBloc
+                                              .clearSelectedPickupLocation();
+                                        },
+                                        child: const Text(
+                                          'REQUEST AN EXPERIENCE',
+                                          style: TextStyle(
+                                              fontSize: 11,
+                                              color: uniqartOnSurface,
+                                              letterSpacing: 1),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -214,51 +316,4 @@ class _HomeViewState extends State<HomeView> {
       },
     );
   }
-
-  Stack remainingRides(int remainder) {
-    return Stack(
-      children: [
-        Container(
-          width: 175,
-          height: 175,
-          decoration: const BoxDecoration(
-            color: CupertinoColors.white,
-            shape: BoxShape.circle,
-          ),
-        ),
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 15,
-          child: Center(
-            child: Text(
-              "$remainder",
-              style: const TextStyle(fontSize: 50, color: uniqartOnSurface),
-            ),
-          ),
-        ),
-        const Positioned(
-          top: 80,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          child: Center(
-            child: Text(
-              "remaining rides",
-              style: TextStyle(fontSize: 13, color: uniqartOnSurface),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class Data {
-  int? maxRide;
-
-  Data({
-    required this.maxRide,
-  });
 }

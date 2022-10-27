@@ -14,7 +14,7 @@ class CloudUserProfile {
   final bool subscriber;
   final bool trial;
   final Timestamp? subStartDate;
-  final Timestamp? subExpiryDate;
+  final Timestamp subExpiryDate;
   final Timestamp? accountCreation;
   const CloudUserProfile({
     required this.documentId,

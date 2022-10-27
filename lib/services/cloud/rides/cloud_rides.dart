@@ -10,7 +10,7 @@ class CloudRide {
   final String? contactNumber;
   final String timePickUp;
   final String timeDropOff;
-  final String dateDropOff;
+  final List datesDropOff;
   final String locationDropOff;
   final String locationPickup;
   final String tripStatus;
@@ -19,6 +19,9 @@ class CloudRide {
   final bool cancellationStatus;
   final bool completion;
   final Timestamp bookingTime;
+  final bool repeatBooking;
+  final int numOfRides;
+  final List daysSelected;
 
   const CloudRide({
     required this.documentId,
@@ -27,7 +30,7 @@ class CloudRide {
     required this.contactNumber,
     required this.timePickUp,
     required this.timeDropOff,
-    required this.dateDropOff,
+    required this.datesDropOff,
     required this.locationDropOff,
     required this.locationPickup,
     required this.tripStatus,
@@ -36,6 +39,9 @@ class CloudRide {
     required this.cancellationStatus,
     required this.completion,
     required this.bookingTime,
+    required this.repeatBooking,
+    required this.numOfRides,
+    required this.daysSelected,
   });
 
   CloudRide.fromSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot)
@@ -45,7 +51,7 @@ class CloudRide {
         contactNumber = snapshot.data()[contactNumberFieldName],
         timePickUp = snapshot.data()[timePickUpFieldName],
         timeDropOff = snapshot.data()[timeDropOffFieldName],
-        dateDropOff = snapshot.data()[dateDropOffFieldName],
+        datesDropOff = snapshot.data()[datesDropOffSelectedFieldName],
         locationDropOff = snapshot.data()[locationDropOffFieldName],
         locationPickup = snapshot.data()[locationPickUpFieldName],
         tripStatus = snapshot.data()[tripStatusFieldName],
@@ -53,5 +59,8 @@ class CloudRide {
         confirmationStatus = snapshot.data()[confirmationStatusFieldName],
         cancellationStatus = snapshot.data()[cancellationStatusFieldName],
         completion = snapshot.data()[completionFieldName],
-        bookingTime = snapshot.data()[bookingTimeFieldName];
+        bookingTime = snapshot.data()[bookingTimeFieldName],
+        repeatBooking = snapshot.data()[repeatBookingFieldName],
+        numOfRides = snapshot.data()[numberOfRidesFieldName],
+        daysSelected = snapshot.data()[datesDropOffSelectedFieldName];
 }

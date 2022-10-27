@@ -22,7 +22,7 @@ class FirebaseRidesCloudStorage {
     required String locationPickup,
     required String timePickUp,
     required String timeDropOff,
-    required String dateDropOff,
+    required List datesDropOff,
     required bool cancellationStatus,
   }) async {
     try {
@@ -31,7 +31,7 @@ class FirebaseRidesCloudStorage {
         locationPickUpFieldName: locationPickup,
         timePickUpFieldName: timePickUp,
         timeDropOffFieldName: timeDropOff,
-        dateDropOffFieldName: dateDropOff,
+        datesDropOffSelectedFieldName: datesDropOff,
         cancellationStatusFieldName: cancellationStatus,
       });
     } catch (e) {
@@ -65,7 +65,7 @@ class FirebaseRidesCloudStorage {
       contactNumberFieldName: contactNumber,
       timePickUpFieldName: '',
       timeDropOffFieldName: '',
-      dateDropOffFieldName: '',
+      datesDropOffSelectedFieldName: [],
       locationDropOffFieldName: "",
       locationPickUpFieldName: "",
       tripStatusFieldName: "Requested",
@@ -74,6 +74,9 @@ class FirebaseRidesCloudStorage {
       cancellationStatusFieldName: false,
       completionFieldName: false,
       bookingTimeFieldName: Timestamp.now(),
+      repeatBookingFieldName: false,
+      numberOfRidesFieldName: 1,
+      daysSelectedFieldName: [],
     });
     // throw const AlertDialog();
     final fetchRide = await document.get();
@@ -84,7 +87,7 @@ class FirebaseRidesCloudStorage {
       contactNumber: contactNumber,
       timePickUp: '',
       timeDropOff: "",
-      dateDropOff: "",
+      datesDropOff: const [],
       locationDropOff: "",
       locationPickup: "",
       tripStatus: "Requested",
@@ -93,6 +96,9 @@ class FirebaseRidesCloudStorage {
       cancellationStatus: false,
       completion: false,
       bookingTime: Timestamp.now(),
+      repeatBooking: false,
+      numOfRides: 1,
+      daysSelected: const [],
     );
   }
 }

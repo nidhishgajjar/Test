@@ -125,6 +125,7 @@ class _BookingViewState extends State<BookingView> {
     final pickUpTimeApprox = _timePickUpController.text;
     final dropOffTime = _timeDropOffController.text;
     final dropOffDate = _dateDropOffController.text;
+    List<String> dates = [dropOffDate];
 
     await _ridesService.updateRide(
       documentId: ride.documentId,
@@ -132,7 +133,7 @@ class _BookingViewState extends State<BookingView> {
       locationDropOff: dropOff,
       timePickUp: "$pickUpTimeApprox (approx). Will confirm shortly.",
       timeDropOff: dropOffTime,
-      dateDropOff: dropOffDate,
+      datesDropOff: dates,
       cancellationStatus: false,
     );
   }

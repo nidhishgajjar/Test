@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test/design/color_constants.dart';
 import 'package:test/miscellaneous/localizations/loc.dart';
 import 'package:test/services/auth/auth_exceptions.dart';
 import 'package:test/services/auth/bloc/auth_bloc.dart';
@@ -15,12 +17,20 @@ class LogInView extends StatefulWidget {
 class _LogInViewState extends State<LogInView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
+  var _passwordVisible = false;
+  bool _logIn = false;
 
   @override
   void initState() {
     super.initState();
     _email = TextEditingController();
     _password = TextEditingController();
+    _passwordVisible;
+    // _password.addListener(() {
+    //   setState(() {
+    //     sumbit = _password.text.isNotEmpty;
+    //   });
+    // });
   }
 
   @override
@@ -55,70 +65,30 @@ class _LogInViewState extends State<LogInView> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('LOGIN'),
-          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          automaticallyImplyLeading: false,
         ),
         body: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: Center(
             child: Column(children: [
-              const SizedBox(
-                height: 75,
-              ),
-              // Image.asset(
-              //   "assets/logo.png",
-              //   height: 55,
-              //   width: 55,
-              // ),
-              const SizedBox(
-                height: 50,
-              ),
-              SizedBox(
-                width: 250,
-                child: TextField(
-                  controller: _email,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    hintText: "enter your email",
-                  ),
+              const Text(
+                "Q",
+                style: TextStyle(
+                  color: uniqartOnSurface,
+                  fontSize: 55,
                 ),
               ),
+
+              email(),
               const SizedBox(
-                height: 15,
+                height: 25,
               ),
-              SizedBox(
-                width: 250,
-                child: TextField(
-                  controller: _password,
-                  enableSuggestions: false,
-                  obscureText: true,
-                  autocorrect: false,
-                  keyboardType: TextInputType.visiblePassword,
-                  decoration: const InputDecoration(
-                    hintText: "enter your password",
-                  ),
-                ),
-              ),
+              password(),
+              logInButton(context),
               const SizedBox(
-                height: 50,
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  final email = _email.text;
-                  final password = _password.text;
-                  context.read<AuthBloc>().add(
-                        AuthEventLogIn(
-                          email,
-                          password,
-                        ),
-                      );
-                },
-                child: const Text("SUBMIT"),
-              ),
-              const SizedBox(
-                height: 20,
+                height: 25,
               ),
               InkWell(
                 onTap: () => context.read<AuthBloc>().add(
@@ -134,25 +104,149 @@ class _LogInViewState extends State<LogInView> {
                 ),
               ),
               const SizedBox(
-                height: 15,
+                height: 175,
               ),
-              InkWell(
-                onTap: () => context.read<AuthBloc>().add(
-                      const AuthEventShouldRegister(),
-                    ),
-                child: const Text(
-                  'Click here to register',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: Colors.blue,
-                    fontSize: 11,
-                  ),
-                ),
-              )
+
+              registerButton(context),
+              const SizedBox(
+                height: 10,
+              ),
+              // const Text(
+              //   "New here?",
+              //   style: TextStyle(color: uniqartOnSurface),
+              // ),
             ]),
           ),
         ),
       ),
+    );
+  }
+
+  CupertinoTextFormFieldRow email() {
+    return CupertinoTextFormFieldRow(
+      controller: _email,
+      textInputAction: TextInputAction.next,
+      enableSuggestions: true,
+      autocorrect: false,
+      keyboardType: TextInputType.emailAddress,
+      placeholder: "enter your email",
+      placeholderStyle: const TextStyle(
+        fontSize: 14,
+        color: CupertinoColors.inactiveGray,
+      ),
+      style: const TextStyle(
+        fontSize: 14,
+        color: uniqartOnSurface,
+      ),
+      padding: const EdgeInsets.fromLTRB(60, 100, 60, 0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(7),
+        color: CupertinoColors.lightBackgroundGray,
+      ),
+      // cursorColor: uniqartOnSurface,
+    );
+  }
+
+  SizedBox registerButton(BuildContext context) {
+    return SizedBox(
+      height: 25,
+      width: 150,
+      child: CupertinoButton(
+        color: uniqartOnSurface,
+        padding: EdgeInsets.zero,
+        borderRadius: BorderRadius.circular(10),
+        onPressed: () => context.read<AuthBloc>().add(
+              const AuthEventShouldRegister(),
+            ),
+        child: const Text(
+          'REGISTER',
+          style: TextStyle(
+              fontSize: 11, color: uniqartBackgroundWhite, letterSpacing: 1),
+        ),
+      ),
+    );
+  }
+
+  SizedBox logInButton(BuildContext context) {
+    return SizedBox(
+      height: 30,
+      width: 100,
+      child: CupertinoButton(
+        color: uniqartOnSurface,
+        disabledColor: uniqartBackgroundWhite,
+        padding: EdgeInsets.zero,
+        borderRadius: BorderRadius.circular(7),
+        onPressed: _logIn == true
+            ? () async {
+                final email = _email.text;
+                final password = _password.text;
+                context.read<AuthBloc>().add(
+                      AuthEventLogIn(
+                        email,
+                        password,
+                      ),
+                    );
+              }
+            : null,
+        child: const Text(
+          "CUM IN",
+          style: TextStyle(
+            fontSize: 14,
+            color: uniqartBackgroundWhite,
+            letterSpacing: 1,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Stack password() {
+    return Stack(
+      children: [
+        CupertinoTextFormFieldRow(
+          controller: _password,
+          enableSuggestions: false,
+          obscureText: _passwordVisible,
+          autocorrect: false,
+          keyboardType: TextInputType.visiblePassword,
+          placeholder: "enter your password",
+          placeholderStyle: const TextStyle(
+            fontSize: 14,
+            color: CupertinoColors.inactiveGray,
+          ),
+          style: const TextStyle(fontSize: 14, color: uniqartOnSurface
+              // color: Colors.black54,
+              ),
+          padding: const EdgeInsets.fromLTRB(60, 10, 105, 65),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(7),
+            color: CupertinoColors.lightBackgroundGray,
+          ),
+          onChanged: (value) {
+            setState(() {
+              _logIn = value.length >= 8 ? true : false;
+            });
+          },
+        ),
+        Container(
+          alignment: Alignment.topRight,
+          padding: const EdgeInsets.fromLTRB(0, 0, 55, 0),
+          child: IconButton(
+            icon: Icon(
+              _passwordVisible
+                  ? CupertinoIcons.eye_slash_fill
+                  : CupertinoIcons.eye_fill,
+            ),
+            onPressed: () {
+              setState(
+                () {
+                  _passwordVisible = !_passwordVisible;
+                },
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

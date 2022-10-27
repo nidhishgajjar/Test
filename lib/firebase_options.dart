@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '300632133861',
     projectId: 'test-uniqart-app',
     storageBucket: 'test-uniqart-app.appspot.com',
+    androidClientId: '300632133861-njet78e84r4j57ha9opt3b3dbgeo3omu.apps.googleusercontent.com',
     iosClientId: '300632133861-t07mtp6iopvoqc7pt3tvdphoa179fh9b.apps.googleusercontent.com',
     iosBundleId: 'app.uniqart.test',
   );

@@ -15,6 +15,11 @@ class AuthStateUninitialized extends AuthState {
       : super(isLoading: isLoading);
 }
 
+class StateAddUserProfile extends AuthState {
+  const StateAddUserProfile({required bool isLoading})
+      : super(isLoading: isLoading);
+}
+
 class AuthStateRegistering extends AuthState {
   final Exception? exception;
   const AuthStateRegistering({

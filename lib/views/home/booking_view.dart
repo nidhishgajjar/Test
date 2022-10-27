@@ -6,10 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:test/consants/routes.dart';
 import 'package:test/services/auth/auth_service.dart';
 import 'package:test/services/cloud/rides/cloud_rides.dart';
-import 'package:test/services/cloud/rides/firebase_cloud_storage.dart';
+import 'package:test/services/cloud/rides/firebase_cloud_storage_rides.dart';
 import 'package:test/services/place/bloc/application_bloc.dart';
-
-// final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class BookingView extends StatefulWidget {
   const BookingView({super.key});
@@ -28,11 +26,12 @@ class _BookingViewState extends State<BookingView> {
   late final currentTime = DateFormat.jm().format(datetime);
   late StreamSubscription locationPickUpSubscription;
   late StreamSubscription locationDropOffSubscription;
-  late final FirebaseCloudStorage _ridesService;
+  late final FirebaseRidesCloudStorage _ridesService;
   late final TextEditingController _pickUpController;
   late final TextEditingController _inputPickUpController;
   late final TextEditingController _dropOffController;
   late final TextEditingController _inputDropOffController;
+  late final TextEditingController _timePickUpController;
   late final TextEditingController _timeDropOffController;
   late final TextEditingController _dateDropOffController;
 
@@ -61,8 +60,14 @@ class _BookingViewState extends State<BookingView> {
         ],
         cancelButton: CupertinoActionSheetAction(
           onPressed: () {
+            _timePickUpController.text = DateFormat.jm().format(
+              time.subtract(
+                const Duration(minutes: 15),
+              ),
+            );
             _timeDropOffController.text = DateFormat.jm().format(time);
             _dateDropOffController.text = DateFormat.MMMEd().format(date);
+
             Navigator.pop(context);
           },
           child: const Text("Done"),
@@ -77,7 +82,7 @@ class _BookingViewState extends State<BookingView> {
       context,
       listen: false,
     );
-    _ridesService = FirebaseCloudStorage();
+    _ridesService = FirebaseRidesCloudStorage();
     super.initState();
     locationPickUpSubscription =
         applicationBloc.selectedPickupLocation.stream.listen((place) {
@@ -100,9 +105,10 @@ class _BookingViewState extends State<BookingView> {
     _inputPickUpController = TextEditingController();
     _dropOffController = TextEditingController();
     _inputDropOffController = TextEditingController();
+    _timePickUpController = TextEditingController();
     _timeDropOffController = TextEditingController();
-
     _dateDropOffController = TextEditingController();
+
     pickupNode = FocusNode();
     dropoffNode = FocusNode();
     bookingRequest = createABookingRequest(context);
@@ -116,6 +122,7 @@ class _BookingViewState extends State<BookingView> {
 
     final pickUp = _pickUpController.text;
     final dropOff = _dropOffController.text;
+    final pickUpTimeApprox = _timePickUpController.text;
     final dropOffTime = _timeDropOffController.text;
     final dropOffDate = _dateDropOffController.text;
 
@@ -123,6 +130,7 @@ class _BookingViewState extends State<BookingView> {
       documentId: ride.documentId,
       locationPickup: pickUp,
       locationDropOff: dropOff,
+      timePickUp: "$pickUpTimeApprox (approx). Will confirm shortly.",
       timeDropOff: dropOffTime,
       dateDropOff: dropOffDate,
       cancellationStatus: false,
@@ -162,9 +170,10 @@ class _BookingViewState extends State<BookingView> {
     _inputPickUpController.dispose();
     _dropOffController.dispose();
     _inputDropOffController.dispose();
+    _timePickUpController.dispose();
     _timeDropOffController.dispose();
-
     _dateDropOffController.dispose();
+
     pickupNode.dispose();
     dropoffNode.dispose();
     locationPickUpSubscription.cancel();
@@ -177,25 +186,6 @@ class _BookingViewState extends State<BookingView> {
   Widget build(BuildContext context) {
     final applicationBloc = Provider.of<ApplicationBloc>(context);
     return Scaffold(
-      // key: _scaffoldKey,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            _ridesService.deleteRide(
-              documentId: _ride?.documentId,
-            );
-            Navigator.of(
-              context,
-            ).pop(
-              homeRoute,
-            );
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        automaticallyImplyLeading: false,
-      ),
       body: FutureBuilder(
         future: bookingRequest,
         builder: (context, snapshot) {
@@ -428,6 +418,11 @@ class _BookingViewState extends State<BookingView> {
         setState(() => time = newTime);
 
         _timeDropOffController.text = DateFormat.jm().format(time);
+        _timePickUpController.text = DateFormat.jm().format(
+          time.subtract(
+            const Duration(minutes: 15),
+          ),
+        );
       },
     );
   }
@@ -448,3 +443,61 @@ class _BookingViewState extends State<BookingView> {
     );
   }
 }
+
+
+// TextFormField(
+//                       controller: _password,
+//                       enableSuggestions: false,
+//                       obscureText: !_passwordVisible,
+//                       autocorrect: false,
+//                       keyboardType: TextInputType.visiblePassword,
+//                       style:
+//                           const TextStyle(fontSize: 14, color: uniqartOnSurface
+//                               // color: Colors.black54,
+//                               ),
+//                       decoration: InputDecoration(
+//                         // helperText: "min 8 characters long",
+//                         focusColor: CupertinoColors.activeBlue,
+//                         contentPadding: const EdgeInsets.all(0),
+//                         prefixIcon: const Icon(Icons.password),
+//                         label: const Text("Password"),
+//                         hintText: "enter your password",
+//                         filled: true,
+//                         fillColor: CupertinoColors.lightBackgroundGray,
+//                         border: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(7),
+//                             borderSide: BorderSide.none),
+//                         suffixIcon: IconButton(
+//                           icon: Icon(
+//                             _passwordVisible
+//                                 ? CupertinoIcons.eye_fill
+//                                 : CupertinoIcons.eye_slash_fill,
+//                           ),
+//                           onPressed: () {
+//                             setState(() {
+//                               _passwordVisible = !_passwordVisible;
+//                             });
+//                           },
+//                         ),
+//                       ),
+//                     ),
+
+      // key: _scaffoldKey,
+      // appBar: AppBar(
+      //   leading: IconButton(
+      //     icon: const Icon(Icons.arrow_back),
+      //     onPressed: () {
+      //       _ridesService.deleteRide(
+      //         documentId: _ride?.documentId,
+      //       );
+      //       Navigator.of(
+      //         context,
+      //       ).pop(
+      //         homeRoute,
+      //       );
+      //     },
+      //   ),
+      //   backgroundColor: Colors.transparent,
+      //   elevation: 0.0,
+      //   automaticallyImplyLeading: false,
+      // ),

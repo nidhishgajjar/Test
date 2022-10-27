@@ -70,7 +70,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           password: password,
         );
         emit(const AuthStateVerifyEnterPhoneNumber(isLoading: false));
-        await provider.sendEmailVerification();
+        // await provider.sendEmailVerification();
       } on Exception catch (e) {
         emit(AuthStateRegistering(
           exception: e,
@@ -168,6 +168,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       try {
         await provider.verifyCode(otp: otp);
+        emit(const StateAddUserProfile(isLoading: false));
+        await provider.sendEmailVerification();
         emit(const AuthStateNeedsVerification(isLoading: false));
       } on Exception catch (e) {
         emit(

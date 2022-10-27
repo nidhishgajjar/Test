@@ -34,6 +34,10 @@ class AuthEventRegister extends AuthEvent {
   );
 }
 
+class AddUserProfile extends AuthEvent {
+  const AddUserProfile();
+}
+
 class AuthEventSendCode extends AuthEvent {
   final String phoneNumber;
   const AuthEventSendCode(

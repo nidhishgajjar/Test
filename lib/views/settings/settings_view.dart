@@ -2,6 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test/services/auth/bloc/auth_bloc.dart';
 import 'package:test/utilities/dialogs/logout_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+final Uri _url = Uri.parse('https://flutter.dev');
+
+void _launchUrl() async {
+  try {
+    if (!await canLaunchUrl(_url)) {
+      await launchUrl(
+        _url,
+        mode: LaunchMode.inAppWebView,
+      );
+    } else {
+      throw "could not launc $_url";
+    }
+  } catch (_) {}
+}
 
 class SettingView extends StatefulWidget {
   const SettingView({super.key});
@@ -47,6 +63,10 @@ class _SettingViewState extends State<SettingView> {
                 Text("Log Out")
               ],
             ),
+          ),
+          const ElevatedButton(
+            onPressed: _launchUrl,
+            child: Text("launch"),
           ),
         ]),
       ),

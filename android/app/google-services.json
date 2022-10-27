@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "300632133861-njet78e84r4j57ha9opt3b3dbgeo3omu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.uniqart.test",
+            "certificate_hash": "be90fe05b6f6370eb2e87a95da714f70e0bddf90"
+          }
+        },
+        {
           "client_id": "300632133861-13c0vmqot3vbp0qr5tfa51u1e1p063gi.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "300632133861-13c0vmqot3vbp0qr5tfa51u1e1p063gi.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "300632133861-t07mtp6iopvoqc7pt3tvdphoa179fh9b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.uniqart.test"
+              }
             }
           ]
         }

@@ -16,6 +16,7 @@ import 'package:test/views/register/register_view.dart';
 import 'package:test/views/register/verification/email.dart';
 import 'package:test/views/register/verification/enter_code.dart';
 import 'package:test/views/register/verification/phone.dart';
+import 'package:test/views/register/verification/user_profile.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +36,7 @@ void main() {
           createABookingRoute: (context) => const BookingView(),
           homeRoute: (context) => const MainNavigator(),
         },
-        theme: unicartTheme,
+        theme: uniqartTheme,
         // darkTheme: ThemeData.dark(),
       ),
     ),
@@ -62,12 +63,14 @@ class HomePage extends StatelessWidget {
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
           return const MainNavigator();
-        } else if (state is AuthStateNeedsVerification) {
-          return const VerifyEmailView();
         } else if (state is AuthStateVerifyEnterPhoneNumber) {
           return const VerifyPhoneView();
         } else if (state is AuthStateEnterCode) {
           return const EnterCodeView();
+        } else if (state is StateAddUserProfile) {
+          return const UserProfile();
+        } else if (state is AuthStateNeedsVerification) {
+          return const VerifyEmailView();
         } else if (state is AuthStateLoggedOut) {
           return const LogInView();
         } else if (state is AuthStateForgotPassword) {

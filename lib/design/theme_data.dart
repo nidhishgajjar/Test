@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:test/consants/color_constants.dart';
+import 'package:test/design/color_constants.dart';
 
-final unicartTheme = _buildUniqartTheme();
+final uniqartTheme = _buildUniqartTheme();
 
 ThemeData _buildUniqartTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
     colorScheme: _uniqartColorScheme,
-    primaryColor: unicartPrimary,
+
+    primaryColor: uniqartTextField,
+
     scaffoldBackgroundColor: uniqartBackgroundWhite,
-    cardColor: uniqartBackgroundWhite,
+    cardColor: uniqartTextField,
     errorColor: uniqartErrorRed,
     buttonTheme: const ButtonThemeData(
       colorScheme: _uniqartColorScheme,
@@ -103,8 +105,8 @@ TextTheme _buildUniqartextTheme(TextTheme base) {
       )
       .apply(
         fontFamily: "Lato",
-        displayColor: uniqartOnSurface,
-        bodyColor: uniqartOnSurface,
+        displayColor: uniqartTextField,
+        bodyColor: uniqartTextField,
       );
 }
 
@@ -127,21 +129,21 @@ InputDecorationTheme _buildUniqartTextFeild(InputDecorationTheme base) {
 BottomNavigationBarThemeData _buildUniqartBottomNavigationBarTheme(
     BottomNavigationBarThemeData base) {
   return base.copyWith(
-    backgroundColor: unicartPrimary,
+    backgroundColor: uniqartPrimary,
     selectedItemColor: uniqartOnSurface,
   );
 }
 
 const ColorScheme _uniqartColorScheme = ColorScheme(
-  primary: unicartPrimary,
+  primary: uniqartPrimary,
   secondary: uniqartSecondary,
   surface: uniqartOnSurface,
-  background: uniqartBackgroundWhite,
+  background: uniqartOnSurface,
   error: uniqartErrorRed,
   onPrimary: uniqartOnSurface,
   onSecondary: uniqartOnSurface,
   onSurface: uniqartOnSurface,
   onBackground: uniqartOnSurface,
-  onError: uniqartSurfaceWhite,
+  onError: uniqartErrorRed,
   brightness: Brightness.light,
 );

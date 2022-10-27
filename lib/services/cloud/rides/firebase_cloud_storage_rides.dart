@@ -3,7 +3,7 @@ import 'package:test/services/cloud/rides/cloud_rides.dart';
 import 'package:test/services/cloud/rides/cloud_rides_constants.dart';
 import 'package:test/services/cloud/rides/cloud_rides_exceptions.dart';
 
-class FirebaseCloudStorage {
+class FirebaseRidesCloudStorage {
   final rides = FirebaseFirestore.instance.collection("rides");
 
 // Delete ride
@@ -20,6 +20,7 @@ class FirebaseCloudStorage {
     required String documentId,
     required String locationDropOff,
     required String locationPickup,
+    required String timePickUp,
     required String timeDropOff,
     required String dateDropOff,
     required bool cancellationStatus,
@@ -28,6 +29,7 @@ class FirebaseCloudStorage {
       await rides.doc(documentId).update({
         locationDropOffFieldName: locationDropOff,
         locationPickUpFieldName: locationPickup,
+        timePickUpFieldName: timePickUp,
         timeDropOffFieldName: timeDropOff,
         dateDropOffFieldName: dateDropOff,
         cancellationStatusFieldName: cancellationStatus,
@@ -61,8 +63,7 @@ class FirebaseCloudStorage {
       ownerUIDFieldName: ownerUID,
       displayNameFieldName: displayName,
       contactNumberFieldName: contactNumber,
-      timePickUpFieldName:
-          'Pickup time is usually between 15 min of dropff time. We will shorty contact you with a pickup time.',
+      timePickUpFieldName: '',
       timeDropOffFieldName: '',
       dateDropOffFieldName: '',
       locationDropOffFieldName: "",
@@ -81,8 +82,7 @@ class FirebaseCloudStorage {
       ownerUID: ownerUID,
       displayName: displayName,
       contactNumber: contactNumber,
-      timePickUp:
-          'Pickup time is usually between 15 min of dropff time. We will shorty contact you with a pickup time.',
+      timePickUp: '',
       timeDropOff: "",
       dateDropOff: "",
       locationDropOff: "",

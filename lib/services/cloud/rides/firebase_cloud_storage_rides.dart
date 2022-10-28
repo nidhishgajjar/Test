@@ -16,10 +16,33 @@ class FirebaseRidesCloudStorage {
   }
 
 // Update Single ride
-  Future<void> updateSingleRide({
+  Future<void> updateLocationRide({
     required String documentId,
     required String locationDropOff,
     required String locationPickup,
+    // required String timePickUp,
+    // required String timeDropOff,
+    // required List datesDropOff,
+    // required String repeatBooking,
+  }) async {
+    try {
+      await rides.doc(documentId).update({
+        locationDropOffFieldName: locationDropOff,
+        locationPickUpFieldName: locationPickup,
+        // timePickUpFieldName: timePickUp,
+        // timeDropOffFieldName: timeDropOff,
+        // datesDropOffSelectedFieldName: datesDropOff,
+        // repeatBookingFieldName: repeatBooking,
+      });
+    } catch (e) {
+      throw CouldNotUpdateRideException();
+    }
+  }
+
+  Future<void> updateSinglDateTimeRide({
+    required String documentId,
+    // required String locationDropOff,
+    // required String locationPickup,
     required String timePickUp,
     required String timeDropOff,
     required List datesDropOff,
@@ -27,8 +50,8 @@ class FirebaseRidesCloudStorage {
   }) async {
     try {
       await rides.doc(documentId).update({
-        locationDropOffFieldName: locationDropOff,
-        locationPickUpFieldName: locationPickup,
+        // locationDropOffFieldName: locationDropOff,
+        // locationPickUpFieldName: locationPickup,
         timePickUpFieldName: timePickUp,
         timeDropOffFieldName: timeDropOff,
         datesDropOffSelectedFieldName: datesDropOff,

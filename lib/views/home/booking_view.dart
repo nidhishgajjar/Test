@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:test/consants/routes.dart';
+import 'package:test/design/color_constants.dart';
 import 'package:test/services/auth/auth_service.dart';
 import 'package:test/services/cloud/rides/cloud_rides.dart';
 import 'package:test/services/cloud/rides/firebase_cloud_storage_rides.dart';
@@ -30,6 +31,7 @@ class _BookingViewState extends State<BookingView> {
   late final currentTime = DateFormat.jm().format(datetime);
   late StreamSubscription locationPickUpSubscription;
   late StreamSubscription locationDropOffSubscription;
+  // late StreamSubscription something;
   late final FirebaseRidesCloudStorage _ridesService;
   late final FirebaseUserCloudStorage _userProfileService;
   late final TextEditingController _pickUpController;
@@ -139,6 +141,9 @@ class _BookingViewState extends State<BookingView> {
       applicationBloc.clearSelectedPickupLocation();
     });
 
+    // something =
+    //     applicationBloc.selectedDropOffLocation.stream.listen((place) {});
+
     _pickUpController = TextEditingController();
     _inputPickUpController = TextEditingController();
     _dropOffController = TextEditingController();
@@ -163,7 +168,36 @@ class _BookingViewState extends State<BookingView> {
     bookingRequest = createABookingRequest(context);
   }
 
-  void _pickUpDropOffControllerListener() async {
+  void _locationControllerListener() async {
+    final ride = _ride;
+    if (ride == null) {
+      return;
+    }
+
+    final pickUp = _pickUpController.text;
+    final dropOff = _dropOffController.text;
+
+    // List total = [
+    //   _monSelectedDates.length,
+    //   _tuesSelectedDates.length,
+    //   _wedSelectedDates.length,
+    //   _thursSelectedDates.length,
+    //   _friSelectedDates.length,
+    //   _satSelectedDates.length,
+    //   _sunSelectedDates.length,
+    // ];
+
+    // int count = total.reduce((value, element) => value + element);
+    // if (count == 0) count = count + 1;
+
+    await _ridesService.updateLocationRide(
+      documentId: ride.documentId,
+      locationPickup: pickUp,
+      locationDropOff: dropOff,
+    );
+  }
+
+  void _singleFieldListener() async {
     final ride = _ride;
     if (ride == null) {
       return;
@@ -171,8 +205,6 @@ class _BookingViewState extends State<BookingView> {
 
     final typeString = _bookingBoolController.text;
 
-    final pickUp = _pickUpController.text;
-    final dropOff = _dropOffController.text;
     final pickUpTimeApprox = _timePickUpController.text;
     final dropOffTime = _timeDropOffController.text;
     final singleDropOffDate = _dateDropOffController.text;
@@ -181,23 +213,21 @@ class _BookingViewState extends State<BookingView> {
       singleDropOffDate,
     ];
 
-    List total = [
-      _monSelectedDates.length,
-      _tuesSelectedDates.length,
-      _wedSelectedDates.length,
-      _thursSelectedDates.length,
-      _friSelectedDates.length,
-      _satSelectedDates.length,
-      _sunSelectedDates.length,
-    ];
+    // List total = [
+    //   _monSelectedDates.length,
+    //   _tuesSelectedDates.length,
+    //   _wedSelectedDates.length,
+    //   _thursSelectedDates.length,
+    //   _friSelectedDates.length,
+    //   _satSelectedDates.length,
+    //   _sunSelectedDates.length,
+    // ];
 
-    int count = total.reduce((value, element) => value + element);
-    if (count == 0) count = count + 1;
+    // int count = total.reduce((value, element) => value + element);
+    // if (count == 0) count = count + 1;
 
-    await _ridesService.updateSingleRide(
+    await _ridesService.updateSinglDateTimeRide(
         documentId: ride.documentId,
-        locationPickup: pickUp,
-        locationDropOff: dropOff,
         timePickUp: "$pickUpTimeApprox (approx). We'll confirm shortly.",
         timeDropOff: dropOffTime,
         datesDropOff: dates,
@@ -259,14 +289,14 @@ class _BookingViewState extends State<BookingView> {
   }
 
   void _setupTextControllerListener() {
-    _pickUpController.removeListener(_pickUpDropOffControllerListener);
-    _pickUpController.addListener(_pickUpDropOffControllerListener);
-    _dropOffController.removeListener(_pickUpDropOffControllerListener);
-    _dropOffController.addListener(_pickUpDropOffControllerListener);
+    _pickUpController.removeListener(_locationControllerListener);
+    _pickUpController.addListener(_locationControllerListener);
+    _dropOffController.removeListener(_locationControllerListener);
+    _dropOffController.addListener(_locationControllerListener);
     _timeDropOffController.removeListener(_repeatFieldListener);
     _timeDropOffController.addListener(_repeatFieldListener);
-    _dateDropOffController.removeListener(_pickUpDropOffControllerListener);
-    _dateDropOffController.addListener(_pickUpDropOffControllerListener);
+    _dateDropOffController.removeListener(_singleFieldListener);
+    _dateDropOffController.addListener(_singleFieldListener);
     _monRepeatDatesController.removeListener(_repeatFieldListener);
     _monRepeatDatesController.addListener(_repeatFieldListener);
     _tuesRepeatDatesController.removeListener(_repeatFieldListener);
@@ -334,6 +364,24 @@ class _BookingViewState extends State<BookingView> {
   Widget build(BuildContext context) {
     final applicationBloc = Provider.of<ApplicationBloc>(context);
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            _ridesService.deleteRide(
+              documentId: _ride?.documentId,
+            );
+            Navigator.of(
+              context,
+            ).pop(
+              homeRoute,
+            );
+          },
+        ),
+        backgroundColor: uniqartSurfaceWhite,
+        elevation: 0.0,
+        automaticallyImplyLeading: false,
+      ),
       body: FutureBuilder(
         future: bookingRequest,
         builder: (context, snapshot) {
@@ -354,55 +402,89 @@ class _BookingViewState extends State<BookingView> {
                         const SizedBox(
                           height: 20,
                         ),
-                        Switch.adaptive(
-                            value: _repeatBooking,
-                            onChanged: (bool value) {
-                              setState(() => _repeatBooking = value);
-                              _bookingBoolController.text =
-                                  _repeatBooking.toString();
-                            }),
                         Stack(
                           children: [
-                            if (_repeatBooking == true &&
+                            Container(
+                              height: 500,
+                              // width: double.infinity,
+                              decoration: const BoxDecoration(
+                                  color: Colors.transparent),
+                            ),
+                            if (_pickUpController.text.isNotEmpty &&
+                                _dropOffController.text.isNotEmpty &&
                                 _inputPickUpController.text.isNotEmpty &&
                                 _inputDropOffController.text.isNotEmpty)
                               Positioned(
-                                // top: 0,
-                                // bottom: 0,
-                                // left: 0,
-                                // right: 0,
+                                top: 20,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                  child: Row(
+                                    children: [
+                                      const Text("Repeat Rides"),
+                                      const SizedBox(
+                                        width: 15,
+                                      ),
+                                      Switch.adaptive(
+                                          value: _repeatBooking,
+                                          onChanged: (bool value) {
+                                            setState(
+                                                () => _repeatBooking = value);
+                                            _bookingBoolController.text =
+                                                _repeatBooking.toString();
+                                          }),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            if (_pickUpController.text.isNotEmpty &&
+                                _dropOffController.text.isNotEmpty &&
+                                _inputPickUpController.text.isNotEmpty &&
+                                _inputDropOffController.text.isNotEmpty)
+                              Positioned(
+                                top: 25,
+                                left: 225,
+                                child: timeCupertinoField(),
+                              ),
+                            if (_repeatBooking == true &&
+                                _pickUpController.text.isNotEmpty &&
+                                _dropOffController.text.isNotEmpty &&
+                                _inputPickUpController.text.isNotEmpty &&
+                                _inputDropOffController.text.isNotEmpty)
+                              Positioned(
+                                top: 70,
+                                left: 0,
+                                right: 0,
                                 child: Center(
                                   child: filterChipsDays(),
                                 ),
                               ),
                             if (_repeatBooking == true &&
+                                _pickUpController.text.isNotEmpty &&
+                                _dropOffController.text.isNotEmpty &&
                                 _inputPickUpController.text.isNotEmpty &&
                                 _inputDropOffController.text.isNotEmpty)
-                              gettingDatesBasedOnDaysSelected(),
-                            if (_repeatBooking == false &&
-                                _inputPickUpController.text.isNotEmpty &&
-                                _inputDropOffController.text.isNotEmpty)
-                              SizedBox(
-                                height: 150,
-                                child: Column(
-                                  children: [
-                                    dateCupertinoField(),
-                                    const SizedBox(
-                                      height: 25,
-                                    ),
-                                    timeCupertinoField(),
-                                    const SizedBox(
-                                      height: 25,
-                                    ),
-                                  ],
-                                ),
+                              Positioned(
+                                top: 150,
+                                left: 0,
+                                right: 0,
+                                child: gettingDatesBasedOnDaysSelected(),
                               ),
+                            if (_repeatBooking == false &&
+                                _pickUpController.text.isNotEmpty &&
+                                _dropOffController.text.isNotEmpty &&
+                                _inputPickUpController.text.isNotEmpty &&
+                                _inputDropOffController.text.isNotEmpty)
+                              Positioned(
+                                  top: 80,
+                                  left: 225,
+                                  child: dateCupertinoField()),
                             if (applicationBloc.searchResults.isNotEmpty)
                               Container(
-                                  height: 300.0,
+                                  height: 500,
                                   width: double.infinity,
                                   decoration: const BoxDecoration(
-                                    color: Colors.white,
+                                    color: uniqartSurfaceWhite,
                                   )),
                             if (applicationBloc.searchResults.isNotEmpty)
                               Container(
@@ -485,7 +567,7 @@ class _BookingViewState extends State<BookingView> {
                     }
 
                     _monRepeatDatesController.text =
-                        _monSelectedDates.toString();
+                        _monSelectedDates.reversed.toString();
                   }
 
                   if (someElement == "Tu" && _tuesSelectedDates.isEmpty) {
@@ -500,7 +582,7 @@ class _BookingViewState extends State<BookingView> {
                     }
 
                     _tuesRepeatDatesController.text =
-                        _tuesSelectedDates.toString();
+                        _tuesSelectedDates.reversed.toString();
                   }
 
                   if (someElement == "We" && _wedSelectedDates.isEmpty) {
@@ -514,7 +596,7 @@ class _BookingViewState extends State<BookingView> {
                       }
                     }
                     _wedRepeatDatesController.text =
-                        _wedSelectedDates.toString();
+                        _wedSelectedDates.reversed.toString();
                   }
 
                   if (someElement == "Th" && _thursSelectedDates.isEmpty) {
@@ -528,7 +610,7 @@ class _BookingViewState extends State<BookingView> {
                       }
                     }
                     _thursRepeatDatesController.text =
-                        _thursSelectedDates.toString();
+                        _thursSelectedDates.reversed.toString();
                   }
 
                   if (someElement == "Fr" && _friSelectedDates.isEmpty) {
@@ -542,7 +624,7 @@ class _BookingViewState extends State<BookingView> {
                       }
                     }
                     _friRepeatDatesController.text =
-                        _friSelectedDates.toString();
+                        _friSelectedDates.reversed.toString();
                   }
 
                   if (someElement == "Sa" && _satSelectedDates.isEmpty) {
@@ -556,7 +638,7 @@ class _BookingViewState extends State<BookingView> {
                       }
                     }
                     _satRepeatDatesController.text =
-                        _satSelectedDates.toString();
+                        _satSelectedDates.reversed.toString();
                   }
 
                   if (someElement == "Su" && _sunSelectedDates.isEmpty) {
@@ -570,56 +652,84 @@ class _BookingViewState extends State<BookingView> {
                       }
                     }
                     _sunRepeatDatesController.text =
-                        _sunSelectedDates.toString();
+                        _sunSelectedDates.reversed.toString();
                   }
+                  // Reverse dats without brackets
+
+                  final reversedMon = _monSelectedDates.reversed;
+                  final monDates = reversedMon.join(", ");
+
+                  final reversedTue = _tuesSelectedDates.reversed;
+                  final tueDates = reversedTue.join(", ");
+
+                  final reversedWed = _wedSelectedDates.reversed;
+                  final wedDates = reversedWed.join(", ");
+
+                  final reversedThu = _thursSelectedDates.reversed;
+                  final thuDates = reversedThu.join(", ");
+
+                  final reversedFri = _friSelectedDates.reversed;
+                  final friDates = reversedFri.join(", ");
+
+                  final reversedSat = _satSelectedDates.reversed;
+                  final satDates = reversedSat.join(", ");
+
+                  final reversedSun = _sunSelectedDates.reversed;
+                  final sunDates = reversedSun.join(", ");
 
                   return Stack(
                     children: [
                       if (count > remaining)
                         Text(
                             "You are trying to book $absOverage more than it is available."),
-                      if (someElement == "Mo")
-                        Positioned(
-                          // top: 70,
-                          child: Center(
-                            child: Text("$_monSelectedDates"),
-                          ),
+                      if (someElement == "Mo" && count < remaining)
+                        Row(
+                          children: [
+                            const Text("Monday - "),
+                            Text("$monDates "),
+                          ],
                         ),
-                      if (someElement == "Tu")
-                        Positioned(
-                          child: Center(
-                            child: Text("$_tuesSelectedDates"),
-                          ),
+                      if (someElement == "Tu" && count < remaining)
+                        Row(
+                          children: [
+                            const Text("Tuesday - "),
+                            Text("$tueDates "),
+                          ],
                         ),
-                      if (someElement == "We")
-                        Positioned(
-                          child: Center(
-                            child: Text("$_wedSelectedDates"),
-                          ),
+                      if (someElement == "We" && count < remaining)
+                        Row(
+                          children: [
+                            const Text("Wednesday - "),
+                            Text("$wedDates "),
+                          ],
                         ),
-                      if (someElement == "Th")
-                        Positioned(
-                          child: Center(
-                            child: Text("$_thursSelectedDates"),
-                          ),
+                      if (someElement == "Th" && count < remaining)
+                        Row(
+                          children: [
+                            const Text("Thursday - "),
+                            Text("$thuDates "),
+                          ],
                         ),
-                      if (someElement == "Fr")
-                        Positioned(
-                          child: Center(
-                            child: Text("$_friSelectedDates"),
-                          ),
+                      if (someElement == "Fr" && count < remaining)
+                        Row(
+                          children: [
+                            const Text("Friday - "),
+                            Text("$friDates "),
+                          ],
                         ),
-                      if (someElement == "Sa")
-                        Positioned(
-                          child: Center(
-                            child: Text("$_satSelectedDates"),
-                          ),
+                      if (someElement == "Sa" && count < remaining)
+                        Row(
+                          children: [
+                            const Text("Saturday - "),
+                            Text("$satDates "),
+                          ],
                         ),
-                      if (someElement == "Su")
-                        Positioned(
-                          child: Center(
-                            child: Text("$_sunSelectedDates"),
-                          ),
+                      if (someElement == "Su" && count < remaining)
+                        Row(
+                          children: [
+                            const Text("Sunday - "),
+                            Text("$sunDates "),
+                          ],
                         ),
                     ],
                   );
@@ -635,99 +745,100 @@ class _BookingViewState extends State<BookingView> {
     );
   }
 
-  Row filterChipsDays() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        "Mo",
-        "Tu",
-        "We",
-        "Th",
-        "Fr",
-        "Sa",
-        "Su",
-      ].map(
-        (days) {
-          return FilterChip(
-            backgroundColor: CupertinoColors.lightBackgroundGray,
-            selectedColor: CupertinoColors.systemYellow,
-            showCheckmark: false,
-            label: Text(days),
-            selected: _selectedDays.contains(days),
-            onSelected: (val) {
-              setState(() {
-                if (val) {
-                  _selectedDays.add(days);
-                } else {
-                  _selectedDays.removeWhere((name) {
-                    return name == days;
-                  });
-                }
-                _daysSelectedController.text = _selectedDays.toString();
+  Padding filterChipsDays() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          "Mo",
+          "Tu",
+          "We",
+          "Th",
+          "Fr",
+          "Sa",
+          "Su",
+        ].map(
+          (days) {
+            return FilterChip(
+              backgroundColor: CupertinoColors.lightBackgroundGray,
+              selectedColor: CupertinoColors.systemYellow,
+              showCheckmark: false,
+              label: Text(days),
+              selected: _selectedDays.contains(days),
+              onSelected: (val) {
+                setState(() {
+                  if (val) {
+                    _selectedDays.add(days);
+                  } else {
+                    _selectedDays.removeWhere((name) {
+                      return name == days;
+                    });
+                  }
+                  _daysSelectedController.text = _selectedDays.toString();
 
-                _monSelectedDates.clear();
-                _monRepeatDatesController.clear();
-                _tuesSelectedDates.clear();
-                _tuesRepeatDatesController.clear();
-                _wedSelectedDates.clear();
-                _wedRepeatDatesController.clear();
-                _thursSelectedDates.clear();
-                _thursRepeatDatesController.clear();
-                _friSelectedDates.clear();
-                _friRepeatDatesController.clear();
-                _satSelectedDates.clear();
-                _satRepeatDatesController.clear();
-                _sunSelectedDates.clear();
-                _sunRepeatDatesController.clear();
-              });
-            },
-          );
-        },
-      ).toList(),
+                  _monSelectedDates.clear();
+                  _monRepeatDatesController.clear();
+                  _tuesSelectedDates.clear();
+                  _tuesRepeatDatesController.clear();
+                  _wedSelectedDates.clear();
+                  _wedRepeatDatesController.clear();
+                  _thursSelectedDates.clear();
+                  _thursRepeatDatesController.clear();
+                  _friSelectedDates.clear();
+                  _friRepeatDatesController.clear();
+                  _satSelectedDates.clear();
+                  _satRepeatDatesController.clear();
+                  _sunSelectedDates.clear();
+                  _sunRepeatDatesController.clear();
+                });
+              },
+            );
+          },
+        ).toList(),
+      ),
     );
   }
 
   tempAutoCompleteList(ApplicationBloc applicationBloc) {
     return SizedBox(
-      child: Scrollbar(
-        child: ListView.separated(
-          separatorBuilder: (context, index) => const Divider(
-            height: 10,
-            thickness: 0.5,
-          ),
-          shrinkWrap: true,
-          itemCount: applicationBloc.searchResults.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              leading: const Icon(Icons.room),
-              title: Text(
-                applicationBloc.searchResults[index].description,
-                style: const TextStyle(color: Colors.black),
-              ),
-              onTap: () {
-                if (pickupNode.hasFocus) {
-                  setState(() {
-                    applicationBloc.setSelectedPickUpLocation(
-                        applicationBloc.searchResults[index].placeId);
-                  });
-                } else {
-                  setState(() {
-                    applicationBloc.setSelectedDropOffLocation(
-                        applicationBloc.searchResults[index].placeId);
-                  });
-                }
-              },
-            );
-          },
+      child: ListView.separated(
+        separatorBuilder: (context, index) => const Divider(
+          height: 10,
+          thickness: 0.5,
         ),
+        shrinkWrap: true,
+        itemCount: applicationBloc.searchResults.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: const Icon(Icons.room),
+            title: Text(
+              applicationBloc.searchResults[index].description,
+              style: const TextStyle(color: Colors.black),
+            ),
+            onTap: () {
+              if (pickupNode.hasFocus) {
+                setState(() {
+                  applicationBloc.setSelectedPickUpLocation(
+                      applicationBloc.searchResults[index].placeId);
+                });
+              } else {
+                setState(() {
+                  applicationBloc.setSelectedDropOffLocation(
+                      applicationBloc.searchResults[index].placeId);
+                });
+              }
+            },
+          );
+        },
       ),
     );
   }
 
   SizedBox timeCupertinoField() {
     return SizedBox(
-      width: 275,
+      width: 125,
       child: CupertinoTextFormFieldRow(
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -871,24 +982,3 @@ class _BookingViewState extends State<BookingView> {
     );
   }
 }
-
-
-      // key: _scaffoldKey,
-      // appBar: AppBar(
-      //   leading: IconButton(
-      //     icon: const Icon(Icons.arrow_back),
-      //     onPressed: () {
-      //       _ridesService.deleteRide(
-      //         documentId: _ride?.documentId,
-      //       );
-      //       Navigator.of(
-      //         context,
-      //       ).pop(
-      //         homeRoute,
-      //       );
-      //     },
-      //   ),
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0.0,
-      //   automaticallyImplyLeading: false,
-      // ),

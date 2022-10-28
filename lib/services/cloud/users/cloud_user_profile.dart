@@ -16,6 +16,7 @@ class CloudUserProfile {
   final Timestamp? subStartDate;
   final Timestamp subExpiryDate;
   final Timestamp? accountCreation;
+  final int remainingRides;
   const CloudUserProfile({
     required this.documentId,
     required this.ownerUID,
@@ -29,6 +30,7 @@ class CloudUserProfile {
     required this.subStartDate,
     required this.subExpiryDate,
     required this.accountCreation,
+    required this.remainingRides,
   });
 
   CloudUserProfile.fromSnapshot(
@@ -44,5 +46,6 @@ class CloudUserProfile {
         trial = snapshot.data()[trialFieldName],
         subStartDate = snapshot.data()[subscriptionStartDateFieldName],
         subExpiryDate = snapshot.data()[subscriptionExpiryDateFieldName],
-        accountCreation = snapshot.data()[accountCreationTimeStampFieldName];
+        accountCreation = snapshot.data()[accountCreationTimeStampFieldName],
+        remainingRides = snapshot.data()[remainingRidesFieldName];
 }

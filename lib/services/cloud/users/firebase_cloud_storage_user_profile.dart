@@ -18,11 +18,11 @@ class FirebaseUserCloudStorage {
 // Update ride
   Future<void> updateUserInfo({
     required String documentId,
-    required String name,
+    required int remainingRides,
   }) async {
     try {
       await userInfo.doc(documentId).update({
-        ownerDisplayNameFieldName: name,
+        remainingRidesFieldName: remainingRides,
       });
     } catch (e) {
       throw CouldNotUpdateUserInfoException();
@@ -50,12 +50,13 @@ class FirebaseUserCloudStorage {
       ownerPhoneNumberFieldName: ownerPhoneNumber,
       ownerDisplayNameFieldName: ownerDisplayName,
       userAccountTypeFieldName: 'regular',
-      ridesLimitFieldName: 60,
+      ridesLimitFieldName: 00,
       subscriberFieldName: false,
       trialFieldName: false,
       subscriptionStartDateFieldName: null,
       subscriptionExpiryDateFieldName: Timestamp.now(),
       accountCreationTimeStampFieldName: Timestamp.now(),
+      remainingRidesFieldName: 0,
     });
 
     final fetchUser = await document.get();
@@ -72,6 +73,7 @@ class FirebaseUserCloudStorage {
       subStartDate: null,
       subExpiryDate: Timestamp.now(),
       accountCreation: Timestamp.now(),
+      remainingRides: 0,
     );
   }
 }

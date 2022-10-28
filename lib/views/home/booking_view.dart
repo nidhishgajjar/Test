@@ -7,6 +7,8 @@ import 'package:test/consants/routes.dart';
 import 'package:test/services/auth/auth_service.dart';
 import 'package:test/services/cloud/rides/cloud_rides.dart';
 import 'package:test/services/cloud/rides/firebase_cloud_storage_rides.dart';
+import 'package:test/services/cloud/users/cloud_user_profile.dart';
+import 'package:test/services/cloud/users/firebase_cloud_storage_user_profile.dart';
 import 'package:test/services/place/bloc/application_bloc.dart';
 
 class BookingView extends StatefulWidget {
@@ -19,6 +21,8 @@ class BookingView extends StatefulWidget {
 class _BookingViewState extends State<BookingView> {
   CloudRide? _ride;
 
+  String get userId => AuthService.firebase().currentUser!.id;
+
   late DateTime date = DateTime.now().add(const Duration(days: 1));
   late DateTime time = DateTime.now();
   late DateTime datetime = DateTime.now();
@@ -27,6 +31,7 @@ class _BookingViewState extends State<BookingView> {
   late StreamSubscription locationPickUpSubscription;
   late StreamSubscription locationDropOffSubscription;
   late final FirebaseRidesCloudStorage _ridesService;
+  late final FirebaseUserCloudStorage _userProfileService;
   late final TextEditingController _pickUpController;
   late final TextEditingController _inputPickUpController;
   late final TextEditingController _dropOffController;
@@ -34,11 +39,43 @@ class _BookingViewState extends State<BookingView> {
   late final TextEditingController _timePickUpController;
   late final TextEditingController _timeDropOffController;
   late final TextEditingController _dateDropOffController;
+  late final TextEditingController _monRepeatDatesController;
+  late final TextEditingController _tuesRepeatDatesController;
+  late final TextEditingController _wedRepeatDatesController;
+  late final TextEditingController _thursRepeatDatesController;
+  late final TextEditingController _friRepeatDatesController;
+  late final TextEditingController _satRepeatDatesController;
+  late final TextEditingController _sunRepeatDatesController;
+  late final TextEditingController _daysSelectedController;
+  late final TextEditingController _bookingBoolController;
+
+  final _selectedDays = [];
+  final _monSelectedDates = [];
+  final _tuesSelectedDates = [];
+  final _wedSelectedDates = [];
+  final _thursSelectedDates = [];
+  final _friSelectedDates = [];
+  final _satSelectedDates = [];
+  final _sunSelectedDates = [];
 
   late Future<CloudRide> bookingRequest;
   late final _formKey = GlobalKey<FormState>();
   late FocusNode pickupNode;
   late FocusNode dropoffNode;
+
+  bool _repeatBooking = true;
+
+  List daysBetween(DateTime from, DateTime to, day) {
+    List dates = [];
+    while (from.isBefore(to)) {
+      from = from.add(const Duration(days: 1));
+      if (from.weekday == day) {
+        dates.insert(0, DateFormat.MMMd().format(from));
+      }
+    }
+
+    return dates;
+  }
 
   void _showDialog(Widget child) {
     showCupertinoModalPopup<void>(
@@ -83,6 +120,7 @@ class _BookingViewState extends State<BookingView> {
       listen: false,
     );
     _ridesService = FirebaseRidesCloudStorage();
+    _userProfileService = FirebaseUserCloudStorage();
     super.initState();
     locationPickUpSubscription =
         applicationBloc.selectedPickupLocation.stream.listen((place) {
@@ -109,6 +147,17 @@ class _BookingViewState extends State<BookingView> {
     _timeDropOffController = TextEditingController();
     _dateDropOffController = TextEditingController();
 
+    _monRepeatDatesController = TextEditingController();
+    _tuesRepeatDatesController = TextEditingController();
+    _wedRepeatDatesController = TextEditingController();
+    _thursRepeatDatesController = TextEditingController();
+    _friRepeatDatesController = TextEditingController();
+    _satRepeatDatesController = TextEditingController();
+    _sunRepeatDatesController = TextEditingController();
+    _daysSelectedController = TextEditingController();
+
+    _bookingBoolController = TextEditingController();
+
     pickupNode = FocusNode();
     dropoffNode = FocusNode();
     bookingRequest = createABookingRequest(context);
@@ -120,21 +169,59 @@ class _BookingViewState extends State<BookingView> {
       return;
     }
 
+    // final typeString = _bookingBoolController.text;
+
     final pickUp = _pickUpController.text;
     final dropOff = _dropOffController.text;
     final pickUpTimeApprox = _timePickUpController.text;
     final dropOffTime = _timeDropOffController.text;
-    final dropOffDate = _dateDropOffController.text;
-    List<String> dates = [dropOffDate];
+    final singleDropOffDate = _dateDropOffController.text;
+    final monDropOffDates = _monRepeatDatesController.text;
+    final tuesDropOffDates = _tuesRepeatDatesController.text;
+    final wedDropOffDates = _wedRepeatDatesController.text;
+    final thursDropOffDates = _thursRepeatDatesController.text;
+    final friDropOffDates = _friRepeatDatesController.text;
+    final satDropOffDates = _satRepeatDatesController.text;
+    final sunDropOffDates = _sunRepeatDatesController.text;
 
-    await _ridesService.updateRide(
+    List dates = [
+      singleDropOffDate,
+      monDropOffDates,
+      tuesDropOffDates,
+      wedDropOffDates,
+      thursDropOffDates,
+      friDropOffDates,
+      satDropOffDates,
+      sunDropOffDates,
+    ];
+    if (dates.isEmpty) {}
+
+    // List days = [_daysSelectedController.text];
+
+    List total = [
+      _monSelectedDates.length,
+      _tuesSelectedDates.length,
+      _wedSelectedDates.length,
+      _thursSelectedDates.length,
+      _friSelectedDates.length,
+      _satSelectedDates.length,
+      _sunSelectedDates.length,
+    ];
+
+    int count = total.reduce((value, element) => value + element);
+    if (count == 0) count = count + 1;
+
+    await _ridesService.updateSingleRide(
       documentId: ride.documentId,
       locationPickup: pickUp,
       locationDropOff: dropOff,
-      timePickUp: "$pickUpTimeApprox (approx). Will confirm shortly.",
+      timePickUp: "$pickUpTimeApprox (approx). We'll confirm shortly.",
       timeDropOff: dropOffTime,
       datesDropOff: dates,
-      cancellationStatus: false,
+      // cancellationStatus: false,
+      // repeatBooking: typeString,
+      // numOfRides: count,
+      // daysSelected: days,
     );
   }
 
@@ -147,6 +234,25 @@ class _BookingViewState extends State<BookingView> {
     _timeDropOffController.addListener(_pickUpDropOffControllerListener);
     _dateDropOffController.removeListener(_pickUpDropOffControllerListener);
     _dateDropOffController.addListener(_pickUpDropOffControllerListener);
+    _monRepeatDatesController.removeListener(_pickUpDropOffControllerListener);
+    _monRepeatDatesController.addListener(_pickUpDropOffControllerListener);
+    _tuesRepeatDatesController.removeListener(_pickUpDropOffControllerListener);
+    _tuesRepeatDatesController.addListener(_pickUpDropOffControllerListener);
+    _wedRepeatDatesController.removeListener(_pickUpDropOffControllerListener);
+    _wedRepeatDatesController.addListener(_pickUpDropOffControllerListener);
+    _thursRepeatDatesController
+        .removeListener(_pickUpDropOffControllerListener);
+    _thursRepeatDatesController.addListener(_pickUpDropOffControllerListener);
+    _friRepeatDatesController.removeListener(_pickUpDropOffControllerListener);
+    _friRepeatDatesController.addListener(_pickUpDropOffControllerListener);
+    _satRepeatDatesController.removeListener(_pickUpDropOffControllerListener);
+    _satRepeatDatesController.addListener(_pickUpDropOffControllerListener);
+    _sunRepeatDatesController.removeListener(_pickUpDropOffControllerListener);
+    _sunRepeatDatesController.addListener(_pickUpDropOffControllerListener);
+    _daysSelectedController.removeListener(_pickUpDropOffControllerListener);
+    _daysSelectedController.addListener(_pickUpDropOffControllerListener);
+    _bookingBoolController.removeListener(_pickUpDropOffControllerListener);
+    _bookingBoolController.addListener(_pickUpDropOffControllerListener);
   }
 
   Future<CloudRide> createABookingRequest(BuildContext context) async {
@@ -174,6 +280,15 @@ class _BookingViewState extends State<BookingView> {
     _timePickUpController.dispose();
     _timeDropOffController.dispose();
     _dateDropOffController.dispose();
+    _monRepeatDatesController.dispose();
+    _tuesRepeatDatesController.dispose();
+    _wedRepeatDatesController.dispose();
+    _thursRepeatDatesController.dispose();
+    _friRepeatDatesController.dispose();
+    _satRepeatDatesController.dispose();
+    _sunRepeatDatesController.dispose();
+    _daysSelectedController.dispose();
+    _bookingBoolController.dispose();
 
     pickupNode.dispose();
     dropoffNode.dispose();
@@ -207,23 +322,49 @@ class _BookingViewState extends State<BookingView> {
                         const SizedBox(
                           height: 20,
                         ),
+                        Switch.adaptive(
+                            value: _repeatBooking,
+                            onChanged: (bool value) {
+                              setState(() => _repeatBooking = value);
+                              _bookingBoolController.text =
+                                  _repeatBooking.toString();
+                            }),
                         Stack(
                           children: [
-                            SizedBox(
-                              height: 300,
-                              child: Column(
-                                children: [
-                                  dateCupertinoField(),
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
-                                  timeCupertinoField(),
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
-                                ],
+                            if (_repeatBooking == true &&
+                                _inputPickUpController.text.isNotEmpty &&
+                                _inputDropOffController.text.isNotEmpty)
+                              Positioned(
+                                // top: 0,
+                                // bottom: 0,
+                                // left: 0,
+                                // right: 0,
+                                child: Center(
+                                  child: filterChipsDays(),
+                                ),
                               ),
-                            ),
+                            if (_repeatBooking == true &&
+                                _inputPickUpController.text.isNotEmpty &&
+                                _inputDropOffController.text.isNotEmpty)
+                              gettingDatesBasedOnDaysSelected(),
+                            if (_repeatBooking == false &&
+                                _inputPickUpController.text.isNotEmpty &&
+                                _inputDropOffController.text.isNotEmpty)
+                              SizedBox(
+                                height: 150,
+                                child: Column(
+                                  children: [
+                                    dateCupertinoField(),
+                                    const SizedBox(
+                                      height: 25,
+                                    ),
+                                    timeCupertinoField(),
+                                    const SizedBox(
+                                      height: 25,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             if (applicationBloc.searchResults.isNotEmpty)
                               Container(
                                   height: 300.0,
@@ -258,6 +399,261 @@ class _BookingViewState extends State<BookingView> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  StreamBuilder<Iterable<CloudUserProfile>> gettingDatesBasedOnDaysSelected() {
+    return StreamBuilder(
+      stream: _userProfileService.userDoc(ownerUID: userId),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+          case ConnectionState.active:
+            if (snapshot.hasData) {
+              final allUser = snapshot.data as Iterable<CloudUserProfile>;
+              final doc = allUser.where((element) => true);
+              final retrieveDocument = doc.elementAt(0);
+              final date = retrieveDocument.subExpiryDate;
+              final remaining = retrieveDocument.remainingRides;
+              List total = [
+                _monSelectedDates.length,
+                _tuesSelectedDates.length,
+                _wedSelectedDates.length,
+                _thursSelectedDates.length,
+                _friSelectedDates.length,
+                _satSelectedDates.length,
+                _sunSelectedDates.length,
+              ];
+
+              int count = total.reduce((value, element) => value + element);
+              if (count == 0) count = count + 1;
+              int overage = remaining - count;
+              int absOverage = overage.abs();
+
+              final present = DateTime.now();
+              final expiryDate = date.toDate();
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: _selectedDays.length,
+                itemBuilder: (context, index) {
+                  final someElement = _selectedDays.elementAt(index);
+
+                  if (someElement == "Mo" && _monSelectedDates.isEmpty) {
+                    const daySelected = DateTime.monday;
+                    final listDates =
+                        daysBetween(present, expiryDate, daySelected);
+                    if (_monSelectedDates.contains(listDates.elementAt(0))) {
+                      _monSelectedDates.clear();
+                    }
+
+                    for (var i = 0; i < listDates.length; i++) {
+                      {
+                        _monSelectedDates.add(listDates.elementAt(i));
+                      }
+                    }
+
+                    _monRepeatDatesController.text =
+                        _monSelectedDates.toString();
+                  }
+
+                  if (someElement == "Tu" && _tuesSelectedDates.isEmpty) {
+                    const daySelected = DateTime.tuesday;
+                    final listDates =
+                        daysBetween(present, expiryDate, daySelected);
+
+                    for (var i = 0; i < listDates.length; i++) {
+                      {
+                        _tuesSelectedDates.add(listDates.elementAt(i));
+                      }
+                    }
+
+                    _tuesRepeatDatesController.text =
+                        _tuesSelectedDates.toString();
+                  }
+
+                  if (someElement == "We" && _wedSelectedDates.isEmpty) {
+                    const daySelected = DateTime.wednesday;
+                    final listDates =
+                        daysBetween(present, expiryDate, daySelected);
+
+                    for (var i = 0; i < listDates.length; i++) {
+                      {
+                        _wedSelectedDates.add(listDates.elementAt(i));
+                      }
+                    }
+                    _wedRepeatDatesController.text =
+                        _wedSelectedDates.toString();
+                  }
+
+                  if (someElement == "Th" && _thursSelectedDates.isEmpty) {
+                    const daySelected = DateTime.thursday;
+                    final listDates =
+                        daysBetween(present, expiryDate, daySelected);
+
+                    for (var i = 0; i < listDates.length; i++) {
+                      {
+                        _thursSelectedDates.add(listDates.elementAt(i));
+                      }
+                    }
+                    _thursRepeatDatesController.text =
+                        _thursSelectedDates.toString();
+                  }
+
+                  if (someElement == "Fr" && _friSelectedDates.isEmpty) {
+                    const daySelected = DateTime.friday;
+                    final listDates =
+                        daysBetween(present, expiryDate, daySelected);
+
+                    for (var i = 0; i < listDates.length; i++) {
+                      {
+                        _friSelectedDates.add(listDates.elementAt(i));
+                      }
+                    }
+                    _friRepeatDatesController.text =
+                        _friSelectedDates.toString();
+                  }
+
+                  if (someElement == "Sa" && _satSelectedDates.isEmpty) {
+                    const daySelected = DateTime.saturday;
+                    final listDates =
+                        daysBetween(present, expiryDate, daySelected);
+
+                    for (var i = 0; i < listDates.length; i++) {
+                      {
+                        _satSelectedDates.add(listDates.elementAt(i));
+                      }
+                    }
+                    _satRepeatDatesController.text =
+                        _satSelectedDates.toString();
+                  }
+
+                  if (someElement == "Su" && _sunSelectedDates.isEmpty) {
+                    const daySelected = DateTime.sunday;
+                    final listDates =
+                        daysBetween(present, expiryDate, daySelected);
+
+                    for (var i = 0; i < listDates.length; i++) {
+                      {
+                        _sunSelectedDates.add(listDates.elementAt(i));
+                      }
+                    }
+                    _sunRepeatDatesController.text =
+                        _sunSelectedDates.toString();
+                  }
+
+                  return Stack(
+                    children: [
+                      if (count > remaining)
+                        Text(
+                            "You are trying to book $absOverage more than it is available."),
+                      if (someElement == "Mo")
+                        Positioned(
+                          // top: 70,
+                          child: Center(
+                            child: Text("$_monSelectedDates"),
+                          ),
+                        ),
+                      if (someElement == "Tu")
+                        Positioned(
+                          child: Center(
+                            child: Text("$_tuesSelectedDates"),
+                          ),
+                        ),
+                      if (someElement == "We")
+                        Positioned(
+                          child: Center(
+                            child: Text("$_wedSelectedDates"),
+                          ),
+                        ),
+                      if (someElement == "Th")
+                        Positioned(
+                          child: Center(
+                            child: Text("$_thursSelectedDates"),
+                          ),
+                        ),
+                      if (someElement == "Fr")
+                        Positioned(
+                          child: Center(
+                            child: Text("$_friSelectedDates"),
+                          ),
+                        ),
+                      if (someElement == "Sa")
+                        Positioned(
+                          child: Center(
+                            child: Text("$_satSelectedDates"),
+                          ),
+                        ),
+                      if (someElement == "Su")
+                        Positioned(
+                          child: Center(
+                            child: Text("$_sunSelectedDates"),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              );
+            } else {
+              return const CircularProgressIndicator();
+            }
+          default:
+            return const CircularProgressIndicator();
+        }
+      },
+    );
+  }
+
+  Row filterChipsDays() {
+    _dateDropOffController.clear();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        "Mo",
+        "Tu",
+        "We",
+        "Th",
+        "Fr",
+        "Sa",
+        "Su",
+      ].map(
+        (days) {
+          return FilterChip(
+            backgroundColor: CupertinoColors.lightBackgroundGray,
+            selectedColor: CupertinoColors.systemYellow,
+            showCheckmark: false,
+            label: Text(days),
+            selected: _selectedDays.contains(days),
+            onSelected: (val) {
+              setState(() {
+                if (val) {
+                  _selectedDays.add(days);
+                } else {
+                  _selectedDays.removeWhere((name) {
+                    return name == days;
+                  });
+                }
+                _daysSelectedController.text = _selectedDays.toString();
+
+                _monSelectedDates.clear();
+                _monRepeatDatesController.clear();
+                _tuesSelectedDates.clear();
+                _tuesRepeatDatesController.clear();
+                _wedSelectedDates.clear();
+                _wedRepeatDatesController.clear();
+                _thursSelectedDates.clear();
+                _thursRepeatDatesController.clear();
+                _friSelectedDates.clear();
+                _friRepeatDatesController.clear();
+                _satSelectedDates.clear();
+                _satRepeatDatesController.clear();
+                _sunSelectedDates.clear();
+                _sunRepeatDatesController.clear();
+              });
+            },
+          );
+        },
+      ).toList(),
     );
   }
 
@@ -445,43 +841,6 @@ class _BookingViewState extends State<BookingView> {
   }
 }
 
-
-// TextFormField(
-//                       controller: _password,
-//                       enableSuggestions: false,
-//                       obscureText: !_passwordVisible,
-//                       autocorrect: false,
-//                       keyboardType: TextInputType.visiblePassword,
-//                       style:
-//                           const TextStyle(fontSize: 14, color: uniqartOnSurface
-//                               // color: Colors.black54,
-//                               ),
-//                       decoration: InputDecoration(
-//                         // helperText: "min 8 characters long",
-//                         focusColor: CupertinoColors.activeBlue,
-//                         contentPadding: const EdgeInsets.all(0),
-//                         prefixIcon: const Icon(Icons.password),
-//                         label: const Text("Password"),
-//                         hintText: "enter your password",
-//                         filled: true,
-//                         fillColor: CupertinoColors.lightBackgroundGray,
-//                         border: OutlineInputBorder(
-//                             borderRadius: BorderRadius.circular(7),
-//                             borderSide: BorderSide.none),
-//                         suffixIcon: IconButton(
-//                           icon: Icon(
-//                             _passwordVisible
-//                                 ? CupertinoIcons.eye_fill
-//                                 : CupertinoIcons.eye_slash_fill,
-//                           ),
-//                           onPressed: () {
-//                             setState(() {
-//                               _passwordVisible = !_passwordVisible;
-//                             });
-//                           },
-//                         ),
-//                       ),
-//                     ),
 
       // key: _scaffoldKey,
       // appBar: AppBar(

@@ -9,3 +9,4 @@ const trialFieldName = 'trial-period';
 const subscriptionStartDateFieldName = "subscription-start-date";
 const subscriptionExpiryDateFieldName = 'subscription-expiry-date';
 const accountCreationTimeStampFieldName = 'account-creation-timestamp';
+const remainingRidesFieldName = "remaining-rides";

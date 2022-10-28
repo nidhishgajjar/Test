@@ -16,14 +16,17 @@ class FirebaseRidesCloudStorage {
   }
 
 // Update ride
-  Future<void> updateRide({
+  Future<void> updateSingleRide({
     required String documentId,
     required String locationDropOff,
     required String locationPickup,
     required String timePickUp,
     required String timeDropOff,
     required List datesDropOff,
-    required bool cancellationStatus,
+    // required bool cancellationStatus,
+    // required String repeatBooking,
+    // required int numOfRides,
+    // required List daysSelected,
   }) async {
     try {
       await rides.doc(documentId).update({
@@ -32,6 +35,47 @@ class FirebaseRidesCloudStorage {
         timePickUpFieldName: timePickUp,
         timeDropOffFieldName: timeDropOff,
         datesDropOffSelectedFieldName: datesDropOff,
+        // cancellationStatusFieldName: cancellationStatus,
+        // repeatBookingFieldName: repeatBooking,
+        // numberOfRidesFieldName: numOfRides,
+        // daysSelectedFieldName: daysSelected,
+      });
+    } catch (e) {
+      throw CouldNotUpdateRideException();
+    }
+  }
+
+  // Update repeat Ride
+  Future<void> updateRepeatRide({
+    required String documentId,
+    required String timePickUp,
+    required String timeDropOff,
+    required List datesDropOff,
+    required String repeatBooking,
+    required int numOfRides,
+    required List daysSelected,
+  }) async {
+    try {
+      await rides.doc(documentId).update({
+        timePickUpFieldName: timePickUp,
+        timeDropOffFieldName: timeDropOff,
+        datesDropOffSelectedFieldName: datesDropOff,
+        repeatBookingFieldName: repeatBooking,
+        numberOfRidesFieldName: numOfRides,
+        daysSelectedFieldName: daysSelected,
+      });
+    } catch (e) {
+      throw CouldNotUpdateRideException();
+    }
+  }
+
+// Update Cancellation status
+  Future<void> updateCancellationStatus({
+    required String documentId,
+    required bool cancellationStatus,
+  }) async {
+    try {
+      await rides.doc(documentId).update({
         cancellationStatusFieldName: cancellationStatus,
       });
     } catch (e) {
@@ -74,7 +118,7 @@ class FirebaseRidesCloudStorage {
       cancellationStatusFieldName: false,
       completionFieldName: false,
       bookingTimeFieldName: Timestamp.now(),
-      repeatBookingFieldName: false,
+      repeatBookingFieldName: 'true',
       numberOfRidesFieldName: 1,
       daysSelectedFieldName: [],
     });
@@ -96,7 +140,7 @@ class FirebaseRidesCloudStorage {
       cancellationStatus: false,
       completion: false,
       bookingTime: Timestamp.now(),
-      repeatBooking: false,
+      repeatBooking: 'true',
       numOfRides: 1,
       daysSelected: const [],
     );

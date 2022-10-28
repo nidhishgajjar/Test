@@ -82,17 +82,10 @@ class _HomeViewState extends State<HomeView> {
                   if (snapshot.hasData) {
                     final allRides = snapshot.data as Iterable<CloudRide>;
                     return UpcomingRidesView(
-                      rides: allRides.where(
-                        (element) => true,
-                      ),
+                      rides: allRides.where((element) => true),
                       onCancelRide: (ride) async {
-                        await _ridesService.updateRide(
+                        await _ridesService.updateCancellationStatus(
                           documentId: ride.documentId,
-                          datesDropOff: ride.datesDropOff,
-                          locationDropOff: ride.locationDropOff,
-                          locationPickup: ride.locationPickup,
-                          timeDropOff: ride.timeDropOff,
-                          timePickUp: ride.timePickUp,
                           cancellationStatus: true,
                         );
                       },
@@ -147,7 +140,10 @@ class _HomeViewState extends State<HomeView> {
                         }
 
                         final remainder = allowedRides - counter;
-
+                        _userProfileService.updateUserInfo(
+                          documentId: retrieveDocument.documentId,
+                          remainingRides: remainder,
+                        );
                         return Center(
                           child: Stack(
                             children: [

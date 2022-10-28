@@ -19,7 +19,7 @@ class CloudRide {
   final bool cancellationStatus;
   final bool completion;
   final Timestamp bookingTime;
-  final bool repeatBooking;
+  final String repeatBooking;
   final int numOfRides;
   final List daysSelected;
 

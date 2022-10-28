@@ -169,34 +169,17 @@ class _BookingViewState extends State<BookingView> {
       return;
     }
 
-    // final typeString = _bookingBoolController.text;
+    final typeString = _bookingBoolController.text;
 
     final pickUp = _pickUpController.text;
     final dropOff = _dropOffController.text;
     final pickUpTimeApprox = _timePickUpController.text;
     final dropOffTime = _timeDropOffController.text;
     final singleDropOffDate = _dateDropOffController.text;
-    final monDropOffDates = _monRepeatDatesController.text;
-    final tuesDropOffDates = _tuesRepeatDatesController.text;
-    final wedDropOffDates = _wedRepeatDatesController.text;
-    final thursDropOffDates = _thursRepeatDatesController.text;
-    final friDropOffDates = _friRepeatDatesController.text;
-    final satDropOffDates = _satRepeatDatesController.text;
-    final sunDropOffDates = _sunRepeatDatesController.text;
 
     List dates = [
       singleDropOffDate,
-      monDropOffDates,
-      tuesDropOffDates,
-      wedDropOffDates,
-      thursDropOffDates,
-      friDropOffDates,
-      satDropOffDates,
-      sunDropOffDates,
     ];
-    if (dates.isEmpty) {}
-
-    // List days = [_daysSelectedController.text];
 
     List total = [
       _monSelectedDates.length,
@@ -212,16 +195,66 @@ class _BookingViewState extends State<BookingView> {
     if (count == 0) count = count + 1;
 
     await _ridesService.updateSingleRide(
+        documentId: ride.documentId,
+        locationPickup: pickUp,
+        locationDropOff: dropOff,
+        timePickUp: "$pickUpTimeApprox (approx). We'll confirm shortly.",
+        timeDropOff: dropOffTime,
+        datesDropOff: dates,
+        repeatBooking: typeString);
+  }
+
+  void _repeatFieldListener() async {
+    final ride = _ride;
+    if (ride == null) {
+      return;
+    }
+
+    final typeString = _bookingBoolController.text;
+
+    final pickUpTimeApprox = _timePickUpController.text;
+    final dropOffTime = _timeDropOffController.text;
+    final monDropOffDates = _monRepeatDatesController.text;
+    final tuesDropOffDates = _tuesRepeatDatesController.text;
+    final wedDropOffDates = _wedRepeatDatesController.text;
+    final thursDropOffDates = _thursRepeatDatesController.text;
+    final friDropOffDates = _friRepeatDatesController.text;
+    final satDropOffDates = _satRepeatDatesController.text;
+    final sunDropOffDates = _sunRepeatDatesController.text;
+
+    List dates = [
+      monDropOffDates,
+      tuesDropOffDates,
+      wedDropOffDates,
+      thursDropOffDates,
+      friDropOffDates,
+      satDropOffDates,
+      sunDropOffDates,
+    ];
+
+    List days = [_daysSelectedController.text];
+
+    List total = [
+      _monSelectedDates.length,
+      _tuesSelectedDates.length,
+      _wedSelectedDates.length,
+      _thursSelectedDates.length,
+      _friSelectedDates.length,
+      _satSelectedDates.length,
+      _sunSelectedDates.length,
+    ];
+
+    int count = total.reduce((value, element) => value + element);
+    if (count == 0) count = count + 1;
+
+    await _ridesService.updateRepeatRide(
       documentId: ride.documentId,
-      locationPickup: pickUp,
-      locationDropOff: dropOff,
       timePickUp: "$pickUpTimeApprox (approx). We'll confirm shortly.",
       timeDropOff: dropOffTime,
       datesDropOff: dates,
-      // cancellationStatus: false,
-      // repeatBooking: typeString,
-      // numOfRides: count,
-      // daysSelected: days,
+      repeatBooking: typeString,
+      numOfRides: count,
+      daysSelected: days,
     );
   }
 
@@ -230,29 +263,28 @@ class _BookingViewState extends State<BookingView> {
     _pickUpController.addListener(_pickUpDropOffControllerListener);
     _dropOffController.removeListener(_pickUpDropOffControllerListener);
     _dropOffController.addListener(_pickUpDropOffControllerListener);
-    _timeDropOffController.removeListener(_pickUpDropOffControllerListener);
-    _timeDropOffController.addListener(_pickUpDropOffControllerListener);
+    _timeDropOffController.removeListener(_repeatFieldListener);
+    _timeDropOffController.addListener(_repeatFieldListener);
     _dateDropOffController.removeListener(_pickUpDropOffControllerListener);
     _dateDropOffController.addListener(_pickUpDropOffControllerListener);
-    _monRepeatDatesController.removeListener(_pickUpDropOffControllerListener);
-    _monRepeatDatesController.addListener(_pickUpDropOffControllerListener);
-    _tuesRepeatDatesController.removeListener(_pickUpDropOffControllerListener);
-    _tuesRepeatDatesController.addListener(_pickUpDropOffControllerListener);
-    _wedRepeatDatesController.removeListener(_pickUpDropOffControllerListener);
-    _wedRepeatDatesController.addListener(_pickUpDropOffControllerListener);
-    _thursRepeatDatesController
-        .removeListener(_pickUpDropOffControllerListener);
-    _thursRepeatDatesController.addListener(_pickUpDropOffControllerListener);
-    _friRepeatDatesController.removeListener(_pickUpDropOffControllerListener);
-    _friRepeatDatesController.addListener(_pickUpDropOffControllerListener);
-    _satRepeatDatesController.removeListener(_pickUpDropOffControllerListener);
-    _satRepeatDatesController.addListener(_pickUpDropOffControllerListener);
-    _sunRepeatDatesController.removeListener(_pickUpDropOffControllerListener);
-    _sunRepeatDatesController.addListener(_pickUpDropOffControllerListener);
-    _daysSelectedController.removeListener(_pickUpDropOffControllerListener);
-    _daysSelectedController.addListener(_pickUpDropOffControllerListener);
-    _bookingBoolController.removeListener(_pickUpDropOffControllerListener);
-    _bookingBoolController.addListener(_pickUpDropOffControllerListener);
+    _monRepeatDatesController.removeListener(_repeatFieldListener);
+    _monRepeatDatesController.addListener(_repeatFieldListener);
+    _tuesRepeatDatesController.removeListener(_repeatFieldListener);
+    _tuesRepeatDatesController.addListener(_repeatFieldListener);
+    _wedRepeatDatesController.removeListener(_repeatFieldListener);
+    _wedRepeatDatesController.addListener(_repeatFieldListener);
+    _thursRepeatDatesController.removeListener(_repeatFieldListener);
+    _thursRepeatDatesController.addListener(_repeatFieldListener);
+    _friRepeatDatesController.removeListener(_repeatFieldListener);
+    _friRepeatDatesController.addListener(_repeatFieldListener);
+    _satRepeatDatesController.removeListener(_repeatFieldListener);
+    _satRepeatDatesController.addListener(_repeatFieldListener);
+    _sunRepeatDatesController.removeListener(_repeatFieldListener);
+    _sunRepeatDatesController.addListener(_repeatFieldListener);
+    _daysSelectedController.removeListener(_repeatFieldListener);
+    _daysSelectedController.addListener(_repeatFieldListener);
+    _bookingBoolController.removeListener(_repeatFieldListener);
+    _bookingBoolController.addListener(_repeatFieldListener);
   }
 
   Future<CloudRide> createABookingRequest(BuildContext context) async {
@@ -604,7 +636,6 @@ class _BookingViewState extends State<BookingView> {
   }
 
   Row filterChipsDays() {
-    _dateDropOffController.clear();
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,

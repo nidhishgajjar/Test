@@ -10,12 +10,28 @@ import 'package:test/services/cloud/users/cloud_user_profile.dart';
 import 'package:test/services/cloud/users/firebase_cloud_storage_user_profile.dart';
 import 'package:test/services/place/bloc/application_bloc.dart';
 import 'package:test/views/home/listbuilder/upcoming_rides_list.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 // typedef UserCallBack = void Function(CloudUserProfile user);
 
-extension Count<T extends Iterable> on Stream<T> {
-  Stream<int> get getLength => map((event) => event.length);
+// extension Count<T extends Iterable> on Stream<T> {
+//   Stream<int> get getLength => map((event) => event.length);
+// }
+
+final Uri _subscribeStripeUrl =
+    Uri.parse('https://billing.stripe.com/p/login/test_bIY3eh8dubZ05PO9AA');
+
+Future<void> _launchUrl() async {
+  try {
+    if (!await launchUrl(
+      _subscribeStripeUrl,
+      mode: LaunchMode.inAppWebView,
+    )) {
+    } else {
+      throw "could not launch $_subscribeStripeUrl";
+    }
+  } catch (_) {}
 }
 
 class HomeView extends StatefulWidget {
@@ -241,7 +257,7 @@ class _HomeViewState extends State<HomeView> {
                                         color: uniqartPrimary,
                                         padding: EdgeInsets.zero,
                                         borderRadius: BorderRadius.circular(10),
-                                        onPressed: () {},
+                                        onPressed: _launchUrl,
                                         child: const Text(
                                           'SUBSCRIBE',
                                           style: TextStyle(

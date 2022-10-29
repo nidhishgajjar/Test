@@ -4,17 +4,17 @@ import 'package:test/services/auth/bloc/auth_bloc.dart';
 import 'package:test/utilities/dialogs/logout_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-final Uri _url = Uri.parse('https://flutter.dev');
+final Uri _customerPortalStripe =
+    Uri.parse('https://billing.stripe.com/p/login/test_bIY3eh8dubZ05PO9AA');
 
-void _launchUrl() async {
+Future<void> _launchUrl() async {
   try {
-    if (!await canLaunchUrl(_url)) {
-      await launchUrl(
-        _url,
-        mode: LaunchMode.inAppWebView,
-      );
+    if (!await launchUrl(
+      _customerPortalStripe,
+      mode: LaunchMode.inAppWebView,
+    )) {
     } else {
-      throw "could not launc $_url";
+      throw "could not launch $_customerPortalStripe";
     }
   } catch (_) {}
 }
@@ -66,7 +66,7 @@ class _SettingViewState extends State<SettingView> {
           ),
           const ElevatedButton(
             onPressed: _launchUrl,
-            child: Text("launch"),
+            child: Text("manage subscription"),
           ),
         ]),
       ),

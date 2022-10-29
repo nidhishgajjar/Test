@@ -129,7 +129,7 @@ class _BookingViewState extends State<BookingView> {
       var pickUpName = place.name;
       var pickUpAddress = place.address;
       _pickUpController.text = "$pickUpName - $pickUpAddress";
-      _inputPickUpController.text = pickUpName;
+      _inputPickUpController.text = "$pickUpName - $pickUpAddress";
       applicationBloc.clearSelectedPickupLocation();
     });
     locationDropOffSubscription =
@@ -137,7 +137,7 @@ class _BookingViewState extends State<BookingView> {
       var dropOffName = place.name;
       var dropOffAddress = place.address;
       _dropOffController.text = "$dropOffName - $dropOffAddress";
-      _inputDropOffController.text = dropOffName;
+      _inputDropOffController.text = "$dropOffName - $dropOffAddress";
       applicationBloc.clearSelectedPickupLocation();
     });
 
@@ -395,9 +395,6 @@ class _BookingViewState extends State<BookingView> {
                     Column(
                       children: [
                         pickUpLocationField(applicationBloc),
-                        const SizedBox(
-                          height: 20,
-                        ),
                         dropOffLocationField(applicationBloc),
                         const SizedBox(
                           height: 20,
@@ -882,8 +879,7 @@ class _BookingViewState extends State<BookingView> {
 
   SizedBox pickUpLocationField(ApplicationBloc applicationBloc) {
     return SizedBox(
-      width: 275,
-      child: TextFormField(
+      child: CupertinoTextFormFieldRow(
         validator: (value) {
           if (value == null || value.isEmpty) {
             return "Please enter pickup location";
@@ -893,32 +889,70 @@ class _BookingViewState extends State<BookingView> {
         autofocus: false,
         focusNode: pickupNode,
         controller: _inputPickUpController,
-        decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(
-              vertical: 0,
-              horizontal: 20,
-            ),
-            prefixIcon: const Icon(Icons.label_rounded),
-            suffixIcon: IconButton(
-              onPressed: () {
-                applicationBloc.clearSelectedPickupLocation();
-                _inputPickUpController.clear();
-              },
-              icon: const Icon(Icons.highlight_off_rounded),
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            labelText: "select pickup location"),
+        textInputAction: TextInputAction.next,
+        enableSuggestions: true,
+        autocorrect: false,
+        keyboardType: TextInputType.emailAddress,
+        placeholder: "select pickup",
         onChanged: (value) => applicationBloc.searchPickUpPlaces(value),
+        prefix: IconButton(
+          onPressed: () {
+            applicationBloc.clearSelectedPickupLocation();
+            _inputPickUpController.clear();
+          },
+          icon: const Icon(Icons.highlight_off_rounded),
+        ),
+        placeholderStyle: const TextStyle(
+          fontSize: 14,
+          color: CupertinoColors.inactiveGray,
+        ),
+        style: const TextStyle(
+          fontSize: 14,
+          color: uniqartOnSurface,
+        ),
+        padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(7),
+          color: CupertinoColors.lightBackgroundGray,
+        ),
+
+        // cursorColor: uniqartOnSurface,
       ),
+      // TextFormField(
+      // validator: (value) {
+      //   if (value == null || value.isEmpty) {
+      //     return "Please enter pickup location";
+      //   }
+      //   return null;
+      // },
+      // autofocus: false,
+      // focusNode: pickupNode,
+      //   controller: _inputPickUpController,
+      //   decoration: InputDecoration(
+      //       contentPadding: const EdgeInsets.symmetric(
+      //         vertical: 0,
+      //         horizontal: 20,
+      //       ),
+      //       prefixIcon: const Icon(Icons.label_rounded),
+      // suffixIcon: IconButton(
+      //   onPressed: () {
+      //     applicationBloc.clearSelectedPickupLocation();
+      //     _inputPickUpController.clear();
+      //   },
+      //   icon: const Icon(Icons.highlight_off_rounded),
+      // ),
+      //       border: OutlineInputBorder(
+      //         borderRadius: BorderRadius.circular(20),
+      //       ),
+      //       labelText: "select pickup location"),
+      // onChanged: (value) => applicationBloc.searchPickUpPlaces(value),
+      // ),
     );
   }
 
   SizedBox dropOffLocationField(ApplicationBloc applicationBloc) {
     return SizedBox(
-      width: 275,
-      child: TextFormField(
+      child: CupertinoTextFormFieldRow(
         validator: (value) {
           if (value == null || value.isEmpty) {
             return "Please enter dropoff location";
@@ -928,23 +962,36 @@ class _BookingViewState extends State<BookingView> {
         autofocus: false,
         focusNode: dropoffNode,
         controller: _inputDropOffController,
-        decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(
-              vertical: 0,
-              horizontal: 20,
-            ),
-            suffixIcon: IconButton(
-              onPressed: () {
-                applicationBloc.clearSelectedDropOffLocation();
-                _inputDropOffController.clear();
-              },
-              icon: const Icon(Icons.clear_rounded),
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            labelText: "select dropoff location"),
+        textInputAction: TextInputAction.done,
+        enableSuggestions: true,
+        autocorrect: false,
+        keyboardType: TextInputType.streetAddress,
+        placeholder: "select dropoff",
+
+        prefix: IconButton(
+          onPressed: () {
+            applicationBloc.clearSelectedDropOffLocation();
+            _inputDropOffController.clear();
+          },
+          icon: const Icon(Icons.highlight_off_rounded),
+        ),
+
         onChanged: (value) => applicationBloc.searchDropOffPlaces(value),
+        placeholderStyle: const TextStyle(
+          fontSize: 14,
+          color: CupertinoColors.inactiveGray,
+        ),
+        style: const TextStyle(
+          fontSize: 14,
+          color: uniqartOnSurface,
+        ),
+        padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(7),
+          color: CupertinoColors.lightBackgroundGray,
+        ),
+
+        // cursorColor: uniqartOnSurface,
       ),
     );
   }

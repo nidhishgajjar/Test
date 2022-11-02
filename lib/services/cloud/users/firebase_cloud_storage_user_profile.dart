@@ -30,7 +30,9 @@ class FirebaseUserCloudStorage {
   }
 
 // Read (view all) rides
-  Stream<Iterable<CloudUserProfile>> userDoc({required String ownerUID}) {
+  Stream<Iterable<CloudUserProfile>> userDoc({
+    required String ownerUID,
+  }) {
     final allUserInfo = userInfo
         .where(ownerUIDFieldName, isEqualTo: ownerUID)
         .snapshots()

@@ -31,7 +31,7 @@ class _BookingViewState extends State<BookingView> {
   late final currentTime = DateFormat.jm().format(datetime);
   late StreamSubscription locationPickUpSubscription;
   late StreamSubscription locationDropOffSubscription;
-  // late StreamSubscription something;
+
   late final FirebaseRidesCloudStorage _ridesService;
   late final FirebaseUserCloudStorage _userProfileService;
   late final TextEditingController _pickUpController;
@@ -44,7 +44,7 @@ class _BookingViewState extends State<BookingView> {
   late final TextEditingController _monRepeatDatesController;
   late final TextEditingController _tuesRepeatDatesController;
   late final TextEditingController _wedRepeatDatesController;
-  late final TextEditingController _thursRepeatDatesController;
+  late final TextEditingController _thuRepeatDatesController;
   late final TextEditingController _friRepeatDatesController;
   late final TextEditingController _satRepeatDatesController;
   late final TextEditingController _sunRepeatDatesController;
@@ -52,12 +52,26 @@ class _BookingViewState extends State<BookingView> {
   late final TextEditingController _bookingBoolController;
 
   final _selectedDays = [];
+
+  final _allUpcomingMonDates = [];
   final _monSelectedDates = [];
-  final _tuesSelectedDates = [];
+
+  final _allUpcomingTueDates = [];
+  final _tueSelectedDates = [];
+
+  final _allUpcomingWedDates = [];
   final _wedSelectedDates = [];
-  final _thursSelectedDates = [];
+
+  final _allUpcomingThuDates = [];
+  final _thuSelectedDates = [];
+
+  final _allUpcomingFriDates = [];
   final _friSelectedDates = [];
+
+  final _allUpcomingSatDates = [];
   final _satSelectedDates = [];
+
+  final _allUpcomingSunDates = [];
   final _sunSelectedDates = [];
 
   late Future<CloudRide> bookingRequest;
@@ -141,9 +155,6 @@ class _BookingViewState extends State<BookingView> {
       applicationBloc.clearSelectedPickupLocation();
     });
 
-    // something =
-    //     applicationBloc.selectedDropOffLocation.stream.listen((place) {});
-
     _pickUpController = TextEditingController();
     _inputPickUpController = TextEditingController();
     _dropOffController = TextEditingController();
@@ -155,7 +166,7 @@ class _BookingViewState extends State<BookingView> {
     _monRepeatDatesController = TextEditingController();
     _tuesRepeatDatesController = TextEditingController();
     _wedRepeatDatesController = TextEditingController();
-    _thursRepeatDatesController = TextEditingController();
+    _thuRepeatDatesController = TextEditingController();
     _friRepeatDatesController = TextEditingController();
     _satRepeatDatesController = TextEditingController();
     _sunRepeatDatesController = TextEditingController();
@@ -176,19 +187,6 @@ class _BookingViewState extends State<BookingView> {
 
     final pickUp = _pickUpController.text;
     final dropOff = _dropOffController.text;
-
-    // List total = [
-    //   _monSelectedDates.length,
-    //   _tuesSelectedDates.length,
-    //   _wedSelectedDates.length,
-    //   _thursSelectedDates.length,
-    //   _friSelectedDates.length,
-    //   _satSelectedDates.length,
-    //   _sunSelectedDates.length,
-    // ];
-
-    // int count = total.reduce((value, element) => value + element);
-    // if (count == 0) count = count + 1;
 
     await _ridesService.updateLocationRide(
       documentId: ride.documentId,
@@ -213,19 +211,6 @@ class _BookingViewState extends State<BookingView> {
       singleDropOffDate,
     ];
 
-    // List total = [
-    //   _monSelectedDates.length,
-    //   _tuesSelectedDates.length,
-    //   _wedSelectedDates.length,
-    //   _thursSelectedDates.length,
-    //   _friSelectedDates.length,
-    //   _satSelectedDates.length,
-    //   _sunSelectedDates.length,
-    // ];
-
-    // int count = total.reduce((value, element) => value + element);
-    // if (count == 0) count = count + 1;
-
     await _ridesService.updateSinglDateTimeRide(
         documentId: ride.documentId,
         timePickUp: "$pickUpTimeApprox (approx). We'll confirm shortly.",
@@ -247,7 +232,7 @@ class _BookingViewState extends State<BookingView> {
     final monDropOffDates = _monRepeatDatesController.text;
     final tuesDropOffDates = _tuesRepeatDatesController.text;
     final wedDropOffDates = _wedRepeatDatesController.text;
-    final thursDropOffDates = _thursRepeatDatesController.text;
+    final thursDropOffDates = _thuRepeatDatesController.text;
     final friDropOffDates = _friRepeatDatesController.text;
     final satDropOffDates = _satRepeatDatesController.text;
     final sunDropOffDates = _sunRepeatDatesController.text;
@@ -266,9 +251,9 @@ class _BookingViewState extends State<BookingView> {
 
     List total = [
       _monSelectedDates.length,
-      _tuesSelectedDates.length,
+      _tueSelectedDates.length,
       _wedSelectedDates.length,
-      _thursSelectedDates.length,
+      _thuSelectedDates.length,
       _friSelectedDates.length,
       _satSelectedDates.length,
       _sunSelectedDates.length,
@@ -303,8 +288,8 @@ class _BookingViewState extends State<BookingView> {
     _tuesRepeatDatesController.addListener(_repeatFieldListener);
     _wedRepeatDatesController.removeListener(_repeatFieldListener);
     _wedRepeatDatesController.addListener(_repeatFieldListener);
-    _thursRepeatDatesController.removeListener(_repeatFieldListener);
-    _thursRepeatDatesController.addListener(_repeatFieldListener);
+    _thuRepeatDatesController.removeListener(_repeatFieldListener);
+    _thuRepeatDatesController.addListener(_repeatFieldListener);
     _friRepeatDatesController.removeListener(_repeatFieldListener);
     _friRepeatDatesController.addListener(_repeatFieldListener);
     _satRepeatDatesController.removeListener(_repeatFieldListener);
@@ -345,7 +330,7 @@ class _BookingViewState extends State<BookingView> {
     _monRepeatDatesController.dispose();
     _tuesRepeatDatesController.dispose();
     _wedRepeatDatesController.dispose();
-    _thursRepeatDatesController.dispose();
+    _thuRepeatDatesController.dispose();
     _friRepeatDatesController.dispose();
     _satRepeatDatesController.dispose();
     _sunRepeatDatesController.dispose();
@@ -403,7 +388,6 @@ class _BookingViewState extends State<BookingView> {
                           children: [
                             Container(
                               height: 500,
-                              // width: double.infinity,
                               decoration: const BoxDecoration(
                                   color: Colors.transparent),
                             ),
@@ -526,211 +510,456 @@ class _BookingViewState extends State<BookingView> {
               final retrieveDocument = doc.elementAt(0);
               final date = retrieveDocument.subExpiryDate;
               final remaining = retrieveDocument.remainingRides;
-              List total = [
-                _monSelectedDates.length,
-                _tuesSelectedDates.length,
-                _wedSelectedDates.length,
-                _thursSelectedDates.length,
-                _friSelectedDates.length,
-                _satSelectedDates.length,
-                _sunSelectedDates.length,
-              ];
-
-              int count = total.reduce((value, element) => value + element);
-              if (count == 0) count = count + 1;
-              int overage = remaining - count;
-              int absOverage = overage.abs();
+              int absOverage = remaining.abs();
 
               final present = DateTime.now();
               final expiryDate = date.toDate();
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: _selectedDays.length,
-                itemBuilder: (context, index) {
-                  final someElement = _selectedDays.elementAt(index);
+              return Column(
+                children: [
+                  if (remaining < 0)
+                    Text(
+                        "You are trying to book $absOverage more than it is available."),
+                  if (remaining >= -4)
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _selectedDays.length,
+                      itemBuilder: (context, index) {
+                        final someElement = _selectedDays.elementAt(index);
 
-                  if (someElement == "Mo" && _monSelectedDates.isEmpty) {
-                    const daySelected = DateTime.monday;
-                    final listDates =
-                        daysBetween(present, expiryDate, daySelected);
-                    if (_monSelectedDates.contains(listDates.elementAt(0))) {
-                      _monSelectedDates.clear();
-                    }
+                        if (someElement == "Mo" &&
+                            _allUpcomingMonDates.isEmpty) {
+                          const daySelected = DateTime.monday;
+                          final listDates =
+                              daysBetween(present, expiryDate, daySelected);
 
-                    for (var i = 0; i < listDates.length; i++) {
-                      {
-                        _monSelectedDates.add(listDates.elementAt(i));
-                      }
-                    }
+                          for (var i = 0; i < listDates.length; i++) {
+                            {
+                              _allUpcomingMonDates.add(listDates.elementAt(i));
+                              _monSelectedDates.add(listDates.elementAt(i));
+                            }
+                          }
+                        } else if (someElement == "Mo" &&
+                            _monRepeatDatesController.text.isEmpty) {
+                          _monRepeatDatesController.text =
+                              _monSelectedDates.reversed.toString();
+                        }
 
-                    _monRepeatDatesController.text =
-                        _monSelectedDates.reversed.toString();
-                  }
+                        if (someElement == "Tu" &&
+                            _allUpcomingTueDates.isEmpty) {
+                          const daySelected = DateTime.tuesday;
+                          final listDates =
+                              daysBetween(present, expiryDate, daySelected);
 
-                  if (someElement == "Tu" && _tuesSelectedDates.isEmpty) {
-                    const daySelected = DateTime.tuesday;
-                    final listDates =
-                        daysBetween(present, expiryDate, daySelected);
+                          for (var i = 0; i < listDates.length; i++) {
+                            {
+                              _allUpcomingTueDates.add(listDates.elementAt(i));
+                              _tueSelectedDates.add(listDates.elementAt(i));
+                            }
+                          }
+                        } else if (someElement == "Tu" &&
+                            _tuesRepeatDatesController.text.isEmpty) {
+                          _tuesRepeatDatesController.text =
+                              _tueSelectedDates.reversed.toString();
+                        }
 
-                    for (var i = 0; i < listDates.length; i++) {
-                      {
-                        _tuesSelectedDates.add(listDates.elementAt(i));
-                      }
-                    }
+                        if (someElement == "We" &&
+                            _allUpcomingWedDates.isEmpty) {
+                          const daySelected = DateTime.wednesday;
+                          final listDates =
+                              daysBetween(present, expiryDate, daySelected);
 
-                    _tuesRepeatDatesController.text =
-                        _tuesSelectedDates.reversed.toString();
-                  }
+                          for (var i = 0; i < listDates.length; i++) {
+                            {
+                              _allUpcomingWedDates.add(listDates.elementAt(i));
+                              _wedSelectedDates.add(listDates.elementAt(i));
+                            }
+                          }
+                        } else if (someElement == "We" &&
+                            _wedRepeatDatesController.text.isEmpty) {
+                          _wedRepeatDatesController.text =
+                              _wedSelectedDates.reversed.toString();
+                        }
 
-                  if (someElement == "We" && _wedSelectedDates.isEmpty) {
-                    const daySelected = DateTime.wednesday;
-                    final listDates =
-                        daysBetween(present, expiryDate, daySelected);
+                        if (someElement == "Th" &&
+                            _allUpcomingThuDates.isEmpty) {
+                          const daySelected = DateTime.thursday;
+                          final listDates =
+                              daysBetween(present, expiryDate, daySelected);
 
-                    for (var i = 0; i < listDates.length; i++) {
-                      {
-                        _wedSelectedDates.add(listDates.elementAt(i));
-                      }
-                    }
-                    _wedRepeatDatesController.text =
-                        _wedSelectedDates.reversed.toString();
-                  }
+                          for (var i = 0; i < listDates.length; i++) {
+                            {
+                              _allUpcomingThuDates.add(listDates.elementAt(i));
+                              _thuSelectedDates.add(listDates.elementAt(i));
+                            }
+                          }
+                        } else if (someElement == "Th" &&
+                            _thuRepeatDatesController.text.isEmpty) {
+                          _thuRepeatDatesController.text =
+                              _thuSelectedDates.reversed.toString();
+                        }
 
-                  if (someElement == "Th" && _thursSelectedDates.isEmpty) {
-                    const daySelected = DateTime.thursday;
-                    final listDates =
-                        daysBetween(present, expiryDate, daySelected);
+                        if (someElement == "Fr" &&
+                            _allUpcomingFriDates.isEmpty) {
+                          const daySelected = DateTime.friday;
+                          final listDates =
+                              daysBetween(present, expiryDate, daySelected);
 
-                    for (var i = 0; i < listDates.length; i++) {
-                      {
-                        _thursSelectedDates.add(listDates.elementAt(i));
-                      }
-                    }
-                    _thursRepeatDatesController.text =
-                        _thursSelectedDates.reversed.toString();
-                  }
+                          for (var i = 0; i < listDates.length; i++) {
+                            {
+                              _allUpcomingFriDates.add(listDates.elementAt(i));
+                              _friSelectedDates.add(listDates.elementAt(i));
+                            }
+                          }
+                        } else if (someElement == "Fr" &&
+                            _friRepeatDatesController.text.isEmpty) {
+                          _friRepeatDatesController.text =
+                              _friSelectedDates.reversed.toString();
+                        }
 
-                  if (someElement == "Fr" && _friSelectedDates.isEmpty) {
-                    const daySelected = DateTime.friday;
-                    final listDates =
-                        daysBetween(present, expiryDate, daySelected);
+                        if (someElement == "Sa" &&
+                            _allUpcomingSatDates.isEmpty) {
+                          const daySelected = DateTime.saturday;
+                          final listDates =
+                              daysBetween(present, expiryDate, daySelected);
 
-                    for (var i = 0; i < listDates.length; i++) {
-                      {
-                        _friSelectedDates.add(listDates.elementAt(i));
-                      }
-                    }
-                    _friRepeatDatesController.text =
-                        _friSelectedDates.reversed.toString();
-                  }
+                          for (var i = 0; i < listDates.length; i++) {
+                            {
+                              _allUpcomingSatDates.add(listDates.elementAt(i));
+                              _satSelectedDates.add(listDates.elementAt(i));
+                            }
+                          }
+                        } else if (someElement == "Sa" &&
+                            _satRepeatDatesController.text.isEmpty) {
+                          _satRepeatDatesController.text =
+                              _satSelectedDates.reversed.toString();
+                        }
 
-                  if (someElement == "Sa" && _satSelectedDates.isEmpty) {
-                    const daySelected = DateTime.saturday;
-                    final listDates =
-                        daysBetween(present, expiryDate, daySelected);
+                        if (someElement == "Su" &&
+                            _allUpcomingSunDates.isEmpty) {
+                          const daySelected = DateTime.sunday;
+                          final listDates =
+                              daysBetween(present, expiryDate, daySelected);
 
-                    for (var i = 0; i < listDates.length; i++) {
-                      {
-                        _satSelectedDates.add(listDates.elementAt(i));
-                      }
-                    }
-                    _satRepeatDatesController.text =
-                        _satSelectedDates.reversed.toString();
-                  }
+                          for (var i = 0; i < listDates.length; i++) {
+                            {
+                              _allUpcomingSunDates.add(listDates.elementAt(i));
+                              _sunSelectedDates.add(listDates.elementAt(i));
+                            }
+                          }
+                        } else if (someElement == "Su" &&
+                            _sunRepeatDatesController.text.isEmpty) {
+                          _sunRepeatDatesController.text =
+                              _sunSelectedDates.reversed.toString();
+                        }
 
-                  if (someElement == "Su" && _sunSelectedDates.isEmpty) {
-                    const daySelected = DateTime.sunday;
-                    final listDates =
-                        daysBetween(present, expiryDate, daySelected);
-
-                    for (var i = 0; i < listDates.length; i++) {
-                      {
-                        _sunSelectedDates.add(listDates.elementAt(i));
-                      }
-                    }
-                    _sunRepeatDatesController.text =
-                        _sunSelectedDates.reversed.toString();
-                  }
-                  // Reverse dats without brackets
-
-                  final reversedMon = _monSelectedDates.reversed;
-                  final monDates = reversedMon.join(", ");
-
-                  final reversedTue = _tuesSelectedDates.reversed;
-                  final tueDates = reversedTue.join(", ");
-
-                  final reversedWed = _wedSelectedDates.reversed;
-                  final wedDates = reversedWed.join(", ");
-
-                  final reversedThu = _thursSelectedDates.reversed;
-                  final thuDates = reversedThu.join(", ");
-
-                  final reversedFri = _friSelectedDates.reversed;
-                  final friDates = reversedFri.join(", ");
-
-                  final reversedSat = _satSelectedDates.reversed;
-                  final satDates = reversedSat.join(", ");
-
-                  final reversedSun = _sunSelectedDates.reversed;
-                  final sunDates = reversedSun.join(", ");
-
-                  return Stack(
-                    children: [
-                      if (count > remaining)
-                        Text(
-                            "You are trying to book $absOverage more than it is available."),
-                      if (someElement == "Mo" && count < remaining)
-                        Row(
+                        return Stack(
                           children: [
-                            const Text("Monday - "),
-                            Text("$monDates "),
+                            if (someElement == "Mo" && remaining >= -4)
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Center(
+                                  child: Wrap(
+                                    spacing: 5,
+                                    alignment: WrapAlignment.start,
+                                    children: [
+                                      for (var item
+                                          in _allUpcomingMonDates.reversed)
+                                        item.toString()
+                                    ].map(
+                                      (dates) {
+                                        return FilterChip(
+                                          backgroundColor: CupertinoColors
+                                              .lightBackgroundGray,
+                                          selectedColor:
+                                              CupertinoColors.systemYellow,
+                                          showCheckmark: false,
+                                          label: Text(dates),
+                                          selected:
+                                              _monSelectedDates.contains(dates),
+                                          onSelected: (val) {
+                                            setState(() {
+                                              if (val) {
+                                                _monSelectedDates.add(dates);
+                                              } else {
+                                                _monSelectedDates
+                                                    .removeWhere((name) {
+                                                  return name == dates;
+                                                });
+                                              }
+                                              _monRepeatDatesController.text =
+                                                  _monSelectedDates.reversed
+                                                      .toString();
+                                            });
+                                          },
+                                        );
+                                      },
+                                    ).toList(),
+                                  ),
+                                ),
+                              ),
+                            if (someElement == "Tu" && remaining >= -4)
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Center(
+                                  child: Wrap(
+                                    spacing: 5,
+                                    alignment: WrapAlignment.start,
+                                    children: [
+                                      for (var item
+                                          in _allUpcomingTueDates.reversed)
+                                        item.toString()
+                                    ].map(
+                                      (dates) {
+                                        return FilterChip(
+                                          backgroundColor: CupertinoColors
+                                              .lightBackgroundGray,
+                                          selectedColor:
+                                              CupertinoColors.systemYellow,
+                                          showCheckmark: false,
+                                          label: Text(dates),
+                                          selected:
+                                              _tueSelectedDates.contains(dates),
+                                          onSelected: (val) {
+                                            setState(() {
+                                              if (val) {
+                                                _tueSelectedDates.add(dates);
+                                              } else {
+                                                _tueSelectedDates
+                                                    .removeWhere((name) {
+                                                  return name == dates;
+                                                });
+                                              }
+                                              _tuesRepeatDatesController.text =
+                                                  _tueSelectedDates.reversed
+                                                      .toString();
+                                            });
+                                          },
+                                        );
+                                      },
+                                    ).toList(),
+                                  ),
+                                ),
+                              ),
+                            if (someElement == "We" && remaining >= 0)
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Center(
+                                  child: Wrap(
+                                    spacing: 5,
+                                    alignment: WrapAlignment.start,
+                                    children: [
+                                      for (var item
+                                          in _allUpcomingWedDates.reversed)
+                                        item.toString()
+                                    ].map(
+                                      (dates) {
+                                        return FilterChip(
+                                          backgroundColor: CupertinoColors
+                                              .lightBackgroundGray,
+                                          selectedColor:
+                                              CupertinoColors.systemYellow,
+                                          showCheckmark: false,
+                                          label: Text(dates),
+                                          selected:
+                                              _wedSelectedDates.contains(dates),
+                                          onSelected: (val) {
+                                            setState(() {
+                                              if (val) {
+                                                _wedSelectedDates.add(dates);
+                                              } else {
+                                                _wedSelectedDates
+                                                    .removeWhere((name) {
+                                                  return name == dates;
+                                                });
+                                              }
+                                              _wedRepeatDatesController.text =
+                                                  _wedSelectedDates.reversed
+                                                      .toString();
+                                            });
+                                          },
+                                        );
+                                      },
+                                    ).toList(),
+                                  ),
+                                ),
+                              ),
+                            if (someElement == "Th" && remaining >= 0)
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Center(
+                                  child: Wrap(
+                                    spacing: 5,
+                                    alignment: WrapAlignment.start,
+                                    children: [
+                                      for (var item
+                                          in _allUpcomingThuDates.reversed)
+                                        item.toString()
+                                    ].map(
+                                      (dates) {
+                                        return FilterChip(
+                                          backgroundColor: CupertinoColors
+                                              .lightBackgroundGray,
+                                          selectedColor:
+                                              CupertinoColors.systemYellow,
+                                          showCheckmark: false,
+                                          label: Text(dates),
+                                          selected:
+                                              _thuSelectedDates.contains(dates),
+                                          onSelected: (val) {
+                                            setState(() {
+                                              if (val) {
+                                                _thuSelectedDates.add(dates);
+                                              } else {
+                                                _thuSelectedDates
+                                                    .removeWhere((name) {
+                                                  return name == dates;
+                                                });
+                                              }
+                                              _thuRepeatDatesController.text =
+                                                  _thuSelectedDates.reversed
+                                                      .toString();
+                                            });
+                                          },
+                                        );
+                                      },
+                                    ).toList(),
+                                  ),
+                                ),
+                              ),
+                            if (someElement == "Fr" && remaining >= 0)
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Center(
+                                  child: Wrap(
+                                    spacing: 5,
+                                    alignment: WrapAlignment.start,
+                                    children: [
+                                      for (var item
+                                          in _allUpcomingFriDates.reversed)
+                                        item.toString()
+                                    ].map(
+                                      (dates) {
+                                        return FilterChip(
+                                          backgroundColor: CupertinoColors
+                                              .lightBackgroundGray,
+                                          selectedColor:
+                                              CupertinoColors.systemYellow,
+                                          showCheckmark: false,
+                                          label: Text(dates),
+                                          selected:
+                                              _friSelectedDates.contains(dates),
+                                          onSelected: (val) {
+                                            setState(() {
+                                              if (val) {
+                                                _friSelectedDates.add(dates);
+                                              } else {
+                                                _friSelectedDates
+                                                    .removeWhere((name) {
+                                                  return name == dates;
+                                                });
+                                              }
+                                              _friRepeatDatesController.text =
+                                                  _friSelectedDates.reversed
+                                                      .toString();
+                                            });
+                                          },
+                                        );
+                                      },
+                                    ).toList(),
+                                  ),
+                                ),
+                              ),
+                            if (someElement == "Sa" && remaining >= 0)
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Center(
+                                  child: Wrap(
+                                    spacing: 5,
+                                    alignment: WrapAlignment.start,
+                                    children: [
+                                      for (var item
+                                          in _allUpcomingSatDates.reversed)
+                                        item.toString()
+                                    ].map(
+                                      (dates) {
+                                        return FilterChip(
+                                          backgroundColor: CupertinoColors
+                                              .lightBackgroundGray,
+                                          selectedColor:
+                                              CupertinoColors.systemYellow,
+                                          showCheckmark: false,
+                                          label: Text(dates),
+                                          selected:
+                                              _satSelectedDates.contains(dates),
+                                          onSelected: (val) {
+                                            setState(() {
+                                              if (val) {
+                                                _satSelectedDates.add(dates);
+                                              } else {
+                                                _satSelectedDates
+                                                    .removeWhere((name) {
+                                                  return name == dates;
+                                                });
+                                              }
+                                              _satRepeatDatesController.text =
+                                                  _satSelectedDates.reversed
+                                                      .toString();
+                                            });
+                                          },
+                                        );
+                                      },
+                                    ).toList(),
+                                  ),
+                                ),
+                              ),
+                            if (someElement == "Su" && remaining >= 0)
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Center(
+                                  child: Wrap(
+                                    spacing: 5,
+                                    alignment: WrapAlignment.start,
+                                    children: [
+                                      for (var item
+                                          in _allUpcomingSunDates.reversed)
+                                        item.toString()
+                                    ].map(
+                                      (dates) {
+                                        return FilterChip(
+                                          backgroundColor: CupertinoColors
+                                              .lightBackgroundGray,
+                                          selectedColor:
+                                              CupertinoColors.systemYellow,
+                                          showCheckmark: false,
+                                          label: Text(dates),
+                                          selected:
+                                              _sunSelectedDates.contains(dates),
+                                          onSelected: (val) {
+                                            setState(() {
+                                              if (val) {
+                                                _sunSelectedDates.add(dates);
+                                              } else {
+                                                _sunSelectedDates
+                                                    .removeWhere((name) {
+                                                  return name == dates;
+                                                });
+                                              }
+                                              _satRepeatDatesController.text =
+                                                  _sunSelectedDates.reversed
+                                                      .toString();
+                                            });
+                                          },
+                                        );
+                                      },
+                                    ).toList(),
+                                  ),
+                                ),
+                              ),
                           ],
-                        ),
-                      if (someElement == "Tu" && count < remaining)
-                        Row(
-                          children: [
-                            const Text("Tuesday - "),
-                            Text("$tueDates "),
-                          ],
-                        ),
-                      if (someElement == "We" && count < remaining)
-                        Row(
-                          children: [
-                            const Text("Wednesday - "),
-                            Text("$wedDates "),
-                          ],
-                        ),
-                      if (someElement == "Th" && count < remaining)
-                        Row(
-                          children: [
-                            const Text("Thursday - "),
-                            Text("$thuDates "),
-                          ],
-                        ),
-                      if (someElement == "Fr" && count < remaining)
-                        Row(
-                          children: [
-                            const Text("Friday - "),
-                            Text("$friDates "),
-                          ],
-                        ),
-                      if (someElement == "Sa" && count < remaining)
-                        Row(
-                          children: [
-                            const Text("Saturday - "),
-                            Text("$satDates "),
-                          ],
-                        ),
-                      if (someElement == "Su" && count < remaining)
-                        Row(
-                          children: [
-                            const Text("Sunday - "),
-                            Text("$sunDates "),
-                          ],
-                        ),
-                    ],
-                  );
-                },
+                        );
+                      },
+                    ),
+                ],
               );
             } else {
               return const CircularProgressIndicator();
@@ -745,55 +974,72 @@ class _BookingViewState extends State<BookingView> {
   Padding filterChipsDays() {
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          "Mo",
-          "Tu",
-          "We",
-          "Th",
-          "Fr",
-          "Sa",
-          "Su",
-        ].map(
-          (days) {
-            return FilterChip(
-              backgroundColor: CupertinoColors.lightBackgroundGray,
-              selectedColor: CupertinoColors.systemYellow,
-              showCheckmark: false,
-              label: Text(days),
-              selected: _selectedDays.contains(days),
-              onSelected: (val) {
-                setState(() {
-                  if (val) {
-                    _selectedDays.add(days);
-                  } else {
-                    _selectedDays.removeWhere((name) {
-                      return name == days;
-                    });
-                  }
-                  _daysSelectedController.text = _selectedDays.toString();
-
-                  _monSelectedDates.clear();
-                  _monRepeatDatesController.clear();
-                  _tuesSelectedDates.clear();
-                  _tuesRepeatDatesController.clear();
-                  _wedSelectedDates.clear();
-                  _wedRepeatDatesController.clear();
-                  _thursSelectedDates.clear();
-                  _thursRepeatDatesController.clear();
-                  _friSelectedDates.clear();
-                  _friRepeatDatesController.clear();
-                  _satSelectedDates.clear();
-                  _satRepeatDatesController.clear();
-                  _sunSelectedDates.clear();
-                  _sunRepeatDatesController.clear();
-                });
-              },
-            );
-          },
-        ).toList(),
+      child: SizedBox(
+        width: double.infinity,
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 5,
+          children: [
+            "Mo",
+            "Tu",
+            "We",
+            "Th",
+            "Fr",
+            "Sa",
+            "Su",
+          ].map(
+            (days) {
+              return FilterChip(
+                backgroundColor: CupertinoColors.lightBackgroundGray,
+                selectedColor: CupertinoColors.systemYellow,
+                showCheckmark: false,
+                label: Text(days),
+                selected: _selectedDays.contains(days),
+                onSelected: (val) {
+                  setState(() {
+                    if (val) {
+                      _selectedDays.add(days);
+                    } else {
+                      _selectedDays.removeWhere((name) {
+                        return name == days;
+                      });
+                      if (days == "Mo") {
+                        _monRepeatDatesController.clear();
+                        _allUpcomingMonDates.clear();
+                        _monSelectedDates.clear();
+                      } else if (days == "Tu") {
+                        _tuesRepeatDatesController.clear();
+                        _allUpcomingTueDates.clear();
+                        _tueSelectedDates.clear();
+                      } else if (days == "We") {
+                        _wedRepeatDatesController.clear();
+                        _allUpcomingWedDates.clear();
+                        _wedSelectedDates.clear();
+                      } else if (days == "Th") {
+                        _thuRepeatDatesController.clear();
+                        _allUpcomingThuDates.clear();
+                        _thuSelectedDates.clear();
+                      } else if (days == "Fr") {
+                        _friRepeatDatesController.clear();
+                        _allUpcomingFriDates.clear();
+                        _friSelectedDates.clear();
+                      } else if (days == "Sa") {
+                        _satRepeatDatesController.clear();
+                        _allUpcomingSatDates.clear();
+                        _satSelectedDates.clear();
+                      } else if (days == "Su") {
+                        _sunRepeatDatesController.clear();
+                        _allUpcomingSunDates.clear();
+                        _sunSelectedDates.clear();
+                      }
+                    }
+                    _daysSelectedController.text = _selectedDays.toString();
+                  });
+                },
+              );
+            },
+          ).toList(),
+        ),
       ),
     );
   }

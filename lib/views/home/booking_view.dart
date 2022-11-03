@@ -11,6 +11,7 @@ import 'package:test/services/cloud/rides/firebase_cloud_storage_rides.dart';
 import 'package:test/services/cloud/users/cloud_user_profile.dart';
 import 'package:test/services/cloud/users/firebase_cloud_storage_user_profile.dart';
 import 'package:test/services/place/bloc/application_bloc.dart';
+import 'package:test/utilities/dialogs/error_dialog.dart';
 
 class BookingView extends StatefulWidget {
   const BookingView({super.key});
@@ -133,7 +134,10 @@ class _BookingViewState extends State<BookingView> {
 
             Navigator.pop(context);
           },
-          child: const Text("Done"),
+          child: const Text(
+            "Done",
+            style: TextStyle(color: uniqartOnSurface),
+          ),
         ),
       ),
     );
@@ -434,7 +438,6 @@ class _BookingViewState extends State<BookingView> {
               return Form(
                 key: _formKey,
                 child: ListView(
-                  physics: const NeverScrollableScrollPhysics(),
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -443,107 +446,112 @@ class _BookingViewState extends State<BookingView> {
                           pickUpLocationField(applicationBloc),
                           dropOffLocationField(applicationBloc),
                           const SizedBox(
-                            height: 20,
+                            height: 10,
                           ),
-                          Stack(
-                            children: [
-                              Container(
-                                height: 200,
-                                decoration: const BoxDecoration(
-                                    color: Colors.transparent),
-                              ),
-                              if (_pickUpController.text.isNotEmpty &&
-                                  _dropOffController.text.isNotEmpty &&
-                                  _inputPickUpController.text.isNotEmpty &&
-                                  _inputDropOffController.text.isNotEmpty &&
-                                  _timePickUpController.text.isNotEmpty)
-                                Positioned(
-                                  top: 35,
-                                  right: 30,
-                                  child: Row(
-                                    children: [
-                                      Switch.adaptive(
-                                          value: _repeatBooking,
-                                          onChanged: (bool value) {
-                                            setState(
-                                                () => _repeatBooking = value);
-                                            _bookingBoolController.text =
-                                                _repeatBooking.toString();
-                                          }),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      const Text("Repeat Rides"),
-                                    ],
-                                  ),
-                                ),
-                              if (_pickUpController.text.isNotEmpty &&
-                                  _dropOffController.text.isNotEmpty &&
-                                  _inputPickUpController.text.isNotEmpty &&
-                                  _inputDropOffController.text.isNotEmpty)
-                                Positioned(
-                                  top: 37,
-                                  left: 10,
-                                  child: timeCupertinoField(),
-                                ),
-                              if (_repeatBooking == true &&
-                                  _pickUpController.text.isNotEmpty &&
-                                  _dropOffController.text.isNotEmpty &&
-                                  _inputPickUpController.text.isNotEmpty &&
-                                  _inputDropOffController.text.isNotEmpty &&
-                                  _timePickUpController.text.isNotEmpty)
-                                Positioned(
-                                  top: 90,
-                                  left: 0,
-                                  right: 0,
-                                  child: Center(
-                                    child: filterChipsDays(),
-                                  ),
-                                ),
-                              if (_repeatBooking == false &&
-                                  _pickUpController.text.isNotEmpty &&
-                                  _dropOffController.text.isNotEmpty &&
-                                  _inputPickUpController.text.isNotEmpty &&
-                                  _inputDropOffController.text.isNotEmpty)
-                                Positioned(
-                                    top: 90,
-                                    left: 10,
-                                    child: dateCupertinoField()),
-                              if (applicationBloc.searchResults.isNotEmpty)
+                          SingleChildScrollView(
+                            child: Stack(
+                              children: [
                                 Container(
-                                  height: 500,
-                                  width: double.infinity,
+                                  height: 325,
                                   decoration: const BoxDecoration(
-                                    color: uniqartSurfaceWhite,
-                                  ),
+                                      color: Colors.transparent),
                                 ),
-                              if (applicationBloc.searchResults.isNotEmpty)
-                                Container(
-                                  child: tempAutoCompleteList(applicationBloc),
-                                )
-                            ],
+                                if (_pickUpController.text.isNotEmpty &&
+                                    _dropOffController.text.isNotEmpty &&
+                                    _inputPickUpController.text.isNotEmpty &&
+                                    _inputDropOffController.text.isNotEmpty)
+                                  Positioned(
+                                    top: 30,
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    child: timeCupertinoField(),
+                                  ),
+                                if (_pickUpController.text.isNotEmpty &&
+                                    _dropOffController.text.isNotEmpty &&
+                                    _inputPickUpController.text.isNotEmpty &&
+                                    _inputDropOffController.text.isNotEmpty &&
+                                    _timePickUpController.text.isNotEmpty)
+                                  Positioned(
+                                    top: 95,
+                                    left: 55,
+                                    child: repeatSwitch(),
+                                  ),
+                                if (_repeatBooking == true &&
+                                    _pickUpController.text.isNotEmpty &&
+                                    _dropOffController.text.isNotEmpty &&
+                                    _inputPickUpController.text.isNotEmpty &&
+                                    _inputDropOffController.text.isNotEmpty &&
+                                    _timePickUpController.text.isNotEmpty)
+                                  Positioned(
+                                    top: 185,
+                                    left: 0,
+                                    right: 0,
+                                    child: Center(
+                                      child: filterChipsDays(),
+                                    ),
+                                  ),
+                                if (_repeatBooking == false &&
+                                    _pickUpController.text.isNotEmpty &&
+                                    _dropOffController.text.isNotEmpty &&
+                                    _inputPickUpController.text.isNotEmpty &&
+                                    _inputDropOffController.text.isNotEmpty)
+                                  Positioned(
+                                      top: 95,
+                                      right: 55,
+                                      child: dateCupertinoField()),
+                                if (applicationBloc.searchResults.isNotEmpty)
+                                  Container(
+                                    height: 500,
+                                    width: double.infinity,
+                                    decoration: const BoxDecoration(
+                                      color: uniqartSurfaceWhite,
+                                    ),
+                                  ),
+                                if (applicationBloc.searchResults.isNotEmpty)
+                                  Container(
+                                    child:
+                                        tempAutoCompleteList(applicationBloc),
+                                  )
+                              ],
+                            ),
                           ),
                           if (_repeatBooking == true &&
                               _pickUpController.text.isNotEmpty &&
                               _dropOffController.text.isNotEmpty &&
                               _inputPickUpController.text.isNotEmpty &&
                               _inputDropOffController.text.isNotEmpty &&
-                              _timePickUpController.text.isNotEmpty)
+                              _timePickUpController.text.isNotEmpty &&
+                              _selectedDays.isNotEmpty)
                             Padding(
-                              padding: const EdgeInsets.all(50.0),
-                              child: Scrollbar(
-                                controller: _scrollController,
-                                thumbVisibility: true,
-                                child: Container(
-                                  height: 175,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(30),
+                              padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                              child: Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 25,
                                   ),
-                                  child: SingleChildScrollView(
-                                      controller: _scrollController,
-                                      child: gettingDatesBasedOnDaysSelected()),
-                                ),
+                                  Scrollbar(
+                                    controller: _scrollController,
+                                    thumbVisibility: true,
+                                    child: Container(
+                                      height: 175,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                      child: SingleChildScrollView(
+                                          controller: _scrollController,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child:
+                                                gettingDatesBasedOnDaysSelected(),
+                                          )),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 45,
+                                  ),
+                                ],
                               ),
                             ),
                         ],
@@ -557,23 +565,102 @@ class _BookingViewState extends State<BookingView> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          if (_repeatBooking == false && _formKey.currentState!.validate()) {
-            Navigator.of(context).pop(homeRoute);
-          } else if (_repeatBooking == true && remaining >= 0) {
-            _ridesService.updateRequestStatus(
-                documentId: _ride!.documentId, requestStatus: true);
-            Navigator.of(context).pop(homeRoute);
-          } else {
-            const Text("Unable to book");
-          }
-        },
-        label: const Text(
-          "create ride",
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.fromLTRB(55, 0, 55, 25),
+        child: CupertinoButton(
+          color: uniqartOnSurface,
+          disabledColor: uniqartBackgroundWhite,
+          padding: EdgeInsets.zero,
+          borderRadius: BorderRadius.circular(20),
+          onPressed: () {
+            if ((_repeatBooking == false &&
+                _formKey.currentState!.validate())) {
+              _ridesService.updateRequestStatus(
+                  documentId: _ride!.documentId, requestStatus: true);
+              Navigator.of(context).pop(homeRoute);
+            } else if ((_repeatBooking == true && remaining >= 0) &&
+                (_monSelectedDates.isNotEmpty ||
+                    _tueSelectedDates.isNotEmpty ||
+                    _wedSelectedDates.isNotEmpty ||
+                    _thuSelectedDates.isNotEmpty ||
+                    _friSelectedDates.isNotEmpty ||
+                    _satSelectedDates.isNotEmpty ||
+                    _sunSelectedDates.isNotEmpty)) {
+              _ridesService.updateRequestStatus(
+                  documentId: _ride!.documentId, requestStatus: true);
+              Navigator.of(context).pop(homeRoute);
+            } else {
+              showErrorDialog(
+                  context, "Unable to proceed without date and time");
+            }
+          },
+          child: const Text(
+            "REQUEST RIDE",
+            style: TextStyle(
+              fontSize: 11,
+              color: uniqartBackgroundWhite,
+              letterSpacing: 1,
+            ),
+          ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: () {
+      //     if ((_repeatBooking == false && _formKey.currentState!.validate())) {
+      //       Navigator.of(context).pop(homeRoute);
+      //     } else if ((_repeatBooking == true && remaining >= 0) &&
+      //         (_monSelectedDates.isNotEmpty ||
+      //             _tueSelectedDates.isNotEmpty ||
+      //             _wedSelectedDates.isNotEmpty ||
+      //             _thuSelectedDates.isNotEmpty ||
+      //             _friSelectedDates.isNotEmpty ||
+      //             _satSelectedDates.isNotEmpty ||
+      //             _sunSelectedDates.isNotEmpty)) {
+      //       _ridesService.updateRequestStatus(
+      //           documentId: _ride!.documentId, requestStatus: true);
+      //       Navigator.of(context).pop(homeRoute);
+      //     } else {
+      //       showErrorDialog(context, "Unable to proceed without date and time");
+      //     }
+      //   },
+      //   label: const Text(
+      //     "create ride",
+      //   ),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  Stack repeatSwitch() {
+    return Stack(
+      children: [
+        Center(
+          child: Container(
+            height: 45,
+            width: 115,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.white,
+            ),
+          ),
+        ),
+        const Positioned(
+          left: 17,
+          top: 11,
+          child: Icon(CupertinoIcons.repeat),
+        ),
+        Positioned(
+          right: 5,
+          top: 0.5,
+          bottom: 0.5,
+          child: Switch.adaptive(
+              value: _repeatBooking,
+              onChanged: (bool value) {
+                setState(() => _repeatBooking = value);
+                _bookingBoolController.text = _repeatBooking.toString();
+              }),
+        ),
+      ],
     );
   }
 
@@ -617,8 +704,11 @@ class _BookingViewState extends State<BookingView> {
               return Column(
                 children: [
                   if (remaining < 0)
-                    Text(
-                        "You are trying to book $absOverage more than it is available."),
+                    Padding(
+                      padding: const EdgeInsets.all(25.0),
+                      child: Text(
+                          "You are trying to book $absOverage more than it is available."),
+                    ),
                   if (remaining >= -4)
                     ListView.builder(
                       shrinkWrap: true,
@@ -774,6 +864,11 @@ class _BookingViewState extends State<BookingView> {
                                           selectedColor: CupertinoColors
                                               .lightBackgroundGray,
                                           label: Text(dates),
+                                          // showCheckmark: true,
+                                          labelStyle: const TextStyle(
+                                            color: uniqartOnSurface,
+                                            fontSize: 10,
+                                          ),
                                           selected:
                                               _monSelectedDates.contains(dates),
                                           onSelected: (val) {
@@ -816,6 +911,10 @@ class _BookingViewState extends State<BookingView> {
                                           selectedColor:
                                               CupertinoColors.systemYellow,
                                           label: Text(dates),
+                                          labelStyle: const TextStyle(
+                                            color: uniqartOnSurface,
+                                            fontSize: 10,
+                                          ),
                                           selected:
                                               _tueSelectedDates.contains(dates),
                                           onSelected: (val) {
@@ -858,6 +957,10 @@ class _BookingViewState extends State<BookingView> {
                                           selectedColor:
                                               CupertinoColors.systemYellow,
                                           label: Text(dates),
+                                          labelStyle: const TextStyle(
+                                            color: uniqartOnSurface,
+                                            fontSize: 10,
+                                          ),
                                           selected:
                                               _wedSelectedDates.contains(dates),
                                           onSelected: (val) {
@@ -900,6 +1003,10 @@ class _BookingViewState extends State<BookingView> {
                                           selectedColor:
                                               CupertinoColors.systemYellow,
                                           label: Text(dates),
+                                          labelStyle: const TextStyle(
+                                            color: uniqartOnSurface,
+                                            fontSize: 10,
+                                          ),
                                           selected:
                                               _thuSelectedDates.contains(dates),
                                           onSelected: (val) {
@@ -942,6 +1049,10 @@ class _BookingViewState extends State<BookingView> {
                                           selectedColor:
                                               CupertinoColors.systemYellow,
                                           label: Text(dates),
+                                          labelStyle: const TextStyle(
+                                            color: uniqartOnSurface,
+                                            fontSize: 10,
+                                          ),
                                           selected:
                                               _friSelectedDates.contains(dates),
                                           onSelected: (val) {
@@ -984,6 +1095,10 @@ class _BookingViewState extends State<BookingView> {
                                           selectedColor:
                                               CupertinoColors.systemYellow,
                                           label: Text(dates),
+                                          labelStyle: const TextStyle(
+                                            color: uniqartOnSurface,
+                                            fontSize: 10,
+                                          ),
                                           selected:
                                               _satSelectedDates.contains(dates),
                                           onSelected: (val) {
@@ -1026,6 +1141,10 @@ class _BookingViewState extends State<BookingView> {
                                           selectedColor:
                                               CupertinoColors.systemYellow,
                                           label: Text(dates),
+                                          labelStyle: const TextStyle(
+                                            color: uniqartOnSurface,
+                                            fontSize: 10,
+                                          ),
                                           selected:
                                               _sunSelectedDates.contains(dates),
                                           onSelected: (val) {
@@ -1065,14 +1184,14 @@ class _BookingViewState extends State<BookingView> {
     );
   }
 
-  Padding filterChipsDays() {
+  filterChipsDays() {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(55, 0, 55, 0),
       child: SizedBox(
         width: double.infinity,
         child: Wrap(
           alignment: WrapAlignment.center,
-          spacing: 40,
+          spacing: 30,
           children: [
             "Mo",
             "Tu",
@@ -1081,6 +1200,7 @@ class _BookingViewState extends State<BookingView> {
             "Fr",
             "Sa",
             "Su",
+            "😎",
           ].map(
             (days) {
               return FilterChip(
@@ -1173,48 +1293,126 @@ class _BookingViewState extends State<BookingView> {
     );
   }
 
-  SizedBox timeCupertinoField() {
-    return SizedBox(
-      width: 150,
-      child: CupertinoTextFormFieldRow(
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return "Please select dropoff time";
-          }
-          return null;
-        },
-        placeholder: DateFormat.jm().format(time),
-        readOnly: true,
-        prefix: const Icon(CupertinoIcons.time),
-        controller: _timeDropOffController,
-        onTap: () => _showDialog(
-          selectTime(),
+  timeCupertinoField() {
+    return Stack(
+      children: [
+        Positioned(
+          left: 55,
+          right: 55,
+          child: Container(
+            height: 45,
+            width: 250,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: uniqartPrimary,
+            ),
+          ),
         ),
-      ),
+        const Positioned(
+          left: 75,
+          top: 13,
+          child: Center(
+            child: Text(
+              "Drop Off",
+              style: TextStyle(
+                color: uniqartOnSurface,
+              ),
+            ),
+          ),
+        ),
+        const Positioned(
+          left: 155,
+          top: 11,
+          child: Center(
+            child: Icon(CupertinoIcons.time),
+          ),
+        ),
+        Positioned(
+          right: 70,
+          top: 8,
+          child: Center(
+            child: SizedBox(
+              width: 100,
+              child: CupertinoTextField(
+                placeholder: DateFormat.jm().format(time),
+                readOnly: true,
+                padding: const EdgeInsets.fromLTRB(17, 5, 17, 5),
+                controller: _timeDropOffController,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: CupertinoColors.lightBackgroundGray,
+                ),
+                onTap: () => _showDialog(
+                  selectTime(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  SizedBox dateCupertinoField() {
-    return SizedBox(
-      width: 275,
-      child: CupertinoTextFormFieldRow(
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return "Please select dropoff date";
-          }
-          return null;
-        },
-        placeholder: DateFormat.MMMEd().format(date),
-        readOnly: true,
-        prefix: const Icon(CupertinoIcons.calendar),
-        controller: _dateDropOffController,
-        onTap: () {
-          _showDialog(
-            selectDate(),
-          );
-        },
-      ),
+  dateCupertinoField() {
+    return Stack(
+      children: [
+        Center(
+          child: Container(
+            height: 45,
+            width: 130,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Positioned(
+          left: -7,
+          top: 0.5,
+          bottom: 0.5,
+          child: SizedBox(
+            width: 150,
+            child: CupertinoTextFormFieldRow(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Please select dropoff date";
+                }
+                return null;
+              },
+              placeholder: DateFormat.MMMEd().format(date),
+              readOnly: true,
+              padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+              controller: _dateDropOffController,
+              onTap: () {
+                _showDialog(
+                  selectDate(),
+                );
+              },
+            ),
+          ),
+        ),
+      ],
     );
+    // SizedBox(
+    //   width: 275,
+    //   child: CupertinoTextFormFieldRow(
+    //     validator: (value) {
+    //       if (value == null || value.isEmpty) {
+    //         return "Please select dropoff date";
+    //       }
+    //       return null;
+    //     },
+    //     placeholder: DateFormat.MMMEd().format(date),
+    //     readOnly: true,
+    //     prefix: const Icon(CupertinoIcons.calendar),
+    //     controller: _dateDropOffController,
+    //     onTap: () {
+    //       _showDialog(
+    //         selectDate(),
+    //       );
+    //     },
+    //   ),
+    // );
   }
 
   pickUpLocationField(ApplicationBloc applicationBloc) {

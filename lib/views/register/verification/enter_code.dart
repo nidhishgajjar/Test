@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test/design/color_constants.dart';
 import 'package:test/services/auth/bloc/auth_bloc.dart';
 
 class EnterCodeView extends StatefulWidget {
@@ -11,6 +13,8 @@ class EnterCodeView extends StatefulWidget {
 
 class _EnterCodeViewState extends State<EnterCodeView> {
   late final TextEditingController _enterCodeController;
+
+  bool _code = false;
 
   @override
   void initState() {
@@ -27,48 +31,86 @@ class _EnterCodeViewState extends State<EnterCodeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Phone Verification"),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded),
-            onPressed: () => context.read<AuthBloc>().add(
-                  const AuthEventLogOut(),
+      appBar: AppBar(
+        backgroundColor: uniqartBackgroundWhite,
+        elevation: 0.0,
+        automaticallyImplyLeading: false,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 50,
+            ),
+            const SizedBox(
+              width: 300,
+              child: Text(
+                "Please enter verification code that you recived via text message.",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: uniqartOnSurface,
+                  height: 2,
                 ),
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              TextFormField(
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CupertinoTextFormFieldRow(
                 controller: _enterCodeController,
-                keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(
-                  label: Text("enter 6 digit code"),
+                enableSuggestions: false,
+                autocorrect: false,
+                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.done,
+                placeholder: "enter 6 digit code",
+                placeholderStyle: const TextStyle(
+                  fontSize: 14,
+                  color: CupertinoColors.inactiveGray,
+                ),
+                style: const TextStyle(fontSize: 14, color: uniqartOnSurface),
+                padding: const EdgeInsets.fromLTRB(100, 55, 100, 0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7),
+                  color: CupertinoColors.lightBackgroundGray,
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _code = value.length >= 6 ? true : false;
+                  });
+                },
+              ),
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            SizedBox(
+              height: 30,
+              width: 100,
+              child: CupertinoButton(
+                color: uniqartOnSurface,
+                disabledColor: uniqartBackgroundWhite,
+                padding: EdgeInsets.zero,
+                borderRadius: BorderRadius.circular(7),
+                onPressed: _code == true
+                    ? () async {
+                        final otp = _enterCodeController.text;
+                        context.read<AuthBloc>().add(
+                              AuthEventVerifyCode(otp),
+                            );
+                      }
+                    : null,
+                child: const Text(
+                  "Verify Code",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: uniqartBackgroundWhite,
+                    letterSpacing: 1,
+                  ),
                 ),
               ),
-
-              TextButton(
-                onPressed: () {
-                  final otp = _enterCodeController.text;
-                  context.read<AuthBloc>().add(
-                        AuthEventVerifyCode(otp),
-                      );
-                  // Navigator.of(context).pushNamed(homeRoute);
-                },
-                child: const Text("Verify Code"),
-              ),
-              // TextButton(
-              //   onPressed: () async {
-              //     context.read<AuthBloc>().add(
-              //           const AuthEventSendCode(_phoneNumber),
-              //         );
-              //   },
-              //   child: const Text(
-              //     "Resend Code"
-              //   ),
-              // )
-            ],
-          ),
-        ));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

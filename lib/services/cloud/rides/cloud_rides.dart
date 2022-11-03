@@ -62,5 +62,5 @@ class CloudRide {
         bookingTime = snapshot.data()[bookingTimeFieldName],
         repeatBooking = snapshot.data()[repeatBookingFieldName],
         numOfRides = snapshot.data()[numberOfRidesFieldName],
-        daysSelected = snapshot.data()[datesDropOffSelectedFieldName];
+        daysSelected = snapshot.data()[daysSelectedFieldName];
 }

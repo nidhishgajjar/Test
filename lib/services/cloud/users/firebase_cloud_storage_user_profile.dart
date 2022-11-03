@@ -52,13 +52,14 @@ class FirebaseUserCloudStorage {
       ownerPhoneNumberFieldName: ownerPhoneNumber,
       ownerDisplayNameFieldName: ownerDisplayName,
       userAccountTypeFieldName: 'regular',
-      ridesLimitFieldName: 00,
+      ridesLimitFieldName: 30,
       subscriberFieldName: false,
       trialFieldName: false,
-      subscriptionStartDateFieldName: null,
-      subscriptionExpiryDateFieldName: Timestamp.now(),
+      subscriptionStartDateFieldName: Timestamp.now(),
+      subscriptionExpiryDateFieldName:
+          DateTime.now().add(const Duration(days: 7)),
       accountCreationTimeStampFieldName: Timestamp.now(),
-      remainingRidesFieldName: 0,
+      remainingRidesFieldName: 30,
     });
 
     final fetchUser = await document.get();
@@ -69,13 +70,13 @@ class FirebaseUserCloudStorage {
       ownerPhoneNumber: ownerPhoneNumber,
       ownerDisplayName: "",
       accountType: "",
-      ridesLimit: 60,
+      ridesLimit: 30,
       subscriber: false,
       trial: false,
-      subStartDate: null,
+      subStartDate: Timestamp.now(),
       subExpiryDate: Timestamp.now(),
       accountCreation: Timestamp.now(),
-      remainingRides: 0,
+      remainingRides: 30,
     );
   }
 }

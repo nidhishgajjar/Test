@@ -66,13 +66,12 @@ class FirebaseAuthProvider implements AuthProvider {
     required String password,
   }) async {
     try {
-      // UserCredential userCredential =
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       final user = currentUser;
-      // final cred = userCredential.user;
+
       if (user != null) {
         return user;
       } else {

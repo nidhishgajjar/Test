@@ -70,7 +70,7 @@ TextTheme _buildUniqartextTheme(TextTheme base) {
         subtitle1: GoogleFonts.lato(
           fontSize: 12,
           fontWeight: FontWeight.w400,
-          letterSpacing: 0.15,
+          letterSpacing: 0.1,
         ),
         subtitle2: GoogleFonts.lato(
           fontSize: 15,
@@ -90,7 +90,7 @@ TextTheme _buildUniqartextTheme(TextTheme base) {
         button: GoogleFonts.lato(
           fontSize: 11,
           fontWeight: FontWeight.w600,
-          letterSpacing: 1.25,
+          letterSpacing: 1,
         ),
         caption: GoogleFonts.lato(
           fontSize: 12,
@@ -100,7 +100,7 @@ TextTheme _buildUniqartextTheme(TextTheme base) {
         overline: GoogleFonts.lato(
           fontSize: 10,
           fontWeight: FontWeight.w400,
-          letterSpacing: 1.5,
+          letterSpacing: 1,
         ),
       )
       .apply(

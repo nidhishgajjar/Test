@@ -63,7 +63,7 @@ class _HomeViewState extends State<HomeView> {
       // key: _scaffoldKey,
       backgroundColor: CupertinoColors.white,
       appBar: AppBar(
-        title: const Text("Uniqart"),
+        title: const Text("UNIQART"),
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
@@ -166,7 +166,7 @@ class _HomeViewState extends State<HomeView> {
                               // Box container
                               Container(
                                 width: double.infinity,
-                                height: 375,
+                                height: 475,
                                 decoration: const BoxDecoration(
                                   color: uniqartBackgroundWhite,
                                 ),
@@ -228,13 +228,13 @@ class _HomeViewState extends State<HomeView> {
 
                               // Text
                               const Positioned(
-                                top: 10,
+                                top: 175,
                                 left: 0,
                                 right: 0,
                                 bottom: 0,
                                 child: Center(
                                   child: Text(
-                                    "remaining rides",
+                                    "Remaining Rides",
                                     style: TextStyle(
                                         fontSize: 13, color: uniqartOnSurface),
                                   ),
@@ -259,7 +259,7 @@ class _HomeViewState extends State<HomeView> {
                                         borderRadius: BorderRadius.circular(10),
                                         onPressed: _launchUrl,
                                         child: const Text(
-                                          'SUBSCRIBE',
+                                          'JOIN',
                                           style: TextStyle(
                                               fontSize: 11,
                                               color: uniqartOnSurface,

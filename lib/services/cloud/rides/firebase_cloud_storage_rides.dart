@@ -38,6 +38,7 @@ class FirebaseRidesCloudStorage {
     required String timeDropOff,
     required List datesDropOff,
     required String repeatBooking,
+    required int numOfRides,
   }) async {
     try {
       await rides.doc(documentId).update({
@@ -45,6 +46,7 @@ class FirebaseRidesCloudStorage {
         timeDropOffFieldName: timeDropOff,
         datesDropOffSelectedFieldName: datesDropOff,
         repeatBookingFieldName: repeatBooking,
+        numberOfRidesFieldName: numOfRides,
       });
     } catch (e) {
       throw CouldNotUpdateRideException();
@@ -89,6 +91,20 @@ class FirebaseRidesCloudStorage {
     }
   }
 
+// Update Cancellation status
+  Future<void> updateRequestStatus({
+    required String documentId,
+    required bool requestStatus,
+  }) async {
+    try {
+      await rides.doc(documentId).update({
+        requestStatusFieldName: requestStatus,
+      });
+    } catch (e) {
+      throw CouldNotUpdateRideException();
+    }
+  }
+
 // Read (view all) rides
   Stream<Iterable<CloudRide>> allRides({
     required String ownerUID,
@@ -119,7 +135,7 @@ class FirebaseRidesCloudStorage {
       locationDropOffFieldName: "",
       locationPickUpFieldName: "",
       tripStatusFieldName: "Requested",
-      requestStatusFieldName: true,
+      requestStatusFieldName: false,
       confirmationStatusFieldName: false,
       cancellationStatusFieldName: false,
       completionFieldName: false,

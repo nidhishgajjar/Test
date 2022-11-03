@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test/design/color_constants.dart';
 import 'package:test/miscellaneous/localizations/loc.dart';
 import 'package:test/services/auth/bloc/auth_bloc.dart';
 import 'package:test/utilities/dialogs/change_password_email.dart';
@@ -13,17 +15,17 @@ class ForgotPasswordView extends StatefulWidget {
 }
 
 class _ForgotPasswordViewState extends State<ForgotPasswordView> {
-  late final TextEditingController _controller;
+  late final TextEditingController _emailController;
 
   @override
   void initState() {
-    _controller = TextEditingController();
+    _emailController = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -33,7 +35,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       listener: (context, state) async {
         if (state is AuthStateForgotPassword) {
           if (state.hasSentEmail) {
-            _controller.clear();
+            _emailController.clear();
             await showChangePasswordDialog(context);
           } else if (state.exception != null) {
             await showErrorDialog(
@@ -58,33 +60,63 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Text(
-                  context.loc.forgot_password_view_prompt,
-                ),
-                SizedBox(
-                  width: 250,
-                  child: TextField(
-                    keyboardType: TextInputType.emailAddress,
-                    autocorrect: false,
-                    autofocus: true,
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      hintText: context.loc.email_text_field_placeholder,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
+                  child: SizedBox(
+                    child: Text(
+                      context.loc.forgot_password_view_prompt,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: uniqartOnSurface,
+                        height: 2,
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 15,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CupertinoTextFormFieldRow(
+                    controller: _emailController,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.done,
+                    placeholder: "enter your email",
+                    placeholderStyle: const TextStyle(
+                      fontSize: 14,
+                      color: CupertinoColors.inactiveGray,
+                    ),
+                    style:
+                        const TextStyle(fontSize: 14, color: uniqartOnSurface),
+                    padding: const EdgeInsets.fromLTRB(50, 55, 50, 50),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                      color: CupertinoColors.lightBackgroundGray,
+                    ),
+                  ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    final email = _controller.text;
-                    context
-                        .read<AuthBloc>()
-                        .add(AuthEventForgotPassword(email: email));
-                  },
-                  child: Text(
-                    context.loc.forgot_password_view_send_me_link,
+                SizedBox(
+                  height: 35,
+                  width: 125,
+                  child: CupertinoButton(
+                    color: uniqartPrimary,
+                    disabledColor: uniqartBackgroundWhite,
+                    padding: EdgeInsets.zero,
+                    borderRadius: BorderRadius.circular(15),
+                    onPressed: () {
+                      final email = _emailController.text;
+                      context
+                          .read<AuthBloc>()
+                          .add(AuthEventForgotPassword(email: email));
+                    },
+                    child: const Text(
+                      "Send Link",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: uniqartOnSurface,
+                        letterSpacing: 1,
+                      ),
+                    ),
                   ),
                 ),
               ],

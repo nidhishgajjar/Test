@@ -17,7 +17,7 @@ class LogInView extends StatefulWidget {
 class _LogInViewState extends State<LogInView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
-  var _passwordVisible = false;
+  var _passwordVisible = true;
   bool _logIn = false;
 
   @override
@@ -26,11 +26,6 @@ class _LogInViewState extends State<LogInView> {
     _email = TextEditingController();
     _password = TextEditingController();
     _passwordVisible;
-    // _password.addListener(() {
-    //   setState(() {
-    //     sumbit = _password.text.isNotEmpty;
-    //   });
-    // });
   }
 
   @override
@@ -65,7 +60,7 @@ class _LogInViewState extends State<LogInView> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: uniqartBackgroundWhite,
           elevation: 0.0,
           automaticallyImplyLeading: false,
         ),
@@ -80,7 +75,6 @@ class _LogInViewState extends State<LogInView> {
                   fontSize: 55,
                 ),
               ),
-
               email(),
               const SizedBox(
                 height: 25,
@@ -104,17 +98,12 @@ class _LogInViewState extends State<LogInView> {
                 ),
               ),
               const SizedBox(
-                height: 175,
+                height: 125,
               ),
-
               registerButton(context),
               const SizedBox(
                 height: 10,
               ),
-              // const Text(
-              //   "New here?",
-              //   style: TextStyle(color: uniqartOnSurface),
-              // ),
             ]),
           ),
         ),
@@ -161,7 +150,10 @@ class _LogInViewState extends State<LogInView> {
         child: const Text(
           'REGISTER',
           style: TextStyle(
-              fontSize: 11, color: uniqartBackgroundWhite, letterSpacing: 1),
+            fontSize: 11,
+            color: uniqartBackgroundWhite,
+            letterSpacing: 1,
+          ),
         ),
       ),
     );
@@ -207,6 +199,7 @@ class _LogInViewState extends State<LogInView> {
           controller: _password,
           enableSuggestions: false,
           obscureText: _passwordVisible,
+          textInputAction: TextInputAction.done,
           autocorrect: false,
           keyboardType: TextInputType.visiblePassword,
           placeholder: "enter your password",

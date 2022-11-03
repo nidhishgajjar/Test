@@ -38,7 +38,7 @@ class _SettingViewState extends State<SettingView> {
         padding: const EdgeInsets.symmetric(),
         child: ListView(children: [
           const SizedBox(
-            height: 30,
+            height: 15,
           ),
           GestureDetector(
             onTap: () async {
@@ -49,25 +49,54 @@ class _SettingViewState extends State<SettingView> {
                     );
               }
             },
-            child: Row(
-              children: const [
-                SizedBox(
-                  width: 30,
-                ),
-                Icon(
-                  Icons.logout_rounded,
-                ),
-                SizedBox(
-                  width: 25,
-                ),
-                Text("Log Out")
-              ],
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Row(
+                children: const [
+                  SizedBox(
+                    width: 30,
+                  ),
+                  Icon(
+                    Icons.logout_rounded,
+                  ),
+                  SizedBox(
+                    width: 25,
+                  ),
+                  Text("Log Out")
+                ],
+              ),
             ),
           ),
-          const ElevatedButton(
-            onPressed: _launchUrl,
-            child: Text("manage subscription"),
+          const Divider(
+            thickness: 0.5,
           ),
+          GestureDetector(
+            onTap: _launchUrl,
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Row(
+                children: const [
+                  SizedBox(
+                    width: 30,
+                  ),
+                  Icon(
+                    Icons.subscriptions_rounded,
+                  ),
+                  SizedBox(
+                    width: 25,
+                  ),
+                  Text("Manage Subscription")
+                ],
+              ),
+            ),
+          ),
+          const Divider(
+            thickness: 0.5,
+          ),
+          // const ElevatedButton(
+          //   onPressed: _launchUrl,
+          //   child: Text("manage subscription"),
+          // ),
         ]),
       ),
     );

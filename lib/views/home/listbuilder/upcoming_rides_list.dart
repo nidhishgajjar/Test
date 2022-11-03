@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test/design/color_constants.dart';
 import 'package:test/services/cloud/rides/cloud_rides.dart';
+import 'package:test/services/cloud/rides/cloud_rides_constants.dart';
 import 'package:test/utilities/dialogs/cancel_booking_dialog.dart';
 
 typedef RideCallback = void Function(CloudRide ride);
@@ -25,7 +26,18 @@ class UpcomingRidesView extends StatelessWidget {
       itemBuilder: (context, index) {
         final ride = rides.elementAt(index);
         final pickupTime = ride.timePickUp;
+        final pickupLocation = ride.locationPickup;
         final dropoffTime = ride.timeDropOff;
+        final dropoffLocation = ride.locationDropOff;
+        final datesList = ride.datesDropOff;
+
+        final dates = datesList.join("");
+        final date = dates.replaceAll(new RegExp(r"\p{P}", unicode: true), " ");
+
+        final daysList = ride.daysSelected;
+        final days = daysList.reduce((value, element) => value + element);
+        final day = days.replaceAll(new RegExp(r"\p{P}", unicode: true), "");
+
         final status = ride.tripStatus;
 
         return Container(
@@ -38,7 +50,7 @@ class UpcomingRidesView extends StatelessWidget {
             child: Stack(
               children: [
                 const SizedBox(
-                  height: 150,
+                  height: 375,
                 ),
                 Positioned(
                   top: 15,
@@ -46,36 +58,168 @@ class UpcomingRidesView extends StatelessWidget {
                   child: Text(
                     "$status ",
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 15,
                       color: uniqartOnSurface,
                     ),
                   ),
                 ),
+
                 Positioned(
-                  top: 55,
+                  top: 60,
                   left: 20,
-                  child: Text(
-                    "Pick up : $pickupTime ",
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: uniqartOnSurface,
+                  child: SizedBox(
+                    width: 300,
+                    child: Column(
+                      children: [
+                        const Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "Pick Up",
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: uniqartOnSurface,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Time:  $pickupTime ",
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: uniqartOnSurface,
+                              height: 1.3,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(
+                            "Location:  $pickupLocation ",
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: uniqartOnSurface,
+                              height: 1.3,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
+
                 Positioned(
-                  top: 85,
+                  top: 175,
                   left: 20,
-                  child: Text(
-                    "Drop off : $dropoffTime ",
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: uniqartOnSurface,
+                  child: SizedBox(
+                    width: 300,
+                    child: Column(
+                      children: [
+                        const Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "Drop Off",
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: uniqartOnSurface,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Time:  $dropoffTime ",
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: uniqartOnSurface,
+                              height: 1.3,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(
+                            "Location:  $dropoffLocation ",
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: uniqartOnSurface,
+                              height: 1.3,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
+
                 Positioned(
-                    top: 100,
-                    left: 290,
+                  top: 300,
+                  left: 20,
+                  child: SizedBox(
+                    width: 300,
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Dates:$date",
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: uniqartOnSurface,
+                              height: 1.3,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(
+                            "Days:  $day",
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: uniqartOnSurface,
+                              height: 1.3,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Positioned(
+                //   top: 150,
+                //   left: 20,
+                //   child: Wrap(children: [
+                //     SizedBox(
+                //       width: 250,
+                //       child: Text(
+                //         "$pickupLocation ",
+                //         style: const TextStyle(
+                //           fontSize: 11,
+                //           color: uniqartOnSurface,
+                //         ),
+                //       ),
+                //     ),
+                //   ]),
+                // ),
+                Positioned(
+                    top: 5,
+                    right: 5,
                     child: IconButton(
                       icon: const Icon(CupertinoIcons.xmark_circle_fill),
                       onPressed: () async {

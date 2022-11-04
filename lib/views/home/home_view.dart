@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:test/consants/routes.dart';
 import 'package:test/design/color_constants.dart';
@@ -87,6 +89,7 @@ class _HomeViewState extends State<HomeView> {
           const SizedBox(
             height: 10,
           ),
+
           StreamBuilder(
             stream: _ridesService.allRides(
               ownerUID: userId,
@@ -135,6 +138,7 @@ class _HomeViewState extends State<HomeView> {
               final retrieveDocument = doc.elementAt(0);
               final allowedRides = retrieveDocument.ridesLimit;
               final expiryDate = retrieveDocument.subExpiryDate.toDate();
+              bool trial = retrieveDocument.trial;
 
               return StreamBuilder(
                 stream: _ridesService.allRides(
@@ -154,12 +158,15 @@ class _HomeViewState extends State<HomeView> {
                           final count = loopDocs.numOfRides;
                           counter += count;
                         }
+                        final formattedExpiry =
+                            DateFormat.yMMMd().format(expiryDate);
 
                         final remainder = allowedRides - counter;
                         _userProfileService.updateUserInfo(
                           documentId: retrieveDocument.documentId,
                           remainingRides: remainder,
                         );
+
                         return Center(
                           child: Stack(
                             children: [
@@ -178,15 +185,31 @@ class _HomeViewState extends State<HomeView> {
                                 left: 0,
                                 right: 0,
                                 bottom: 75,
-                                child: Center(
-                                  child: Container(
-                                    width: 175,
-                                    height: 175,
-                                    decoration: const BoxDecoration(
-                                      color: CupertinoColors.white,
-                                      shape: BoxShape.circle,
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      child: Center(
+                                        child: CircularPercentIndicator(
+                                          radius: 97,
+                                          lineWidth: 15,
+                                          backgroundColor:
+                                              uniqartBackgroundWhite,
+                                          progressColor: uniqartOnSurface,
+                                          percent: remainder / allowedRides,
+                                          circularStrokeCap:
+                                              CircularStrokeCap.round,
+                                          animation: true,
+                                          center: Container(
+                                            width: 165,
+                                            decoration: const BoxDecoration(
+                                              color: CupertinoColors.white,
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ),
 
@@ -197,7 +220,7 @@ class _HomeViewState extends State<HomeView> {
                                   top: 0,
                                   left: 0,
                                   right: 0,
-                                  bottom: 90,
+                                  bottom: 70,
                                   child: Center(
                                     child: Text(
                                       "00",
@@ -215,7 +238,7 @@ class _HomeViewState extends State<HomeView> {
                                   top: 0,
                                   left: 0,
                                   right: 0,
-                                  bottom: 90,
+                                  bottom: 70,
                                   child: Center(
                                     child: Text(
                                       "$remainder",
@@ -245,7 +268,7 @@ class _HomeViewState extends State<HomeView> {
                               if (remainder <= 0 ||
                                   DateTime.now().isAfter(expiryDate))
                                 Positioned(
-                                  top: 285,
+                                  top: 350,
                                   left: 0,
                                   right: 0,
                                   bottom: 0,
@@ -254,15 +277,45 @@ class _HomeViewState extends State<HomeView> {
                                       height: 25,
                                       width: 225,
                                       child: CupertinoButton(
-                                        color: uniqartPrimary,
+                                        color: Colors.blueAccent,
                                         padding: EdgeInsets.zero,
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(20),
                                         onPressed: _launchUrl,
                                         child: const Text(
-                                          'JOIN',
+                                          'SUBSCRIBE',
                                           style: TextStyle(
                                               fontSize: 11,
-                                              color: uniqartOnSurface,
+                                              color: uniqartBackgroundWhite,
+                                              letterSpacing: 1),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              // Subscribe button with condition
+                              if (DateTime.now().isAfter(expiryDate
+                                      .subtract(const Duration(days: 3))) &&
+                                  DateTime.now().isBefore(expiryDate) &&
+                                  trial == true)
+                                Positioned(
+                                  // top: 0,
+                                  // left: 0,
+                                  // right: 0,
+                                  // bottom: 0,
+                                  child: Center(
+                                    child: SizedBox(
+                                      height: 85,
+                                      width: double.infinity,
+                                      child: CupertinoButton(
+                                        color: Colors.blueAccent,
+                                        padding: const EdgeInsets.all(10),
+                                        borderRadius: BorderRadius.circular(0),
+                                        onPressed: _launchUrl,
+                                        child: Text(
+                                          'Trial ends on $formattedExpiry. Please update your payment information. CLICK HERE! (please ignore if already updated)',
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              color: uniqartBackgroundWhite,
                                               letterSpacing: 1),
                                         ),
                                       ),
@@ -274,7 +327,7 @@ class _HomeViewState extends State<HomeView> {
                               if (remainder > 0 &&
                                   DateTime.now().isBefore(expiryDate))
                                 Positioned(
-                                  top: 285,
+                                  top: 350,
                                   left: 0,
                                   right: 0,
                                   bottom: 0,

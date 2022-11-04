@@ -25,6 +25,7 @@ class UpcomingRidesView extends StatelessWidget {
       itemCount: rides.length,
       itemBuilder: (context, index) {
         final ride = rides.elementAt(index);
+        final status = ride.tripStatus;
         final pickupTime = ride.timePickUp;
         final pickupLocation = ride.locationPickup;
         final dropoffTime = ride.timeDropOff;
@@ -32,192 +33,25 @@ class UpcomingRidesView extends StatelessWidget {
         final datesList = ride.datesDropOff;
 
         final dates = datesList.join("");
-        final date = dates.replaceAll(new RegExp(r"\p{P}", unicode: true), " ");
-
-        final daysList = ride.daysSelected;
-        final days = daysList.reduce((value, element) => value + element);
-        final day = days.replaceAll(new RegExp(r"\p{P}", unicode: true), "");
-
-        final status = ride.tripStatus;
+        // final date = dates.replaceAll(new RegExp(r"\p{P}", unicode: true), " ");
 
         return Container(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-          child: Card(
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            color: uniqartBackgroundWhite,
-            child: Stack(
-              children: [
-                const SizedBox(
-                  height: 375,
-                ),
-                Positioned(
-                  top: 15,
-                  left: 20,
-                  child: Text(
-                    "$status ",
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: uniqartOnSurface,
-                    ),
+          child: SingleChildScrollView(
+            child: Card(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              color: uniqartBackgroundWhite,
+              child: Stack(
+                children: [
+                  // Details Container
+                  Container(
+                    height: 400,
                   ),
-                ),
 
-                Positioned(
-                  top: 60,
-                  left: 20,
-                  child: SizedBox(
-                    width: 300,
-                    child: Column(
-                      children: [
-                        const Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Pick Up",
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: uniqartOnSurface,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Time:  $pickupTime ",
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: uniqartOnSurface,
-                              height: 1.3,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            "Location:  $pickupLocation ",
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: uniqartOnSurface,
-                              height: 1.3,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                Positioned(
-                  top: 175,
-                  left: 20,
-                  child: SizedBox(
-                    width: 300,
-                    child: Column(
-                      children: [
-                        const Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Drop Off",
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: uniqartOnSurface,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Time:  $dropoffTime ",
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: uniqartOnSurface,
-                              height: 1.3,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            "Location:  $dropoffLocation ",
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: uniqartOnSurface,
-                              height: 1.3,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                Positioned(
-                  top: 300,
-                  left: 20,
-                  child: SizedBox(
-                    width: 300,
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Dates:$date",
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: uniqartOnSurface,
-                              height: 1.3,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(
-                            "Days:  $day",
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: uniqartOnSurface,
-                              height: 1.3,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Positioned(
-                //   top: 150,
-                //   left: 20,
-                //   child: Wrap(children: [
-                //     SizedBox(
-                //       width: 250,
-                //       child: Text(
-                //         "$pickupLocation ",
-                //         style: const TextStyle(
-                //           fontSize: 11,
-                //           color: uniqartOnSurface,
-                //         ),
-                //       ),
-                //     ),
-                //   ]),
-                // ),
-                Positioned(
+                  // Cancellation button
+                  Positioned(
                     top: 5,
                     right: 5,
                     child: IconButton(
@@ -229,31 +63,257 @@ class UpcomingRidesView extends StatelessWidget {
                         }
                       },
                       color: CupertinoColors.systemRed,
-                    )),
-              ],
-            ),
+                    ),
+                  ),
 
-            // ListTile(
-            //   title: Text(
-            //     "Ride Status: $status",
-            //     maxLines: 1,
-            //     softWrap: true,
-            //     overflow: TextOverflow.ellipsis,
-            //   ),
-            //   subtitle: Text("Pickup: $pickup"),
-            //   trailing: IconButton(
-            //     icon: const Icon(
-            //       CupertinoIcons.xmark_circle_fill,
-            //       color: CupertinoColors.destructiveRed,
-            //     ),
-            //     onPressed: () async {
-            //       final shouldCancel = await showDeleteDialog(context);
-            //       if (shouldCancel) {
-            //         onCancelRide(ride);
-            //       }
-            //     },
-            //   ),
-            // ),
+                  // Status Display
+                  Positioned(
+                    top: 15,
+                    left: 20,
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: 25,
+                          width: 250,
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
+                        ),
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          top: 0,
+                          child: Center(
+                            child: Text(
+                              "$status ",
+                              style: const TextStyle(
+                                fontSize: 15,
+                                color: uniqartOnSurface,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Pick Up Display
+                  Positioned(
+                    top: 65,
+                    left: 20,
+                    child: SizedBox(
+                      width: 300,
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  height: 25,
+                                  width: 75,
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20))),
+                                ),
+                                const Positioned(
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 0,
+                                  top: 0,
+                                  child: Center(
+                                    child: Text(
+                                      "Pick Up",
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: uniqartOnSurface,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 15, 0, 3),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Time:  $pickupTime ",
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  color: uniqartOnSurface,
+                                  height: 1.3,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 3, 0, 3),
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                "Location:  $pickupLocation ",
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  color: uniqartOnSurface,
+                                  height: 1.3,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Drop Off Display
+                  Positioned(
+                    top: 170,
+                    left: 20,
+                    child: SizedBox(
+                      width: 300,
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  height: 25,
+                                  width: 75,
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20))),
+                                ),
+                                const Positioned(
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 0,
+                                  top: 0,
+                                  child: Center(
+                                    child: Text(
+                                      "Drop Off",
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: uniqartOnSurface,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 15, 0, 3),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Time:  $dropoffTime ",
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  color: uniqartOnSurface,
+                                  height: 1.3,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 3, 0, 3),
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                "Location:  $dropoffLocation ",
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  color: uniqartOnSurface,
+                                  height: 1.3,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Selected Dates Display
+                  Positioned(
+                    top: 275,
+                    left: 20,
+                    child: SizedBox(
+                      width: 300,
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  height: 25,
+                                  width: 75,
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20))),
+                                ),
+                                const Positioned(
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 0,
+                                  top: 0,
+                                  child: Center(
+                                    child: Text(
+                                      "Date/s",
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: uniqartOnSurface,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 15, 0, 3),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "$dates ",
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: uniqartOnSurface,
+                                  height: 1.3,
+                                ),
+                              ),
+                            ),
+                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.fromLTRB(8, 3, 0, 3),
+                          //   child: Align(
+                          //     alignment: Alignment.bottomLeft,
+                          //     child: Text(
+                          //       "Location:  $dropoffLocation ",
+                          //       style: const TextStyle(
+                          //         fontSize: 11,
+                          //         color: uniqartOnSurface,
+                          //         height: 1.3,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         );
       },

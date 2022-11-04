@@ -391,36 +391,6 @@ class _BookingViewState extends State<BookingView> {
             );
           },
         ),
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-        //     child: SizedBox(
-        //       height: 60,
-        //       width: 100,
-        //       child: CupertinoButton(
-        //         color: uniqartOnSurface,
-        //         disabledColor: uniqartBackgroundWhite,
-        //         padding: EdgeInsets.zero,
-        //         borderRadius: BorderRadius.circular(20),
-        //         onPressed: () {
-        //           Navigator.of(
-        //             context,
-        //           ).pop(
-        //             homeRoute,
-        //           );
-        //         },
-        //         child: const Text(
-        //           "CUM IN",
-        //           style: TextStyle(
-        //             fontSize: 7,
-        //             color: uniqartBackgroundWhite,
-        //             letterSpacing: 1,
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   )
-        // ],
         backgroundColor: uniqartSurfaceWhite,
         elevation: 0.0,
         automaticallyImplyLeading: false,
@@ -604,30 +574,6 @@ class _BookingViewState extends State<BookingView> {
           ),
         ),
       ),
-      // floatingActionButton: FloatingActionButton.extended(
-      //   onPressed: () {
-      //     if ((_repeatBooking == false && _formKey.currentState!.validate())) {
-      //       Navigator.of(context).pop(homeRoute);
-      //     } else if ((_repeatBooking == true && remaining >= 0) &&
-      //         (_monSelectedDates.isNotEmpty ||
-      //             _tueSelectedDates.isNotEmpty ||
-      //             _wedSelectedDates.isNotEmpty ||
-      //             _thuSelectedDates.isNotEmpty ||
-      //             _friSelectedDates.isNotEmpty ||
-      //             _satSelectedDates.isNotEmpty ||
-      //             _sunSelectedDates.isNotEmpty)) {
-      //       _ridesService.updateRequestStatus(
-      //           documentId: _ride!.documentId, requestStatus: true);
-      //       Navigator.of(context).pop(homeRoute);
-      //     } else {
-      //       showErrorDialog(context, "Unable to proceed without date and time");
-      //     }
-      //   },
-      //   label: const Text(
-      //     "create ride",
-      //   ),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -728,6 +674,8 @@ class _BookingViewState extends State<BookingView> {
                               _allUpcomingMonDates.add(listDates.elementAt(i));
                               _monSelectedDates.add(listDates.elementAt(i));
                             }
+                            _monRepeatDatesController.text =
+                                _monSelectedDates.reversed.toString();
                           }
                         } else if (someElement == "Mo" &&
                             _monRepeatDatesController.text.isEmpty) {
@@ -746,6 +694,8 @@ class _BookingViewState extends State<BookingView> {
                               _allUpcomingTueDates.add(listDates.elementAt(i));
                               _tueSelectedDates.add(listDates.elementAt(i));
                             }
+                            _tuesRepeatDatesController.text =
+                                _tueSelectedDates.reversed.toString();
                           }
                         } else if (someElement == "Tu" &&
                             _tuesRepeatDatesController.text.isEmpty) {
@@ -764,6 +714,8 @@ class _BookingViewState extends State<BookingView> {
                               _allUpcomingWedDates.add(listDates.elementAt(i));
                               _wedSelectedDates.add(listDates.elementAt(i));
                             }
+                            _wedRepeatDatesController.text =
+                                _wedSelectedDates.reversed.toString();
                           }
                         } else if (someElement == "We" &&
                             _wedRepeatDatesController.text.isEmpty) {
@@ -782,6 +734,8 @@ class _BookingViewState extends State<BookingView> {
                               _allUpcomingThuDates.add(listDates.elementAt(i));
                               _thuSelectedDates.add(listDates.elementAt(i));
                             }
+                            _thuRepeatDatesController.text =
+                                _thuSelectedDates.reversed.toString();
                           }
                         } else if (someElement == "Th" &&
                             _thuRepeatDatesController.text.isEmpty) {
@@ -800,6 +754,8 @@ class _BookingViewState extends State<BookingView> {
                               _allUpcomingFriDates.add(listDates.elementAt(i));
                               _friSelectedDates.add(listDates.elementAt(i));
                             }
+                            _friRepeatDatesController.text =
+                                _friSelectedDates.reversed.toString();
                           }
                         } else if (someElement == "Fr" &&
                             _friRepeatDatesController.text.isEmpty) {
@@ -818,6 +774,8 @@ class _BookingViewState extends State<BookingView> {
                               _allUpcomingSatDates.add(listDates.elementAt(i));
                               _satSelectedDates.add(listDates.elementAt(i));
                             }
+                            _satRepeatDatesController.text =
+                                _satSelectedDates.reversed.toString();
                           }
                         } else if (someElement == "Sa" &&
                             _satRepeatDatesController.text.isEmpty) {
@@ -836,6 +794,8 @@ class _BookingViewState extends State<BookingView> {
                               _allUpcomingSunDates.add(listDates.elementAt(i));
                               _sunSelectedDates.add(listDates.elementAt(i));
                             }
+                            _sunRepeatDatesController.text =
+                                _sunSelectedDates.reversed.toString();
                           }
                         } else if (someElement == "Su" &&
                             _sunRepeatDatesController.text.isEmpty) {

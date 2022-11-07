@@ -14,7 +14,7 @@ class CloudRide {
   final String locationDropOff;
   final String locationPickup;
   final String tripStatus;
-  final bool? requestStatus;
+  final bool requestStatus;
   final bool confirmationStatus;
   final bool cancellationStatus;
   final bool completion;
@@ -22,6 +22,12 @@ class CloudRide {
   final String repeatBooking;
   final int numOfRides;
   final List daysSelected;
+  final String qratorName;
+  final String conveyance;
+  final String conveyanceColor;
+  final String numPlate;
+  final Timestamp subExpiryDate;
+  final Timestamp subStartDate;
 
   const CloudRide({
     required this.documentId,
@@ -42,6 +48,12 @@ class CloudRide {
     required this.repeatBooking,
     required this.numOfRides,
     required this.daysSelected,
+    required this.qratorName,
+    required this.conveyance,
+    required this.conveyanceColor,
+    required this.numPlate,
+    required this.subExpiryDate,
+    required this.subStartDate,
   });
 
   CloudRide.fromSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot)
@@ -62,5 +74,11 @@ class CloudRide {
         bookingTime = snapshot.data()[bookingTimeFieldName],
         repeatBooking = snapshot.data()[repeatBookingFieldName],
         numOfRides = snapshot.data()[numberOfRidesFieldName],
-        daysSelected = snapshot.data()[daysSelectedFieldName];
+        daysSelected = snapshot.data()[daysSelectedFieldName],
+        qratorName = snapshot.data()[qratorFieldName],
+        conveyance = snapshot.data()[conveyanceFieldName],
+        conveyanceColor = snapshot.data()[conveyanceColorFieldName],
+        numPlate = snapshot.data()[numberPlateFieldName],
+        subExpiryDate = snapshot.data()[subExpiryDateFieldName],
+        subStartDate = snapshot.data()[subStartDateFieldName];
 }

@@ -5,7 +5,7 @@ import 'package:test/utilities/dialogs/logout_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final Uri _customerPortalStripe =
-    Uri.parse('https://billing.stripe.com/p/login/test_bIY3eh8dubZ05PO9AA');
+    Uri.parse('https://billing.stripe.com/p/login/test_6oE16jc4D5PD8PC288');
 
 Future<void> _launchUrl() async {
   try {

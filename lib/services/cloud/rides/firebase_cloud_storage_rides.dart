@@ -91,7 +91,7 @@ class FirebaseRidesCloudStorage {
     }
   }
 
-// Update Cancellation status
+// Update Request status
   Future<void> updateRequestStatus({
     required String documentId,
     required bool requestStatus,
@@ -105,16 +105,48 @@ class FirebaseRidesCloudStorage {
     }
   }
 
-// Read (view all) rides
+// Read all completed rides
+  Stream<Iterable<CloudRide>> allCompletedRides({
+    required String ownerUID,
+  }) {
+    final allCompletedRides = rides
+        .where(ownerUIDFieldName, isEqualTo: ownerUID)
+        .where(cancellationStatusFieldName, isEqualTo: false)
+        .where(completionFieldName, isEqualTo: true)
+        // .orderBy(bookingTimeFieldName, descending: true)
+        .limit(30)
+        .snapshots()
+        .map((event) => event.docs.map((doc) => CloudRide.fromSnapshot(doc)));
+    return allCompletedRides;
+  }
+
+// Read all scheduled rides
+  Stream<Iterable<CloudRide>> allScheduledRides({
+    required String ownerUID,
+  }) {
+    final allScheduledRides = rides
+        .where(ownerUIDFieldName, isEqualTo: ownerUID)
+        .where(cancellationStatusFieldName, isEqualTo: false)
+        .where(completionFieldName, isEqualTo: false)
+        .where(requestStatusFieldName, isEqualTo: true)
+        .orderBy(bookingTimeFieldName, descending: true)
+        .limit(10)
+        .snapshots()
+        .map((event) => event.docs.map((doc) => CloudRide.fromSnapshot(doc)));
+    return allScheduledRides;
+  }
+
+// Read all no cancelled ride (maintain ride count)
   Stream<Iterable<CloudRide>> allRides({
     required String ownerUID,
+    required DateTime expiryDate,
+    required DateTime startDate,
   }) {
     final allRides = rides
         .where(ownerUIDFieldName, isEqualTo: ownerUID)
         .where(cancellationStatusFieldName, isEqualTo: false)
-        .where(requestStatusFieldName, isEqualTo: true)
-        // .orderBy(bookingTimeFieldName, descending: false)
-        .limit(10)
+        .where(bookingTimeFieldName, isGreaterThanOrEqualTo: startDate)
+        .where(bookingTimeFieldName, isLessThanOrEqualTo: expiryDate)
         .snapshots()
         .map((event) => event.docs.map((doc) => CloudRide.fromSnapshot(doc)));
     return allRides;
@@ -143,28 +175,39 @@ class FirebaseRidesCloudStorage {
       repeatBookingFieldName: 'true',
       numberOfRidesFieldName: 1,
       daysSelectedFieldName: [],
+      qratorFieldName: "Nidhish",
+      conveyanceFieldName: "Elantra 2019",
+      conveyanceColorFieldName: "Black",
+      numberPlateFieldName: "CJPK 870",
+      subExpiryDateFieldName: Timestamp.now(),
+      subStartDateFieldName: Timestamp.now(),
     });
     // throw const AlertDialog();
     final fetchRide = await document.get();
     return CloudRide(
-      documentId: fetchRide.id,
-      ownerUID: ownerUID,
-      displayName: displayName,
-      contactNumber: contactNumber,
-      timePickUp: '',
-      timeDropOff: "",
-      datesDropOff: const [],
-      locationDropOff: "",
-      locationPickup: "",
-      tripStatus: "Requested",
-      requestStatus: true,
-      confirmationStatus: false,
-      cancellationStatus: false,
-      completion: false,
-      bookingTime: Timestamp.now(),
-      repeatBooking: 'true',
-      numOfRides: 1,
-      daysSelected: const [],
-    );
+        documentId: fetchRide.id,
+        ownerUID: ownerUID,
+        displayName: displayName,
+        contactNumber: contactNumber,
+        timePickUp: '',
+        timeDropOff: "",
+        datesDropOff: const [],
+        locationDropOff: "",
+        locationPickup: "",
+        tripStatus: "Requested",
+        requestStatus: true,
+        confirmationStatus: false,
+        cancellationStatus: false,
+        completion: false,
+        bookingTime: Timestamp.now(),
+        repeatBooking: 'true',
+        numOfRides: 1,
+        daysSelected: const [],
+        qratorName: '',
+        conveyance: '',
+        conveyanceColor: '',
+        numPlate: '',
+        subExpiryDate: Timestamp.now(),
+        subStartDate: Timestamp.now());
   }
 }

@@ -26,7 +26,7 @@ class _RegisterViewState extends State<RegisterView> {
 
   late final _formKey = GlobalKey<FormState>();
 
-  final domains = ["@uwaterloo.ca", "@mylaurier.ca", "@scigic.com"];
+  final domains = ["@uwaterloo.ca", "@mylaurier.ca"];
   int index = 0;
 
   void _showDialog(Widget child) {
@@ -56,7 +56,7 @@ class _RegisterViewState extends State<RegisterView> {
           },
           child: const Text(
             "Done",
-            style: TextStyle(color: uniqartOnSurface),
+            style: TextStyle(color: uniqartTextField),
           ),
         ),
       ),
@@ -133,12 +133,9 @@ class _RegisterViewState extends State<RegisterView> {
                       "Experience the Qness",
                       style: TextStyle(
                         fontSize: 18,
-                        color: uniqartOnSurface,
+                        color: uniqartPrimary,
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 85,
                   ),
                   displayNameField(),
                   emailField(),
@@ -148,7 +145,7 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                   registerButton(context),
                   const SizedBox(
-                    height: 133,
+                    height: 165,
                   ),
                   alreadyAUserButton(context),
                 ]),
@@ -163,8 +160,7 @@ class _RegisterViewState extends State<RegisterView> {
       height: 25,
       width: 175,
       child: CupertinoButton(
-        color: uniqartOnSurface,
-        disabledColor: uniqartBackgroundWhite,
+        color: uniqartPrimary,
         padding: EdgeInsets.zero,
         borderRadius: BorderRadius.circular(10),
         onPressed: () async {
@@ -175,7 +171,10 @@ class _RegisterViewState extends State<RegisterView> {
         child: const Text(
           "CLICK HERE TO LOGIN",
           style: TextStyle(
-              fontSize: 11, color: uniqartBackgroundWhite, letterSpacing: 1),
+            fontSize: 11,
+            color: uniqartOnSurface,
+            letterSpacing: 1,
+          ),
         ),
       ),
     );
@@ -186,7 +185,7 @@ class _RegisterViewState extends State<RegisterView> {
       height: 30,
       width: 100,
       child: CupertinoButton(
-        color: uniqartOnSurface,
+        color: uniqartPrimary,
         disabledColor: uniqartBackgroundWhite,
         padding: EdgeInsets.zero,
         borderRadius: BorderRadius.circular(7),
@@ -235,7 +234,10 @@ class _RegisterViewState extends State<RegisterView> {
             fontSize: 14,
             color: CupertinoColors.inactiveGray,
           ),
-          style: const TextStyle(fontSize: 14, color: uniqartOnSurface),
+          style: const TextStyle(
+            fontSize: 14,
+            color: uniqartTextField,
+          ),
           padding: const EdgeInsets.fromLTRB(60, 35, 105, 0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(7),
@@ -256,6 +258,7 @@ class _RegisterViewState extends State<RegisterView> {
                   ? CupertinoIcons.eye_slash_fill
                   : CupertinoIcons.eye_fill,
             ),
+            color: uniqartDisabled,
             onPressed: () {
               setState(
                 () {
@@ -285,7 +288,7 @@ class _RegisterViewState extends State<RegisterView> {
           ),
           style: const TextStyle(
             fontSize: 14,
-            color: uniqartOnSurface,
+            color: uniqartTextField,
           ),
           padding: const EdgeInsets.fromLTRB(60, 35, 190, 0),
           decoration: BoxDecoration(
@@ -306,6 +309,9 @@ class _RegisterViewState extends State<RegisterView> {
                   return null;
                 },
                 placeholder: "@ click here",
+                style: const TextStyle(
+                  color: uniqartTextField,
+                ),
                 readOnly: true,
                 controller: _domainController,
                 onTap: () => _showDialog(CupertinoPicker(
@@ -349,9 +355,9 @@ class _RegisterViewState extends State<RegisterView> {
       ),
       style: const TextStyle(
         fontSize: 14,
-        color: uniqartOnSurface,
+        color: uniqartTextField,
       ),
-      padding: const EdgeInsets.fromLTRB(60, 0, 60, 0),
+      padding: const EdgeInsets.fromLTRB(60, 85, 60, 0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(7),
         color: CupertinoColors.lightBackgroundGray,

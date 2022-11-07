@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test/design/color_constants.dart';
 import 'package:test/services/cloud/rides/cloud_rides.dart';
-import 'package:test/services/cloud/rides/cloud_rides_constants.dart';
+
 import 'package:test/utilities/dialogs/cancel_booking_dialog.dart';
 
 typedef RideCallback = void Function(CloudRide ride);
@@ -31,6 +31,13 @@ class UpcomingRidesView extends StatelessWidget {
         final dropoffTime = ride.timeDropOff;
         final dropoffLocation = ride.locationDropOff;
         final datesList = ride.datesDropOff;
+        // final confirmationStatus = ride.confirmationStatus;
+        final bookingTime = ride.bookingTime.toDate();
+        final qratorName = ride.qratorName;
+        final conveyance = ride.conveyance;
+        final color = ride.conveyanceColor;
+        final plate = ride.numPlate;
+        final cancellationLimit = bookingTime.add(const Duration(hours: 12));
 
         final dates = datesList.join("");
         // final date = dates.replaceAll(new RegExp(r"\p{P}", unicode: true), " ");
@@ -42,63 +49,98 @@ class UpcomingRidesView extends StatelessWidget {
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
-              color: uniqartBackgroundWhite,
+              color: uniqartOnSurface,
               child: Stack(
                 children: [
                   // Details Container
                   Container(
-                    height: 400,
+                    height: 450,
                   ),
 
                   // Cancellation button
-                  Positioned(
-                    top: 5,
-                    right: 5,
-                    child: IconButton(
-                      icon: const Icon(CupertinoIcons.xmark_circle_fill),
-                      onPressed: () async {
-                        final shouldCancel = await showDeleteDialog(context);
-                        if (shouldCancel) {
-                          onCancelRide(ride);
-                        }
-                      },
-                      color: CupertinoColors.systemRed,
+                  if (DateTime.now().isBefore(cancellationLimit))
+                    Positioned(
+                      top: 5,
+                      right: 5,
+                      child: IconButton(
+                        icon: const Icon(CupertinoIcons.xmark_circle_fill),
+                        onPressed: () async {
+                          final shouldCancel = await showDeleteDialog(context);
+                          if (shouldCancel) {
+                            onCancelRide(ride);
+                          }
+                        },
+                        color: CupertinoColors.systemRed,
+                      ),
                     ),
-                  ),
 
-                  // Status Display
-                  Positioned(
-                    top: 15,
-                    left: 20,
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: 25,
-                          width: 250,
-                          decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20))),
-                        ),
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          top: 0,
-                          child: Center(
-                            child: Text(
-                              "$status ",
-                              style: const TextStyle(
-                                fontSize: 15,
-                                color: uniqartOnSurface,
+                  // Status Display before cancellation limit
+                  if (DateTime.now().isBefore(cancellationLimit))
+                    Positioned(
+                      top: 15,
+                      left: 20,
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 25,
+                            width: 250,
+                            decoration: const BoxDecoration(
+                                color: uniqartSurfaceWhite,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          ),
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            top: 0,
+                            child: Center(
+                              child: Text(
+                                "$status ",
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  color: uniqartTextField,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
 
+                  // Status Display after cancellation limit
+                  if (DateTime.now().isAfter(cancellationLimit))
+                    Positioned(
+                      top: 15,
+                      left: 20,
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 25,
+                            width: 300,
+                            decoration: const BoxDecoration(
+                                color: uniqartBackgroundWhite,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                          ),
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            top: 0,
+                            child: Center(
+                              child: Text(
+                                "$status ",
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  color: uniqartTextField,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   // Pick Up Display
                   Positioned(
                     top: 65,
@@ -115,7 +157,7 @@ class UpcomingRidesView extends StatelessWidget {
                                   height: 25,
                                   width: 75,
                                   decoration: const BoxDecoration(
-                                      color: Colors.white,
+                                      color: uniqartSurfaceWhite,
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(20))),
                                 ),
@@ -129,7 +171,7 @@ class UpcomingRidesView extends StatelessWidget {
                                       "Pick Up",
                                       style: TextStyle(
                                         fontSize: 13,
-                                        color: uniqartOnSurface,
+                                        color: uniqartTextField,
                                       ),
                                     ),
                                   ),
@@ -159,7 +201,7 @@ class UpcomingRidesView extends StatelessWidget {
                                 "Location:  $pickupLocation ",
                                 style: const TextStyle(
                                   fontSize: 11,
-                                  color: uniqartOnSurface,
+                                  color: uniqartTextField,
                                   height: 1.3,
                                 ),
                               ),
@@ -186,7 +228,7 @@ class UpcomingRidesView extends StatelessWidget {
                                   height: 25,
                                   width: 75,
                                   decoration: const BoxDecoration(
-                                      color: Colors.white,
+                                      color: uniqartSurfaceWhite,
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(20))),
                                 ),
@@ -200,7 +242,7 @@ class UpcomingRidesView extends StatelessWidget {
                                       "Drop Off",
                                       style: TextStyle(
                                         fontSize: 13,
-                                        color: uniqartOnSurface,
+                                        color: uniqartTextField,
                                       ),
                                     ),
                                   ),
@@ -230,7 +272,7 @@ class UpcomingRidesView extends StatelessWidget {
                                 "Location:  $dropoffLocation ",
                                 style: const TextStyle(
                                   fontSize: 11,
-                                  color: uniqartOnSurface,
+                                  color: uniqartTextField,
                                   height: 1.3,
                                 ),
                               ),
@@ -257,7 +299,7 @@ class UpcomingRidesView extends StatelessWidget {
                                   height: 25,
                                   width: 75,
                                   decoration: const BoxDecoration(
-                                      color: Colors.white,
+                                      color: uniqartSurfaceWhite,
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(20))),
                                 ),
@@ -271,7 +313,7 @@ class UpcomingRidesView extends StatelessWidget {
                                       "Date/s",
                                       style: TextStyle(
                                         fontSize: 13,
-                                        color: uniqartOnSurface,
+                                        color: uniqartTextField,
                                       ),
                                     ),
                                   ),
@@ -287,26 +329,70 @@ class UpcomingRidesView extends StatelessWidget {
                                 "$dates ",
                                 style: const TextStyle(
                                   fontSize: 10,
-                                  color: uniqartOnSurface,
+                                  color: uniqartTextField,
                                   height: 1.3,
                                 ),
                               ),
                             ),
                           ),
-                          // Padding(
-                          //   padding: const EdgeInsets.fromLTRB(8, 3, 0, 3),
-                          //   child: Align(
-                          //     alignment: Alignment.bottomLeft,
-                          //     child: Text(
-                          //       "Location:  $dropoffLocation ",
-                          //       style: const TextStyle(
-                          //         fontSize: 11,
-                          //         color: uniqartOnSurface,
-                          //         height: 1.3,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Qurator Details
+                  Positioned(
+                    top: 390,
+                    left: 20,
+                    child: SizedBox(
+                      width: 300,
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.center,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  height: 50,
+                                  width: 300,
+                                  decoration: const BoxDecoration(
+                                      color: uniqartSurfaceWhite,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20))),
+                                ),
+                                Positioned(
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 20,
+                                  top: 0,
+                                  child: Center(
+                                    child: Text(
+                                      "Qrator: $qratorName",
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        color: uniqartTextField,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 0,
+                                  top: 20,
+                                  child: Center(
+                                    child: Text(
+                                      "Vehicle: $color $conveyance ($plate)",
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        color: uniqartTextField,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),

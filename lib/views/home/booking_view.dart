@@ -55,7 +55,6 @@ class _BookingViewState extends State<BookingView> {
   late final ScrollController _scrollController;
 
   int remaining = 0;
-
   final _selectedDays = [];
 
   final _allUpcomingMonDates = [];
@@ -136,7 +135,7 @@ class _BookingViewState extends State<BookingView> {
           },
           child: const Text(
             "Done",
-            style: TextStyle(color: uniqartOnSurface),
+            style: TextStyle(color: uniqartTextField),
           ),
         ),
       ),
@@ -266,6 +265,8 @@ class _BookingViewState extends State<BookingView> {
 
     List days = [_daysSelectedController.text];
 
+    int count = 0;
+
     List total = [
       _monSelectedDates.length,
       _tueSelectedDates.length,
@@ -276,7 +277,7 @@ class _BookingViewState extends State<BookingView> {
       _sunSelectedDates.length,
     ];
 
-    int count = total.reduce((value, element) => value + element);
+    count = total.reduce((value, element) => value + element);
 
     await _ridesService.updateRepeatRide(
       documentId: ride.documentId,
@@ -379,6 +380,7 @@ class _BookingViewState extends State<BookingView> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
+          color: uniqartTextField,
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             _ridesService.deleteRide(
@@ -538,7 +540,7 @@ class _BookingViewState extends State<BookingView> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.fromLTRB(55, 0, 55, 25),
         child: CupertinoButton(
-          color: uniqartOnSurface,
+          color: uniqartPrimary,
           disabledColor: uniqartBackgroundWhite,
           padding: EdgeInsets.zero,
           borderRadius: BorderRadius.circular(20),
@@ -567,9 +569,10 @@ class _BookingViewState extends State<BookingView> {
           child: const Text(
             "REQUEST RIDE",
             style: TextStyle(
-              fontSize: 11,
-              color: uniqartBackgroundWhite,
-              letterSpacing: 1,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: uniqartOnSurface,
+              letterSpacing: 1.5,
             ),
           ),
         ),
@@ -592,8 +595,11 @@ class _BookingViewState extends State<BookingView> {
         ),
         const Positioned(
           left: 17,
-          top: 11,
-          child: Icon(CupertinoIcons.repeat),
+          top: 10,
+          child: Icon(
+            Icons.event_repeat_rounded,
+            color: uniqartPrimary,
+          ),
         ),
         Positioned(
           right: 5,
@@ -621,32 +627,16 @@ class _BookingViewState extends State<BookingView> {
               final allUser = snapshot.data as Iterable<CloudUserProfile>;
               final doc = allUser.where((element) => true);
               final retrieveDocument = doc.elementAt(0);
-              final date = retrieveDocument.subExpiryDate;
+              final dateExpiry = retrieveDocument.subExpiryDate;
               final remainingRides = retrieveDocument.remainingRides;
 
-              int count = 0;
+              remaining = remainingRides;
 
-              if (_repeatBooking == true) {
-                List total = [
-                  _monSelectedDates.length,
-                  _tueSelectedDates.length,
-                  _wedSelectedDates.length,
-                  _thuSelectedDates.length,
-                  _friSelectedDates.length,
-                  _satSelectedDates.length,
-                  _sunSelectedDates.length,
-                ];
-
-                count = total.reduce((value, element) => value + element);
-              } else {
-                count = 1;
-              }
-
-              remaining = remainingRides - count;
-              int absOverage = remaining.abs();
+              int absOverage = remainingRides.abs();
 
               final present = DateTime.now();
-              final expiryDate = date.toDate();
+              final expiryDate = dateExpiry.toDate();
+
               return Column(
                 children: [
                   if (remaining < 0)
@@ -808,324 +798,309 @@ class _BookingViewState extends State<BookingView> {
                             if (someElement == "Mo")
                               Padding(
                                 padding: const EdgeInsets.all(3.0),
-                                child: Center(
-                                  child: Wrap(
-                                    spacing: 5,
-                                    alignment: WrapAlignment.start,
-                                    children: [
-                                      for (var item
-                                          in _allUpcomingMonDates.reversed)
-                                        item.toString()
-                                    ].map(
-                                      (dates) {
-                                        return FilterChip(
-                                          backgroundColor: CupertinoColors
-                                              .extraLightBackgroundGray,
-                                          selectedColor: CupertinoColors
-                                              .lightBackgroundGray,
-                                          label: Text(dates),
-                                          // showCheckmark: true,
-                                          labelStyle: const TextStyle(
-                                            color: uniqartOnSurface,
-                                            fontSize: 10,
-                                          ),
-                                          selected:
-                                              _monSelectedDates.contains(dates),
-                                          onSelected: (val) {
-                                            setState(() {
-                                              if (val) {
-                                                _monSelectedDates.add(dates);
-                                              } else {
-                                                _monSelectedDates
-                                                    .removeWhere((name) {
-                                                  return name == dates;
-                                                });
-                                              }
-                                              _monRepeatDatesController.text =
-                                                  _monSelectedDates.reversed
-                                                      .toString();
-                                            });
-                                          },
-                                        );
-                                      },
-                                    ).toList(),
-                                  ),
+                                child: Wrap(
+                                  spacing: 5,
+                                  alignment: WrapAlignment.start,
+                                  children: [
+                                    for (var item
+                                        in _allUpcomingMonDates.reversed)
+                                      item.toString()
+                                  ].map(
+                                    (dates) {
+                                      return FilterChip(
+                                        backgroundColor: uniqartOnSurface,
+                                        selectedColor:
+                                            CupertinoColors.lightBackgroundGray,
+                                        checkmarkColor: uniqartPrimary,
+                                        label: Text(dates),
+                                        labelStyle: const TextStyle(
+                                          color: uniqartTextField,
+                                          fontSize: 10,
+                                        ),
+                                        selected:
+                                            _monSelectedDates.contains(dates),
+                                        onSelected: (val) {
+                                          setState(() {
+                                            if (val) {
+                                              _monSelectedDates.add(dates);
+                                            } else {
+                                              _monSelectedDates
+                                                  .removeWhere((name) {
+                                                return name == dates;
+                                              });
+                                            }
+                                            _monRepeatDatesController.text =
+                                                _monSelectedDates.reversed
+                                                    .toString();
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ).toList(),
                                 ),
                               ),
                             if (someElement == "Tu")
                               Padding(
                                 padding: const EdgeInsets.all(3.0),
-                                child: Center(
-                                  child: Wrap(
-                                    spacing: 5,
-                                    alignment: WrapAlignment.start,
-                                    children: [
-                                      for (var item
-                                          in _allUpcomingTueDates.reversed)
-                                        item.toString()
-                                    ].map(
-                                      (dates) {
-                                        return FilterChip(
-                                          backgroundColor: CupertinoColors
-                                              .lightBackgroundGray,
-                                          selectedColor:
-                                              CupertinoColors.systemYellow,
-                                          label: Text(dates),
-                                          labelStyle: const TextStyle(
-                                            color: uniqartOnSurface,
-                                            fontSize: 10,
-                                          ),
-                                          selected:
-                                              _tueSelectedDates.contains(dates),
-                                          onSelected: (val) {
-                                            setState(() {
-                                              if (val) {
-                                                _tueSelectedDates.add(dates);
-                                              } else {
-                                                _tueSelectedDates
-                                                    .removeWhere((name) {
-                                                  return name == dates;
-                                                });
-                                              }
-                                              _tuesRepeatDatesController.text =
-                                                  _tueSelectedDates.reversed
-                                                      .toString();
-                                            });
-                                          },
-                                        );
-                                      },
-                                    ).toList(),
-                                  ),
+                                child: Wrap(
+                                  spacing: 5,
+                                  alignment: WrapAlignment.start,
+                                  children: [
+                                    for (var item
+                                        in _allUpcomingTueDates.reversed)
+                                      item.toString()
+                                  ].map(
+                                    (dates) {
+                                      return FilterChip(
+                                        backgroundColor: uniqartOnSurface,
+                                        selectedColor:
+                                            CupertinoColors.lightBackgroundGray,
+                                        checkmarkColor: uniqartPrimary,
+                                        label: Text(dates),
+                                        labelStyle: const TextStyle(
+                                          color: uniqartTextField,
+                                          fontSize: 10,
+                                        ),
+                                        selected:
+                                            _tueSelectedDates.contains(dates),
+                                        onSelected: (val) {
+                                          setState(() {
+                                            if (val) {
+                                              _tueSelectedDates.add(dates);
+                                            } else {
+                                              _tueSelectedDates
+                                                  .removeWhere((name) {
+                                                return name == dates;
+                                              });
+                                            }
+                                            _tuesRepeatDatesController.text =
+                                                _tueSelectedDates.reversed
+                                                    .toString();
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ).toList(),
                                 ),
                               ),
                             if (someElement == "We")
                               Padding(
                                 padding: const EdgeInsets.all(3.0),
-                                child: Center(
-                                  child: Wrap(
-                                    spacing: 5,
-                                    alignment: WrapAlignment.start,
-                                    children: [
-                                      for (var item
-                                          in _allUpcomingWedDates.reversed)
-                                        item.toString()
-                                    ].map(
-                                      (dates) {
-                                        return FilterChip(
-                                          backgroundColor: CupertinoColors
-                                              .lightBackgroundGray,
-                                          selectedColor:
-                                              CupertinoColors.systemYellow,
-                                          label: Text(dates),
-                                          labelStyle: const TextStyle(
-                                            color: uniqartOnSurface,
-                                            fontSize: 10,
-                                          ),
-                                          selected:
-                                              _wedSelectedDates.contains(dates),
-                                          onSelected: (val) {
-                                            setState(() {
-                                              if (val) {
-                                                _wedSelectedDates.add(dates);
-                                              } else {
-                                                _wedSelectedDates
-                                                    .removeWhere((name) {
-                                                  return name == dates;
-                                                });
-                                              }
-                                              _wedRepeatDatesController.text =
-                                                  _wedSelectedDates.reversed
-                                                      .toString();
-                                            });
-                                          },
-                                        );
-                                      },
-                                    ).toList(),
-                                  ),
+                                child: Wrap(
+                                  spacing: 5,
+                                  alignment: WrapAlignment.start,
+                                  children: [
+                                    for (var item
+                                        in _allUpcomingWedDates.reversed)
+                                      item.toString()
+                                  ].map(
+                                    (dates) {
+                                      return FilterChip(
+                                        backgroundColor: uniqartOnSurface,
+                                        selectedColor:
+                                            CupertinoColors.lightBackgroundGray,
+                                        checkmarkColor: uniqartPrimary,
+                                        label: Text(dates),
+                                        labelStyle: const TextStyle(
+                                          color: uniqartTextField,
+                                          fontSize: 10,
+                                        ),
+                                        selected:
+                                            _wedSelectedDates.contains(dates),
+                                        onSelected: (val) {
+                                          setState(() {
+                                            if (val) {
+                                              _wedSelectedDates.add(dates);
+                                            } else {
+                                              _wedSelectedDates
+                                                  .removeWhere((name) {
+                                                return name == dates;
+                                              });
+                                            }
+                                            _wedRepeatDatesController.text =
+                                                _wedSelectedDates.reversed
+                                                    .toString();
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ).toList(),
                                 ),
                               ),
                             if (someElement == "Th")
                               Padding(
                                 padding: const EdgeInsets.all(3.0),
-                                child: Center(
-                                  child: Wrap(
-                                    spacing: 5,
-                                    alignment: WrapAlignment.start,
-                                    children: [
-                                      for (var item
-                                          in _allUpcomingThuDates.reversed)
-                                        item.toString()
-                                    ].map(
-                                      (dates) {
-                                        return FilterChip(
-                                          backgroundColor: CupertinoColors
-                                              .lightBackgroundGray,
-                                          selectedColor:
-                                              CupertinoColors.systemYellow,
-                                          label: Text(dates),
-                                          labelStyle: const TextStyle(
-                                            color: uniqartOnSurface,
-                                            fontSize: 10,
-                                          ),
-                                          selected:
-                                              _thuSelectedDates.contains(dates),
-                                          onSelected: (val) {
-                                            setState(() {
-                                              if (val) {
-                                                _thuSelectedDates.add(dates);
-                                              } else {
-                                                _thuSelectedDates
-                                                    .removeWhere((name) {
-                                                  return name == dates;
-                                                });
-                                              }
-                                              _thuRepeatDatesController.text =
-                                                  _thuSelectedDates.reversed
-                                                      .toString();
-                                            });
-                                          },
-                                        );
-                                      },
-                                    ).toList(),
-                                  ),
+                                child: Wrap(
+                                  spacing: 5,
+                                  alignment: WrapAlignment.start,
+                                  children: [
+                                    for (var item
+                                        in _allUpcomingThuDates.reversed)
+                                      item.toString()
+                                  ].map(
+                                    (dates) {
+                                      return FilterChip(
+                                        backgroundColor: uniqartOnSurface,
+                                        selectedColor:
+                                            CupertinoColors.lightBackgroundGray,
+                                        checkmarkColor: uniqartPrimary,
+                                        label: Text(dates),
+                                        labelStyle: const TextStyle(
+                                          color: uniqartTextField,
+                                          fontSize: 10,
+                                        ),
+                                        selected:
+                                            _thuSelectedDates.contains(dates),
+                                        onSelected: (val) {
+                                          setState(() {
+                                            if (val) {
+                                              _thuSelectedDates.add(dates);
+                                            } else {
+                                              _thuSelectedDates
+                                                  .removeWhere((name) {
+                                                return name == dates;
+                                              });
+                                            }
+                                            _thuRepeatDatesController.text =
+                                                _thuSelectedDates.reversed
+                                                    .toString();
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ).toList(),
                                 ),
                               ),
                             if (someElement == "Fr")
                               Padding(
                                 padding: const EdgeInsets.all(3.0),
-                                child: Center(
-                                  child: Wrap(
-                                    spacing: 5,
-                                    alignment: WrapAlignment.start,
-                                    children: [
-                                      for (var item
-                                          in _allUpcomingFriDates.reversed)
-                                        item.toString()
-                                    ].map(
-                                      (dates) {
-                                        return FilterChip(
-                                          backgroundColor: CupertinoColors
-                                              .lightBackgroundGray,
-                                          selectedColor:
-                                              CupertinoColors.systemYellow,
-                                          label: Text(dates),
-                                          labelStyle: const TextStyle(
-                                            color: uniqartOnSurface,
-                                            fontSize: 10,
-                                          ),
-                                          selected:
-                                              _friSelectedDates.contains(dates),
-                                          onSelected: (val) {
-                                            setState(() {
-                                              if (val) {
-                                                _friSelectedDates.add(dates);
-                                              } else {
-                                                _friSelectedDates
-                                                    .removeWhere((name) {
-                                                  return name == dates;
-                                                });
-                                              }
-                                              _friRepeatDatesController.text =
-                                                  _friSelectedDates.reversed
-                                                      .toString();
-                                            });
-                                          },
-                                        );
-                                      },
-                                    ).toList(),
-                                  ),
+                                child: Wrap(
+                                  spacing: 5,
+                                  alignment: WrapAlignment.start,
+                                  children: [
+                                    for (var item
+                                        in _allUpcomingFriDates.reversed)
+                                      item.toString()
+                                  ].map(
+                                    (dates) {
+                                      return FilterChip(
+                                        backgroundColor: uniqartOnSurface,
+                                        selectedColor:
+                                            CupertinoColors.lightBackgroundGray,
+                                        checkmarkColor: uniqartPrimary,
+                                        label: Text(dates),
+                                        labelStyle: const TextStyle(
+                                          color: uniqartTextField,
+                                          fontSize: 10,
+                                        ),
+                                        selected:
+                                            _friSelectedDates.contains(dates),
+                                        onSelected: (val) {
+                                          setState(() {
+                                            if (val) {
+                                              _friSelectedDates.add(dates);
+                                            } else {
+                                              _friSelectedDates
+                                                  .removeWhere((name) {
+                                                return name == dates;
+                                              });
+                                            }
+                                            _friRepeatDatesController.text =
+                                                _friSelectedDates.reversed
+                                                    .toString();
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ).toList(),
                                 ),
                               ),
                             if (someElement == "Sa")
                               Padding(
                                 padding: const EdgeInsets.all(3.0),
-                                child: Center(
-                                  child: Wrap(
-                                    spacing: 5,
-                                    alignment: WrapAlignment.start,
-                                    children: [
-                                      for (var item
-                                          in _allUpcomingSatDates.reversed)
-                                        item.toString()
-                                    ].map(
-                                      (dates) {
-                                        return FilterChip(
-                                          backgroundColor: CupertinoColors
-                                              .lightBackgroundGray,
-                                          selectedColor:
-                                              CupertinoColors.systemYellow,
-                                          label: Text(dates),
-                                          labelStyle: const TextStyle(
-                                            color: uniqartOnSurface,
-                                            fontSize: 10,
-                                          ),
-                                          selected:
-                                              _satSelectedDates.contains(dates),
-                                          onSelected: (val) {
-                                            setState(() {
-                                              if (val) {
-                                                _satSelectedDates.add(dates);
-                                              } else {
-                                                _satSelectedDates
-                                                    .removeWhere((name) {
-                                                  return name == dates;
-                                                });
-                                              }
-                                              _satRepeatDatesController.text =
-                                                  _satSelectedDates.reversed
-                                                      .toString();
-                                            });
-                                          },
-                                        );
-                                      },
-                                    ).toList(),
-                                  ),
+                                child: Wrap(
+                                  spacing: 5,
+                                  alignment: WrapAlignment.start,
+                                  children: [
+                                    for (var item
+                                        in _allUpcomingSatDates.reversed)
+                                      item.toString()
+                                  ].map(
+                                    (dates) {
+                                      return FilterChip(
+                                        backgroundColor: uniqartOnSurface,
+                                        selectedColor:
+                                            CupertinoColors.lightBackgroundGray,
+                                        checkmarkColor: uniqartPrimary,
+                                        label: Text(dates),
+                                        labelStyle: const TextStyle(
+                                          color: uniqartTextField,
+                                          fontSize: 10,
+                                        ),
+                                        selected:
+                                            _satSelectedDates.contains(dates),
+                                        onSelected: (val) {
+                                          setState(() {
+                                            if (val) {
+                                              _satSelectedDates.add(dates);
+                                            } else {
+                                              _satSelectedDates
+                                                  .removeWhere((name) {
+                                                return name == dates;
+                                              });
+                                            }
+                                            _satRepeatDatesController.text =
+                                                _satSelectedDates.reversed
+                                                    .toString();
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ).toList(),
                                 ),
                               ),
                             if (someElement == "Su")
                               Padding(
                                 padding: const EdgeInsets.all(3.0),
-                                child: Center(
-                                  child: Wrap(
-                                    spacing: 5,
-                                    alignment: WrapAlignment.start,
-                                    children: [
-                                      for (var item
-                                          in _allUpcomingSunDates.reversed)
-                                        item.toString()
-                                    ].map(
-                                      (dates) {
-                                        return FilterChip(
-                                          backgroundColor: CupertinoColors
-                                              .lightBackgroundGray,
-                                          selectedColor:
-                                              CupertinoColors.systemYellow,
-                                          label: Text(dates),
-                                          labelStyle: const TextStyle(
-                                            color: uniqartOnSurface,
-                                            fontSize: 10,
-                                          ),
-                                          selected:
-                                              _sunSelectedDates.contains(dates),
-                                          onSelected: (val) {
-                                            setState(() {
-                                              if (val) {
-                                                _sunSelectedDates.add(dates);
-                                              } else {
-                                                _sunSelectedDates
-                                                    .removeWhere((name) {
-                                                  return name == dates;
-                                                });
-                                              }
-                                              _satRepeatDatesController.text =
-                                                  _sunSelectedDates.reversed
-                                                      .toString();
-                                            });
-                                          },
-                                        );
-                                      },
-                                    ).toList(),
-                                  ),
+                                child: Wrap(
+                                  spacing: 5,
+                                  alignment: WrapAlignment.start,
+                                  children: [
+                                    for (var item
+                                        in _allUpcomingSunDates.reversed)
+                                      item.toString()
+                                  ].map(
+                                    (dates) {
+                                      return FilterChip(
+                                        backgroundColor: uniqartOnSurface,
+                                        selectedColor:
+                                            CupertinoColors.lightBackgroundGray,
+                                        checkmarkColor: uniqartPrimary,
+                                        label: Text(dates),
+                                        labelStyle: const TextStyle(
+                                          color: uniqartTextField,
+                                          fontSize: 10,
+                                        ),
+                                        selected:
+                                            _sunSelectedDates.contains(dates),
+                                        onSelected: (val) {
+                                          setState(() {
+                                            if (val) {
+                                              _sunSelectedDates.add(dates);
+                                            } else {
+                                              _sunSelectedDates
+                                                  .removeWhere((name) {
+                                                return name == dates;
+                                              });
+                                            }
+                                            _satRepeatDatesController.text =
+                                                _sunSelectedDates.reversed
+                                                    .toString();
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ).toList(),
                                 ),
                               ),
                           ],
@@ -1151,7 +1126,7 @@ class _BookingViewState extends State<BookingView> {
         width: double.infinity,
         child: Wrap(
           alignment: WrapAlignment.center,
-          spacing: 30,
+          spacing: 24,
           children: [
             "Mo",
             "Tu",
@@ -1164,10 +1139,18 @@ class _BookingViewState extends State<BookingView> {
           ].map(
             (days) {
               return FilterChip(
-                backgroundColor: CupertinoColors.lightBackgroundGray,
-                selectedColor: CupertinoColors.systemYellow,
+                backgroundColor: uniqartOnSurface,
+                selectedColor: uniqartSecondary,
                 showCheckmark: false,
-                label: Text(days),
+                // side: const BorderSide(
+                //   color: CupertinoColors.lightBackgroundGray,
+                // ),
+                label: Text(
+                  days,
+                ),
+                labelStyle: const TextStyle(
+                  color: uniqartDisabled,
+                ),
                 selected: _selectedDays.contains(days),
                 onSelected: (val) {
                   setState(() {
@@ -1229,10 +1212,13 @@ class _BookingViewState extends State<BookingView> {
         itemCount: applicationBloc.searchResults.length,
         itemBuilder: (context, index) {
           return ListTile(
-            leading: const Icon(Icons.room),
+            leading: const Icon(
+              CupertinoIcons.placemark_fill,
+              color: uniqartDisabled,
+            ),
             title: Text(
               applicationBloc.searchResults[index].description,
-              style: const TextStyle(color: Colors.black),
+              style: const TextStyle(color: uniqartTextField),
             ),
             onTap: () {
               if (pickupNode.hasFocus) {
@@ -1264,7 +1250,7 @@ class _BookingViewState extends State<BookingView> {
             width: 250,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: uniqartPrimary,
+              color: Colors.white,
             ),
           ),
         ),
@@ -1275,16 +1261,19 @@ class _BookingViewState extends State<BookingView> {
             child: Text(
               "Drop Off",
               style: TextStyle(
-                color: uniqartOnSurface,
+                color: uniqartTextField,
               ),
             ),
           ),
         ),
         const Positioned(
-          left: 155,
-          top: 11,
+          left: 145,
+          top: 10,
           child: Center(
-            child: Icon(CupertinoIcons.time),
+            child: Icon(
+              CupertinoIcons.time,
+              color: uniqartPrimary,
+            ),
           ),
         ),
         Positioned(
@@ -1292,15 +1281,19 @@ class _BookingViewState extends State<BookingView> {
           top: 8,
           child: Center(
             child: SizedBox(
-              width: 100,
+              width: 105,
               child: CupertinoTextField(
                 placeholder: DateFormat.jm().format(time),
                 readOnly: true,
+                style: const TextStyle(
+                  color: uniqartTextField,
+                  fontSize: 16,
+                ),
                 padding: const EdgeInsets.fromLTRB(17, 5, 17, 5),
                 controller: _timeDropOffController,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: CupertinoColors.lightBackgroundGray,
+                  color: uniqartOnSurface,
                 ),
                 onTap: () => _showDialog(
                   selectTime(),
@@ -1339,6 +1332,10 @@ class _BookingViewState extends State<BookingView> {
                 }
                 return null;
               },
+              style: const TextStyle(
+                color: uniqartTextField,
+                fontSize: 16,
+              ),
               placeholder: DateFormat.MMMEd().format(date),
               readOnly: true,
               padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
@@ -1353,26 +1350,6 @@ class _BookingViewState extends State<BookingView> {
         ),
       ],
     );
-    // SizedBox(
-    //   width: 275,
-    //   child: CupertinoTextFormFieldRow(
-    //     validator: (value) {
-    //       if (value == null || value.isEmpty) {
-    //         return "Please select dropoff date";
-    //       }
-    //       return null;
-    //     },
-    //     placeholder: DateFormat.MMMEd().format(date),
-    //     readOnly: true,
-    //     prefix: const Icon(CupertinoIcons.calendar),
-    //     controller: _dateDropOffController,
-    //     onTap: () {
-    //       _showDialog(
-    //         selectDate(),
-    //       );
-    //     },
-    //   ),
-    // );
   }
 
   pickUpLocationField(ApplicationBloc applicationBloc) {
@@ -1388,6 +1365,7 @@ class _BookingViewState extends State<BookingView> {
               _inputPickUpController.clear();
             },
             icon: const Icon(Icons.highlight_off_rounded),
+            color: uniqartPrimary,
           ),
         ),
         Padding(
@@ -1416,7 +1394,7 @@ class _BookingViewState extends State<BookingView> {
               ),
               style: const TextStyle(
                 fontSize: 14,
-                color: uniqartOnSurface,
+                color: uniqartTextField,
               ),
               padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
               decoration: BoxDecoration(
@@ -1445,6 +1423,7 @@ class _BookingViewState extends State<BookingView> {
               _inputDropOffController.clear();
             },
             icon: const Icon(Icons.highlight_off_rounded),
+            color: uniqartPrimary,
           ),
         ),
         Padding(
@@ -1457,6 +1436,7 @@ class _BookingViewState extends State<BookingView> {
                 }
                 return null;
               },
+
               autofocus: false,
               focusNode: dropoffNode,
               controller: _inputDropOffController,
@@ -1473,7 +1453,7 @@ class _BookingViewState extends State<BookingView> {
               ),
               style: const TextStyle(
                 fontSize: 14,
-                color: uniqartOnSurface,
+                color: uniqartTextField,
               ),
               padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
               decoration: BoxDecoration(

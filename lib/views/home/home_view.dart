@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,7 @@ import 'package:url_launcher/url_launcher.dart';
 // }
 
 final Uri _subscribeStripeUrl =
-    Uri.parse('https://billing.stripe.com/p/login/test_bIY3eh8dubZ05PO9AA');
+    Uri.parse('https://buy.stripe.com/test_aEUcPz717eCjduE9AA');
 
 Future<void> _launchUrl() async {
   try {
@@ -63,11 +64,15 @@ class _HomeViewState extends State<HomeView> {
 
     return Scaffold(
       // key: _scaffoldKey,
-      backgroundColor: CupertinoColors.white,
+      backgroundColor: uniqartBackgroundWhite,
       appBar: AppBar(
-        title: const Text("UNIQART"),
+        title: const Text(
+          "UNIQART",
+          // style: TextStyle(color: uniqartOnSurface),
+        ),
         centerTitle: true,
         automaticallyImplyLeading: false,
+        // backgroundColor: uniqartDisabled,
       ),
       body: ListView(
         children: [
@@ -76,22 +81,22 @@ class _HomeViewState extends State<HomeView> {
 
           // Bottom section for scheduled trips
           const SizedBox(
-            height: 25,
+            height: 30,
           ),
           const Center(
             child: Text(
               "Scheduled Trips",
               style: TextStyle(
-                color: uniqartOnSurface,
+                color: uniqartTextField,
               ),
             ),
           ),
           const SizedBox(
-            height: 10,
+            height: 20,
           ),
 
           StreamBuilder(
-            stream: _ridesService.allRides(
+            stream: _ridesService.allScheduledRides(
               ownerUID: userId,
             ),
             builder: (context, snapshot) {
@@ -138,11 +143,15 @@ class _HomeViewState extends State<HomeView> {
               final retrieveDocument = doc.elementAt(0);
               final allowedRides = retrieveDocument.ridesLimit;
               final expiryDate = retrieveDocument.subExpiryDate.toDate();
+              final startDate = retrieveDocument.subStartDate!.toDate();
+
               bool trial = retrieveDocument.trial;
 
               return StreamBuilder(
                 stream: _ridesService.allRides(
                   ownerUID: userId,
+                  expiryDate: expiryDate,
+                  startDate: startDate,
                 ),
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
@@ -175,61 +184,225 @@ class _HomeViewState extends State<HomeView> {
                                 width: double.infinity,
                                 height: 475,
                                 decoration: const BoxDecoration(
-                                  color: uniqartBackgroundWhite,
+                                  color: uniqartOnSurface,
                                 ),
                               ),
 
                               // Circle box container
-                              Positioned(
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                bottom: 75,
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                      child: Center(
-                                        child: CircularPercentIndicator(
-                                          radius: 97,
-                                          lineWidth: 15,
-                                          backgroundColor:
-                                              uniqartBackgroundWhite,
-                                          progressColor: uniqartOnSurface,
-                                          percent: remainder / allowedRides,
-                                          circularStrokeCap:
-                                              CircularStrokeCap.round,
-                                          animation: true,
-                                          center: Container(
-                                            width: 165,
-                                            decoration: const BoxDecoration(
-                                              color: CupertinoColors.white,
-                                              shape: BoxShape.circle,
+                              if (remainder > 0 &&
+                                  DateTime.now().isBefore(expiryDate))
+                                Positioned(
+                                  top: 0,
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 75,
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        child: Center(
+                                          child: CircularPercentIndicator(
+                                            radius: 97,
+                                            lineWidth: 15,
+                                            backgroundColor: uniqartSecondary,
+                                            progressColor: uniqartDisabled,
+                                            percent: remainder / allowedRides,
+                                            circularStrokeCap:
+                                                CircularStrokeCap.round,
+                                            animation: true,
+                                            center: Container(
+                                              width: 165,
+                                              decoration: const BoxDecoration(
+                                                color: CupertinoColors.white,
+                                                shape: BoxShape.circle,
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
 
                               // 00 rides (text) with condition
                               if (remainder <= 0 ||
                                   DateTime.now().isAfter(expiryDate))
-                                const Positioned(
+                                Positioned(
                                   top: 0,
                                   left: 0,
                                   right: 0,
                                   bottom: 70,
                                   child: Center(
-                                    child: Text(
-                                      "00",
-                                      style: TextStyle(
-                                          fontSize: 50,
-                                          color: uniqartOnSurface),
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          width: 300,
+                                          height: 300,
+                                          decoration: BoxDecoration(
+                                            color: uniqartBackgroundWhite,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 25,
+                                          left: 30,
+                                          right: 30,
+                                          child: Stack(
+                                            children: [
+                                              Center(
+                                                child: Container(
+                                                  width: 250,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(
+                                                    color: uniqartOnSurface,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                ),
+                                              ),
+                                              const Positioned(
+                                                top: 7,
+                                                left: 0,
+                                                right: 0,
+                                                child: Center(
+                                                  child: Text(
+                                                    "Standard Conveyance",
+                                                    style: TextStyle(
+                                                      color: uniqartTextField,
+                                                      fontSize: 13,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 90,
+                                          left: 30,
+                                          right: 30,
+                                          child: Stack(
+                                            children: [
+                                              Center(
+                                                child: Container(
+                                                  width: 250,
+                                                  height: 185,
+                                                  padding:
+                                                      const EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                    color: uniqartOnSurface,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                top: 15,
+                                                right: 0,
+                                                left: 0,
+                                                child: Center(
+                                                  child: Container(
+                                                    height: 20,
+                                                    width: 150,
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          uniqartSurfaceWhite,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const Positioned(
+                                                top: 17,
+                                                left: 0,
+                                                right: 0,
+                                                child: Center(
+                                                  child: Text(
+                                                    "Re-Subscribe",
+                                                    style: TextStyle(
+                                                      color: uniqartPrimary,
+                                                      fontSize: 13,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const Positioned(
+                                                top: 55,
+                                                child: SizedBox(
+                                                  width: 200,
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            35, 0, 0, 0),
+                                                    child: Text(
+                                                      "Includes 60 trips within a three-kilometer radius of a univeristy.",
+                                                      style: TextStyle(
+                                                        color: uniqartPrimary,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                bottom: 10,
+                                                left: 0,
+                                                right: 0,
+                                                child: Center(
+                                                  child: Container(
+                                                    width: 175,
+                                                    height: 30,
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          uniqartSurfaceWhite,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const Positioned(
+                                                bottom: 53,
+                                                left: 0,
+                                                right: 0,
+                                                child: Center(
+                                                  child: Text(
+                                                    "99 CAD/Month",
+                                                    style: TextStyle(
+                                                      color: uniqartDisabled,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const Positioned(
+                                                bottom: 15,
+                                                left: 0,
+                                                right: 0,
+                                                child: Center(
+                                                  child: Text(
+                                                    "1.65 CAD/trip ONLY",
+                                                    style: TextStyle(
+                                                      color: uniqartTextField,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
                                     ),
                                   ),
                                 ),
+
+                              // Build Subscribe Section
 
                               // Remaining rides with condition (text)
                               if (remainder > 0 &&
@@ -244,25 +417,28 @@ class _HomeViewState extends State<HomeView> {
                                       "$remainder",
                                       style: const TextStyle(
                                           fontSize: 50,
-                                          color: uniqartOnSurface),
+                                          color: uniqartTextField),
                                     ),
                                   ),
                                 ),
 
                               // Text
-                              const Positioned(
-                                top: 175,
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                child: Center(
-                                  child: Text(
-                                    "Remaining Rides",
-                                    style: TextStyle(
-                                        fontSize: 13, color: uniqartOnSurface),
+                              if (remainder > 0 &&
+                                  DateTime.now().isBefore(expiryDate))
+                                const Positioned(
+                                  top: 175,
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Center(
+                                    child: Text(
+                                      "Remaining Rides",
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          color: uniqartTextField),
+                                    ),
                                   ),
                                 ),
-                              ),
 
                               // Subscribe button with condition
                               if (remainder <= 0 ||
@@ -274,20 +450,38 @@ class _HomeViewState extends State<HomeView> {
                                   bottom: 0,
                                   child: Center(
                                     child: SizedBox(
-                                      height: 25,
-                                      width: 225,
+                                      height: 50,
+                                      width: 300,
                                       child: CupertinoButton(
-                                        color: Colors.blueAccent,
+                                        color: uniqartSecondary,
                                         padding: EdgeInsets.zero,
                                         borderRadius: BorderRadius.circular(20),
                                         onPressed: _launchUrl,
-                                        child: const Text(
-                                          'SUBSCRIBE',
-                                          style: TextStyle(
-                                              fontSize: 11,
-                                              color: uniqartBackgroundWhite,
-                                              letterSpacing: 1),
-                                        ),
+                                        child: Stack(children: const [
+                                          Positioned(
+                                            left: 85,
+                                            top: 13,
+                                            child: Icon(
+                                              CupertinoIcons
+                                                  .bag_fill_badge_plus,
+                                              color: uniqartDisabled,
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 17,
+                                            right: 95,
+                                            // left: 0,
+                                            child: Center(
+                                              child: Text(
+                                                'SUBSCRIBE',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: uniqartTextField,
+                                                    letterSpacing: 1),
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
                                       ),
                                     ),
                                   ),
@@ -307,15 +501,18 @@ class _HomeViewState extends State<HomeView> {
                                       height: 85,
                                       width: double.infinity,
                                       child: CupertinoButton(
-                                        color: Colors.blueAccent,
+                                        color: uniqartDisabled,
                                         padding: const EdgeInsets.all(10),
-                                        borderRadius: BorderRadius.circular(0),
+                                        borderRadius: const BorderRadius.only(
+                                          bottomLeft: Radius.circular(20),
+                                          bottomRight: Radius.circular(20),
+                                        ),
                                         onPressed: _launchUrl,
                                         child: Text(
                                           'Trial ends on $formattedExpiry. Please update your payment information. CLICK HERE! (please ignore if already updated)',
                                           style: const TextStyle(
                                               fontSize: 16,
-                                              color: uniqartBackgroundWhite,
+                                              color: uniqartSurfaceWhite,
                                               letterSpacing: 1),
                                         ),
                                       ),
@@ -333,8 +530,8 @@ class _HomeViewState extends State<HomeView> {
                                   bottom: 0,
                                   child: Center(
                                     child: SizedBox(
-                                      height: 25,
-                                      width: 225,
+                                      height: 35,
+                                      width: 300,
                                       child: CupertinoButton(
                                         color: uniqartPrimary,
                                         padding: EdgeInsets.zero,
@@ -348,13 +545,39 @@ class _HomeViewState extends State<HomeView> {
                                           applicationBloc
                                               .clearSelectedPickupLocation();
                                         },
-                                        child: const Text(
-                                          'REQUEST AN EXPERIENCE',
-                                          style: TextStyle(
-                                              fontSize: 11,
-                                              color: uniqartOnSurface,
-                                              letterSpacing: 1),
-                                        ),
+                                        child: Stack(children: const [
+                                          Positioned(
+                                            left: 35,
+                                            top: 5,
+                                            child: Icon(
+                                              CupertinoIcons
+                                                  .location_circle_fill,
+                                              color: uniqartSecondary,
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 10,
+                                            right: 35,
+                                            // left: 0,
+                                            child: Center(
+                                              child: Text(
+                                                'REQUEST AN EXPERIENCE',
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    color: uniqartOnSurface,
+                                                    letterSpacing: 1),
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+
+                                        // const Text(
+                                        //   'REQUEST AN EXPERIENCE',
+                                        //   style: TextStyle(
+                                        //       fontSize: 13,
+                                        //       color: uniqartOnSurface,
+                                        //       letterSpacing: 1),
+                                        // ),
                                       ),
                                     ),
                                   ),

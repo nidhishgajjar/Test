@@ -9,27 +9,27 @@ ThemeData _buildUniqartTheme() {
   return base.copyWith(
     colorScheme: _uniqartColorScheme,
 
-    primaryColor: uniqartTextField,
+    primaryColor: uniqartPrimary,
 
     scaffoldBackgroundColor: uniqartBackgroundWhite,
-    cardColor: uniqartTextField,
+    cardColor: uniqartOnSurface,
     errorColor: uniqartErrorRed,
-    buttonTheme: const ButtonThemeData(
-      colorScheme: _uniqartColorScheme,
-      textTheme: ButtonTextTheme.accent,
-    ),
-    // textButtonTheme: TextButtonThemeData(
-    //   style: TextButton.styleFrom(
-    //     // This is a custom color variable
-    //     textStyle: GoogleFonts.lato(color: Colors.blue),
-    //   ),
+    // buttonTheme: const ButtonThemeData(
+    //   colorScheme: _uniqartColorScheme,
+    //   textTheme: ButtonTextTheme.accent,
     // ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        // This is a custom color variable
+        textStyle: GoogleFonts.lato(color: Colors.blue),
+      ),
+    ),
     primaryIconTheme: _customUniqartIconTheme(base.primaryIconTheme),
     textTheme: _buildUniqartextTheme(base.textTheme),
     primaryTextTheme: _buildUniqartextTheme(base.primaryTextTheme),
-    iconTheme: _customUniqartIconTheme(base.iconTheme),
+    // iconTheme: _customUniqartIconTheme(base.iconTheme),
     appBarTheme: _buildUniqartAppBarTheme(base.appBarTheme),
-    inputDecorationTheme: _buildUniqartTextFeild(base.inputDecorationTheme),
+
     bottomNavigationBarTheme:
         _buildUniqartBottomNavigationBarTheme(base.bottomNavigationBarTheme),
   );
@@ -37,7 +37,7 @@ ThemeData _buildUniqartTheme() {
 
 IconThemeData _customUniqartIconTheme(IconThemeData base) {
   return base.copyWith(
-    color: uniqartOnSurface,
+    color: uniqartBackgroundWhite,
     size: 24,
   );
 }
@@ -104,45 +104,42 @@ TextTheme _buildUniqartextTheme(TextTheme base) {
         ),
       )
       .apply(
-        fontFamily: "Lato",
-        displayColor: uniqartTextField,
-        bodyColor: uniqartTextField,
-      );
+          fontFamily: "Lato",
+          displayColor: uniqartTextField,
+          bodyColor: uniqartTextField,
+          decorationColor: uniqartTextField);
 }
 
 AppBarTheme _buildUniqartAppBarTheme(AppBarTheme base) {
   return base.copyWith(
+      backgroundColor: uniqartPrimary,
+      iconTheme: const IconThemeData(color: uniqartTextField),
+      shadowColor: uniqartOnSurface,
       titleTextStyle: GoogleFonts.lato(
-    color: uniqartOnSurface,
-    fontSize: 16,
-    fontWeight: FontWeight.bold,
-    letterSpacing: 3,
-  ));
-}
-
-InputDecorationTheme _buildUniqartTextFeild(InputDecorationTheme base) {
-  return base.copyWith(
-    contentPadding: const EdgeInsets.fromLTRB(2, 20, 0, 0),
-  );
+        color: uniqartOnSurface,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 1,
+      ));
 }
 
 BottomNavigationBarThemeData _buildUniqartBottomNavigationBarTheme(
     BottomNavigationBarThemeData base) {
   return base.copyWith(
-    backgroundColor: uniqartPrimary,
-    selectedItemColor: uniqartOnSurface,
-  );
+      backgroundColor: uniqartSurfaceWhite,
+      selectedItemColor: uniqartPrimary,
+      unselectedItemColor: uniqartDisabled);
 }
 
 const ColorScheme _uniqartColorScheme = ColorScheme(
   primary: uniqartPrimary,
   secondary: uniqartSecondary,
   surface: uniqartOnSurface,
-  background: uniqartOnSurface,
+  background: uniqartBackgroundWhite,
   error: uniqartErrorRed,
-  onPrimary: uniqartOnSurface,
-  onSecondary: uniqartOnSurface,
-  onSurface: uniqartOnSurface,
+  onPrimary: uniqartSurfaceWhite,
+  onSecondary: uniqartSurfaceWhite,
+  onSurface: uniqartSurfaceWhite,
   onBackground: uniqartOnSurface,
   onError: uniqartErrorRed,
   brightness: Brightness.light,

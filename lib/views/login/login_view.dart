@@ -68,12 +68,13 @@ class _LogInViewState extends State<LogInView> {
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: Center(
             child: Column(children: [
-              const Text(
-                "Q",
-                style: TextStyle(
-                  color: uniqartOnSurface,
-                  fontSize: 55,
-                ),
+              const SizedBox(
+                height: 30,
+              ),
+              Image.asset(
+                'assets/logo.png',
+                width: 75,
+                height: 75,
               ),
               email(),
               const SizedBox(
@@ -92,13 +93,14 @@ class _LogInViewState extends State<LogInView> {
                   'forgot password?',
                   style: TextStyle(
                     decoration: TextDecoration.underline,
+                    decorationColor: Colors.blue,
                     color: Colors.blue,
                     fontSize: 11,
                   ),
                 ),
               ),
               const SizedBox(
-                height: 125,
+                height: 100,
               ),
               registerButton(context),
               const SizedBox(
@@ -119,15 +121,16 @@ class _LogInViewState extends State<LogInView> {
       autocorrect: false,
       keyboardType: TextInputType.emailAddress,
       placeholder: "enter your email",
+
       placeholderStyle: const TextStyle(
         fontSize: 14,
         color: CupertinoColors.inactiveGray,
       ),
       style: const TextStyle(
         fontSize: 14,
-        color: uniqartOnSurface,
+        color: uniqartTextField,
       ),
-      padding: const EdgeInsets.fromLTRB(60, 100, 60, 0),
+      padding: const EdgeInsets.fromLTRB(60, 120, 60, 0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(7),
         color: CupertinoColors.lightBackgroundGray,
@@ -141,7 +144,7 @@ class _LogInViewState extends State<LogInView> {
       height: 25,
       width: 150,
       child: CupertinoButton(
-        color: uniqartOnSurface,
+        color: uniqartPrimary,
         padding: EdgeInsets.zero,
         borderRadius: BorderRadius.circular(10),
         onPressed: () => context.read<AuthBloc>().add(
@@ -151,7 +154,7 @@ class _LogInViewState extends State<LogInView> {
           'REGISTER',
           style: TextStyle(
             fontSize: 11,
-            color: uniqartBackgroundWhite,
+            color: uniqartOnSurface,
             letterSpacing: 1,
           ),
         ),
@@ -164,7 +167,7 @@ class _LogInViewState extends State<LogInView> {
       height: 30,
       width: 100,
       child: CupertinoButton(
-        color: uniqartOnSurface,
+        color: uniqartPrimary,
         disabledColor: uniqartBackgroundWhite,
         padding: EdgeInsets.zero,
         borderRadius: BorderRadius.circular(7),
@@ -181,7 +184,7 @@ class _LogInViewState extends State<LogInView> {
               }
             : null,
         child: const Text(
-          "CUM IN",
+          "ENTER IN",
           style: TextStyle(
             fontSize: 14,
             color: uniqartBackgroundWhite,
@@ -207,9 +210,10 @@ class _LogInViewState extends State<LogInView> {
             fontSize: 14,
             color: CupertinoColors.inactiveGray,
           ),
-          style: const TextStyle(fontSize: 14, color: uniqartOnSurface
-              // color: Colors.black54,
-              ),
+          style: const TextStyle(
+            fontSize: 14,
+            color: uniqartTextField,
+          ),
           padding: const EdgeInsets.fromLTRB(60, 10, 105, 65),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(7),
@@ -230,6 +234,7 @@ class _LogInViewState extends State<LogInView> {
                   ? CupertinoIcons.eye_slash_fill
                   : CupertinoIcons.eye_fill,
             ),
+            color: uniqartDisabled,
             onPressed: () {
               setState(
                 () {

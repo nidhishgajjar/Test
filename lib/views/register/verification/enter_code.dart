@@ -45,10 +45,10 @@ class _EnterCodeViewState extends State<EnterCodeView> {
             const SizedBox(
               width: 300,
               child: Text(
-                "Please enter verification code that you recived via text message.",
+                "Please enter verification code that you recieved via text message.",
                 style: TextStyle(
                   fontSize: 14,
-                  color: uniqartOnSurface,
+                  color: uniqartPrimary,
                   height: 2,
                 ),
               ),
@@ -66,7 +66,10 @@ class _EnterCodeViewState extends State<EnterCodeView> {
                   fontSize: 14,
                   color: CupertinoColors.inactiveGray,
                 ),
-                style: const TextStyle(fontSize: 14, color: uniqartOnSurface),
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: uniqartTextField,
+                ),
                 padding: const EdgeInsets.fromLTRB(100, 55, 100, 0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(7),
@@ -86,7 +89,7 @@ class _EnterCodeViewState extends State<EnterCodeView> {
               height: 30,
               width: 100,
               child: CupertinoButton(
-                color: uniqartOnSurface,
+                color: uniqartPrimary,
                 disabledColor: uniqartBackgroundWhite,
                 padding: EdgeInsets.zero,
                 borderRadius: BorderRadius.circular(7),

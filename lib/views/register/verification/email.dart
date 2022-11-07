@@ -17,9 +17,16 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Verify Email"),
+          title: const Text("VERIFY EMAIL"),
+          backgroundColor: uniqartPrimary,
+          titleTextStyle: const TextStyle(
+            color: uniqartOnSurface,
+            fontSize: 13,
+            letterSpacing: 1,
+          ),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            icon: const Icon(Icons.arrow_back_rounded),
+            color: uniqartOnSurface,
             onPressed: () => context.read<AuthBloc>().add(
                   const AuthEventLogOut(),
                 ),
@@ -36,7 +43,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                   "Verification Code Sent",
                   style: TextStyle(
                     fontSize: 25,
-                    color: uniqartOnSurface,
+                    color: uniqartTextField,
                   ),
                 ),
               ),
@@ -50,7 +57,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                     "Please check your inbox we have sent you a confirmation email. Check your junk/spam folder before resending the email.",
                     style: TextStyle(
                       fontSize: 14,
-                      color: uniqartOnSurface,
+                      color: uniqartTextField,
                       height: 2,
                     ),
                   ),
@@ -63,7 +70,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                 height: 35,
                 width: 125,
                 child: CupertinoButton(
-                  color: uniqartPrimary,
+                  color: uniqartSecondary,
                   disabledColor: uniqartBackgroundWhite,
                   padding: EdgeInsets.zero,
                   borderRadius: BorderRadius.circular(15),
@@ -76,7 +83,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                     "Resend Link",
                     style: TextStyle(
                       fontSize: 14,
-                      color: uniqartOnSurface,
+                      color: uniqartTextField,
                       letterSpacing: 1,
                     ),
                   ),
@@ -89,7 +96,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                     "Verified email? Login to proceed.",
                     style: TextStyle(
                       fontSize: 16,
-                      color: uniqartOnSurface,
+                      color: uniqartTextField,
                     ),
                   ),
                 ),
@@ -98,7 +105,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                 height: 35,
                 width: 125,
                 child: CupertinoButton(
-                  color: uniqartSecondary,
+                  color: uniqartPrimary,
                   disabledColor: uniqartBackgroundWhite,
                   padding: EdgeInsets.zero,
                   borderRadius: BorderRadius.circular(15),
@@ -111,7 +118,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                     "LOGIN",
                     style: TextStyle(
                       fontSize: 14,
-                      color: uniqartBackgroundWhite,
+                      color: uniqartOnSurface,
                       letterSpacing: 1,
                     ),
                   ),

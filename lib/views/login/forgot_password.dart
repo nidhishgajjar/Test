@@ -47,9 +47,16 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(context.loc.forgot_password),
+          title: const Text("RESET PASSWORD"),
+          backgroundColor: uniqartPrimary,
+          titleTextStyle: const TextStyle(
+            color: uniqartOnSurface,
+            fontSize: 13,
+            letterSpacing: 1,
+          ),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            icon: const Icon(Icons.arrow_back_rounded),
+            color: uniqartOnSurface,
             onPressed: () => context.read<AuthBloc>().add(
                   const AuthEventLogOut(),
                 ),
@@ -67,7 +74,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                       context.loc.forgot_password_view_prompt,
                       style: const TextStyle(
                         fontSize: 14,
-                        color: uniqartOnSurface,
+                        color: uniqartTextField,
                         height: 2,
                       ),
                     ),

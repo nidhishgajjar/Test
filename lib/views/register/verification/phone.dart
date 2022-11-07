@@ -54,7 +54,7 @@ class _VerifyPhoneViewState extends State<VerifyPhoneView> {
                   "Wlecome $displayName,",
                   style: const TextStyle(
                     fontSize: 25,
-                    color: uniqartOnSurface,
+                    color: uniqartTextField,
                   ),
                 ),
               ),
@@ -67,7 +67,7 @@ class _VerifyPhoneViewState extends State<VerifyPhoneView> {
                   "Please enter your phone number below to recieve a verification code",
                   style: TextStyle(
                     fontSize: 14,
-                    color: uniqartOnSurface,
+                    color: uniqartTextField,
                     height: 2,
                   ),
                 ),
@@ -86,7 +86,7 @@ class _VerifyPhoneViewState extends State<VerifyPhoneView> {
                     fontSize: 14,
                     color: CupertinoColors.inactiveGray,
                   ),
-                  style: const TextStyle(fontSize: 14, color: uniqartOnSurface),
+                  style: const TextStyle(fontSize: 14, color: uniqartTextField),
                   padding: const EdgeInsets.fromLTRB(60, 55, 75, 0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(7),
@@ -106,7 +106,7 @@ class _VerifyPhoneViewState extends State<VerifyPhoneView> {
                 height: 30,
                 width: 100,
                 child: CupertinoButton(
-                  color: uniqartOnSurface,
+                  color: uniqartPrimary,
                   disabledColor: uniqartBackgroundWhite,
                   padding: EdgeInsets.zero,
                   borderRadius: BorderRadius.circular(7),

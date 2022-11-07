@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:test/services/cloud/rides/cloud_rides_constants.dart';
+import 'package:uniqart/services/cloud/rides/cloud_rides_constants.dart';
 
 @immutable
 class CloudRide {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:test/services/auth/auth_service.dart';
-import 'package:test/services/cloud/users/cloud_user_profile.dart';
-import 'package:test/services/cloud/users/firebase_cloud_storage_user_profile.dart';
+import 'package:uniqart/services/auth/auth_service.dart';
+import 'package:uniqart/services/cloud/users/cloud_user_profile.dart';
+import 'package:uniqart/services/cloud/users/firebase_cloud_storage_user_profile.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});

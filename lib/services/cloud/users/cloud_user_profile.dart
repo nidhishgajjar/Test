@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:test/services/cloud/users/cloud_user_profile_constants.dart';
+import 'package:uniqart/services/cloud/users/cloud_user_profile_constants.dart';
 
 @immutable
 class CloudUserProfile {

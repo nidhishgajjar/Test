@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
-import 'package:test/models/places/places.dart';
+import 'package:uniqart/models/places/places.dart';
 import 'dart:convert' as convert;
-import 'package:test/models/places/places_search.dart';
+import 'package:uniqart/models/places/places_search.dart';
 
 class PlacesService {
   final key = "AIzaSyDelD8NnfHcMIpb093UGSSOMt2ULZoQ9OA";

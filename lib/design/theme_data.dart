@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:test/design/color_constants.dart';
+import 'package:uniqart/design/color_constants.dart';
 
 final uniqartTheme = _buildUniqartTheme();
 

@@ -1,7 +1,7 @@
 {
   "file_generated_by": "FlutterFire CLI",
   "purpose": "FirebaseAppID & ProjectID for this Firebase app in this directory",
-  "GOOGLE_APP_ID": "1:300632133861:ios:baa68908fb65cdf6a3440c",
-  "FIREBASE_PROJECT_ID": "test-uniqart-app",
-  "GCM_SENDER_ID": "300632133861"
+  "GOOGLE_APP_ID": "1:879628172880:ios:5b369adfa91d9ef3019b55",
+  "FIREBASE_PROJECT_ID": "uniqart-app",
+  "GCM_SENDER_ID": "879628172880"
 }

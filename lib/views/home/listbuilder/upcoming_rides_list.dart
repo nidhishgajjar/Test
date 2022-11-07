@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:test/design/color_constants.dart';
-import 'package:test/services/cloud/rides/cloud_rides.dart';
+import 'package:uniqart/design/color_constants.dart';
+import 'package:uniqart/services/cloud/rides/cloud_rides.dart';
 
-import 'package:test/utilities/dialogs/cancel_booking_dialog.dart';
+import 'package:uniqart/utilities/dialogs/cancel_booking_dialog.dart';
 
 typedef RideCallback = void Function(CloudRide ride);
 

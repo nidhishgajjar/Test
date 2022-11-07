@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:test/design/color_constants.dart';
-import 'package:test/miscellaneous/localizations/loc.dart';
-import 'package:test/services/auth/bloc/auth_bloc.dart';
-import 'package:test/utilities/dialogs/change_password_email.dart';
-import 'package:test/utilities/dialogs/error_dialog.dart';
+import 'package:uniqart/design/color_constants.dart';
+import 'package:uniqart/miscellaneous/localizations/loc.dart';
+import 'package:uniqart/services/auth/bloc/auth_bloc.dart';
+import 'package:uniqart/utilities/dialogs/change_password_email.dart';
+import 'package:uniqart/utilities/dialogs/error_dialog.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});

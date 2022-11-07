@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:test/design/color_constants.dart';
-import 'package:test/miscellaneous/localizations/loc.dart';
-import 'package:test/services/auth/bloc/auth_bloc.dart';
+import 'package:uniqart/design/color_constants.dart';
+import 'package:uniqart/services/auth/bloc/auth_bloc.dart';
 
 class VerifyEmailView extends StatefulWidget {
   const VerifyEmailView({super.key});

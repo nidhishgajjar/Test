@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:test/models/places/places.dart';
-import 'package:test/models/places/places_search.dart';
-import 'package:test/services/place/places_service.dart';
+import 'package:uniqart/models/places/places.dart';
+import 'package:uniqart/models/places/places_search.dart';
+import 'package:uniqart/services/place/places_service.dart';
 
 class ApplicationBloc with ChangeNotifier {
   final placesService = PlacesService();

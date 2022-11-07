@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:test/miscellaneous/localizations/loc.dart';
-import 'package:test/utilities/dialogs/generic_dialog.dart';
+import 'package:uniqart/miscellaneous/localizations/loc.dart';
+import 'package:uniqart/utilities/dialogs/generic_dialog.dart';
 
 Future<void> showErrorDialog(
   BuildContext context,

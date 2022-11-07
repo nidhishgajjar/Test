@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>300632133861-t07mtp6iopvoqc7pt3tvdphoa179fh9b.apps.googleusercontent.com</string>
+	<string>879628172880-ou2ns5r3mgo766j0l97h2o4rv4euk1tk.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.300632133861-t07mtp6iopvoqc7pt3tvdphoa179fh9b</string>
+	<string>com.googleusercontent.apps.879628172880-ou2ns5r3mgo766j0l97h2o4rv4euk1tk</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>879628172880-3hapunqpd9blh78qshlj6t96em5gf0od.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCq-pdXihPL-BJKI1SqJIAFBAP5CO7ISi0</string>
+	<string>AIzaSyDDR_Uw6xoTFqcaCZUiWJzIzKC8mPirQxo</string>
 	<key>GCM_SENDER_ID</key>
-	<string>300632133861</string>
+	<string>879628172880</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>app.uniqart.test</string>
+	<string>app.uniqart.uniqart</string>
 	<key>PROJECT_ID</key>
-	<string>test-uniqart-app</string>
+	<string>uniqart-app</string>
 	<key>STORAGE_BUCKET</key>
-	<string>test-uniqart-app.appspot.com</string>
+	<string>uniqart-app.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:300632133861:ios:baa68908fb65cdf6a3440c</string>
+	<string>1:879628172880:ios:5b369adfa91d9ef3019b55</string>
 </dict>
 </plist>

@@ -50,21 +50,21 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyA0NMX8I2n5CSvpzZAfYWjW3HLxuXvIimM',
-    appId: '1:300632133861:android:993bfb1e665ee3fca3440c',
-    messagingSenderId: '300632133861',
-    projectId: 'test-uniqart-app',
-    storageBucket: 'test-uniqart-app.appspot.com',
+    apiKey: 'AIzaSyC33a2oQjt8uVfEkzyy8I24OaDNl5q9pOY',
+    appId: '1:879628172880:android:7019a925a0065552019b55',
+    messagingSenderId: '879628172880',
+    projectId: 'uniqart-app',
+    storageBucket: 'uniqart-app.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCq-pdXihPL-BJKI1SqJIAFBAP5CO7ISi0',
-    appId: '1:300632133861:ios:baa68908fb65cdf6a3440c',
-    messagingSenderId: '300632133861',
-    projectId: 'test-uniqart-app',
-    storageBucket: 'test-uniqart-app.appspot.com',
-    androidClientId: '300632133861-njet78e84r4j57ha9opt3b3dbgeo3omu.apps.googleusercontent.com',
-    iosClientId: '300632133861-t07mtp6iopvoqc7pt3tvdphoa179fh9b.apps.googleusercontent.com',
-    iosBundleId: 'app.uniqart.test',
+    apiKey: 'AIzaSyDDR_Uw6xoTFqcaCZUiWJzIzKC8mPirQxo',
+    appId: '1:879628172880:ios:5b369adfa91d9ef3019b55',
+    messagingSenderId: '879628172880',
+    projectId: 'uniqart-app',
+    storageBucket: 'uniqart-app.appspot.com',
+    androidClientId: '879628172880-3hapunqpd9blh78qshlj6t96em5gf0od.apps.googleusercontent.com',
+    iosClientId: '879628172880-ou2ns5r3mgo766j0l97h2o4rv4euk1tk.apps.googleusercontent.com',
+    iosBundleId: 'app.uniqart.uniqart',
   );
 }

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:test/services/cloud/rides/cloud_rides.dart';
-import 'package:test/services/cloud/rides/cloud_rides_constants.dart';
-import 'package:test/services/cloud/rides/cloud_rides_exceptions.dart';
+import 'package:uniqart/services/cloud/rides/cloud_rides.dart';
+import 'package:uniqart/services/cloud/rides/cloud_rides_constants.dart';
+import 'package:uniqart/services/cloud/rides/cloud_rides_exceptions.dart';
 
 class FirebaseRidesCloudStorage {
   final rides = FirebaseFirestore.instance.collection("rides");

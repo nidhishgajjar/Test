@@ -1,18 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:test/consants/routes.dart';
-import 'package:test/design/color_constants.dart';
-import 'package:test/services/auth/auth_service.dart';
-import 'package:test/services/cloud/rides/cloud_rides.dart';
-import 'package:test/services/cloud/rides/firebase_cloud_storage_rides.dart';
-import 'package:test/services/cloud/users/cloud_user_profile.dart';
-import 'package:test/services/cloud/users/firebase_cloud_storage_user_profile.dart';
-import 'package:test/services/place/bloc/application_bloc.dart';
-import 'package:test/views/home/listbuilder/upcoming_rides_list.dart';
+import 'package:uniqart/consants/routes.dart';
+import 'package:uniqart/design/color_constants.dart';
+import 'package:uniqart/services/auth/auth_service.dart';
+import 'package:uniqart/services/cloud/rides/cloud_rides.dart';
+import 'package:uniqart/services/cloud/rides/firebase_cloud_storage_rides.dart';
+import 'package:uniqart/services/cloud/users/cloud_user_profile.dart';
+import 'package:uniqart/services/cloud/users/firebase_cloud_storage_user_profile.dart';
+import 'package:uniqart/services/place/bloc/application_bloc.dart';
+import 'package:uniqart/views/home/listbuilder/upcoming_rides_list.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();

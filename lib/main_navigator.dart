@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:test/views/home/home_view.dart';
-import 'package:test/views/settings/settings_view.dart';
+import 'package:uniqart/views/home/home_view.dart';
+import 'package:uniqart/views/settings/settings_view.dart';
 
 class MainNavigator extends StatefulWidget {
   const MainNavigator({super.key});

@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:equatable/equatable.dart';
-import 'package:test/services/auth/auth_provider.dart';
-import 'package:test/services/auth/auth_user.dart';
+import 'package:uniqart/services/auth/auth_provider.dart';
+import 'package:uniqart/services/auth/auth_user.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';

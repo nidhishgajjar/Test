@@ -1,45 +1,37 @@
 {
   "project_info": {
-    "project_number": "300632133861",
-    "project_id": "test-uniqart-app",
-    "storage_bucket": "test-uniqart-app.appspot.com"
+    "project_number": "879628172880",
+    "project_id": "uniqart-app",
+    "storage_bucket": "uniqart-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:300632133861:android:993bfb1e665ee3fca3440c",
+        "mobilesdk_app_id": "1:879628172880:android:7019a925a0065552019b55",
         "android_client_info": {
-          "package_name": "app.uniqart.test"
+          "package_name": "app.uniqart.uniqart"
         }
       },
       "oauth_client": [
         {
-          "client_id": "300632133861-njet78e84r4j57ha9opt3b3dbgeo3omu.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "app.uniqart.test",
-            "certificate_hash": "be90fe05b6f6370eb2e87a95da714f70e0bddf90"
-          }
-        },
-        {
-          "client_id": "300632133861-13c0vmqot3vbp0qr5tfa51u1e1p063gi.apps.googleusercontent.com",
+          "client_id": "879628172880-7tdq1medk55mb82fhohvgma6d7l01oqu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA0NMX8I2n5CSvpzZAfYWjW3HLxuXvIimM"
+          "current_key": "AIzaSyC33a2oQjt8uVfEkzyy8I24OaDNl5q9pOY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "300632133861-13c0vmqot3vbp0qr5tfa51u1e1p063gi.apps.googleusercontent.com",
+              "client_id": "879628172880-7tdq1medk55mb82fhohvgma6d7l01oqu.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "300632133861-t07mtp6iopvoqc7pt3tvdphoa179fh9b.apps.googleusercontent.com",
+              "client_id": "879628172880-lq4o04fpji9t4ln4jn6d265ptufl4ask.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "app.uniqart.test"

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:test/services/auth/bloc/auth_bloc.dart';
-import 'package:test/utilities/dialogs/logout_dialog.dart';
+import 'package:uniqart/services/auth/bloc/auth_bloc.dart';
+import 'package:uniqart/utilities/dialogs/logout_dialog.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
 final Uri _customerPortalStripe =

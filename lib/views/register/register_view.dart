@@ -208,7 +208,7 @@ class _RegisterViewState extends State<RegisterView> {
               }
             : null,
         child: const Text(
-          "BLEND",
+          "JOIN",
           style: TextStyle(
             fontSize: 14,
             color: uniqartBackgroundWhite,

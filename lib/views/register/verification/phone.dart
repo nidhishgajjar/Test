@@ -76,6 +76,7 @@ class _VerifyPhoneViewState extends State<VerifyPhoneView> {
                 padding: const EdgeInsets.all(8.0),
                 child: CupertinoTextFormFieldRow(
                   controller: _phoneNumberController,
+                  maxLength: 10,
                   enableSuggestions: false,
                   autocorrect: false,
                   keyboardType: TextInputType.phone,

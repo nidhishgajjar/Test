@@ -57,6 +57,7 @@ class _EnterCodeViewState extends State<EnterCodeView> {
               padding: const EdgeInsets.all(8.0),
               child: CupertinoTextFormFieldRow(
                 controller: _enterCodeController,
+                maxLength: 6,
                 enableSuggestions: false,
                 autocorrect: false,
                 keyboardType: TextInputType.number,

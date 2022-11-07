@@ -15,13 +15,6 @@ import 'package:uniqart/services/place/bloc/application_bloc.dart';
 import 'package:uniqart/views/home/listbuilder/upcoming_rides_list.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-// final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-// typedef UserCallBack = void Function(CloudUserProfile user);
-
-// extension Count<T extends Iterable> on Stream<T> {
-//   Stream<int> get getLength => map((event) => event.length);
-// }
-
 final Uri _subscribeStripeUrl =
     Uri.parse('https://buy.stripe.com/test_aEUcPz717eCjduE9AA');
 
@@ -68,11 +61,9 @@ class _HomeViewState extends State<HomeView> {
       appBar: AppBar(
         title: const Text(
           "UNIQART",
-          // style: TextStyle(color: uniqartOnSurface),
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
-        // backgroundColor: uniqartDisabled,
       ),
       body: ListView(
         children: [
@@ -203,7 +194,8 @@ class _HomeViewState extends State<HomeView> {
                                           child: CircularPercentIndicator(
                                             radius: 97,
                                             lineWidth: 15,
-                                            backgroundColor: uniqartSecondary,
+                                            backgroundColor: CupertinoColors
+                                                .lightBackgroundGray,
                                             progressColor: uniqartDisabled,
                                             percent: remainder / allowedRides,
                                             circularStrokeCap:
@@ -223,7 +215,7 @@ class _HomeViewState extends State<HomeView> {
                                   ),
                                 ),
 
-                              // 00 rides (text) with condition
+                              // subsribe section with condition
                               if (remainder <= 0 ||
                                   DateTime.now().isAfter(expiryDate))
                                 Positioned(
@@ -402,8 +394,6 @@ class _HomeViewState extends State<HomeView> {
                                   ),
                                 ),
 
-                              // Build Subscribe Section
-
                               // Remaining rides with condition (text)
                               if (remainder > 0 &&
                                   DateTime.now().isBefore(expiryDate))
@@ -486,7 +476,8 @@ class _HomeViewState extends State<HomeView> {
                                     ),
                                   ),
                                 ),
-                              // Subscribe button with condition
+
+                              // Trial ends reminder with condition
                               if (DateTime.now().isAfter(expiryDate
                                       .subtract(const Duration(days: 3))) &&
                                   DateTime.now().isBefore(expiryDate) &&

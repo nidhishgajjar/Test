@@ -52,8 +52,25 @@ class AuthStateVerifyEnterPhoneNumber extends AuthState {
 }
 
 class AuthStateEnterCode extends AuthState {
-  const AuthStateEnterCode({required bool isLoading})
-      : super(isLoading: isLoading);
+  const AuthStateEnterCode({
+    required bool isLoading,
+  }) : super(isLoading: isLoading);
+}
+
+class AuthStateInvalidCode extends AuthState {
+  final Exception? exception;
+  const AuthStateInvalidCode({
+    required this.exception,
+    required bool isLoading,
+  }) : super(isLoading: isLoading);
+}
+
+class AuthStateSendCodeFailed extends AuthState {
+  final Exception? exception;
+  const AuthStateSendCodeFailed({
+    required this.exception,
+    required bool isLoading,
+  }) : super(isLoading: isLoading);
 }
 
 class AuthStateVerificationSuccessful extends AuthState {

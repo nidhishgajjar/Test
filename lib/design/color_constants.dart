@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-const Color uniqartSecondary = Color(0xFFE0FFFE);
 const Color uniqartPrimary = Color(0xFF1F3E5A);
+const Color uniqartSecondary = Color(0xFFC2CCDA);
+const Color uniqartThird = Color(0xFFE0FFFE);
 const Color uniqartDisabled = Color.fromARGB(206, 31, 62, 90);
-// const Color uniqartGrey = Color(0xFFECECEC);
 
 const Color uniqartOnSurface = Color(0xFFECECEC);
 

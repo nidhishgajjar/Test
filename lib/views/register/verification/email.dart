@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uniqart/design/color_constants.dart';
+import 'package:uniqart/miscellaneous/localizations/loc.dart';
 import 'package:uniqart/services/auth/bloc/auth_bloc.dart';
 
 class VerifyEmailView extends StatefulWidget {
@@ -16,7 +17,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("VERIFY EMAIL"),
+          title: Text(context.loc.verify_email),
           backgroundColor: uniqartPrimary,
           titleTextStyle: const TextStyle(
             color: uniqartOnSurface,
@@ -37,10 +38,12 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               const SizedBox(
                 height: 60,
               ),
-              const SizedBox(
+
+              // Title
+              SizedBox(
                 child: Text(
-                  "Verification Code Sent",
-                  style: TextStyle(
+                  context.loc.verify_email_view_title,
+                  style: const TextStyle(
                     fontSize: 25,
                     color: uniqartTextField,
                   ),
@@ -49,12 +52,14 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               const SizedBox(
                 height: 35,
               ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(50, 0, 50, 40),
+
+              // Body text
+              Padding(
+                padding: const EdgeInsets.fromLTRB(50, 0, 50, 40),
                 child: SizedBox(
                   child: Text(
-                    "Please check your inbox we have sent you a confirmation email. Check your junk/spam folder before resending the email.",
-                    style: TextStyle(
+                    context.loc.verify_email_view_body_text,
+                    style: const TextStyle(
                       fontSize: 14,
                       color: uniqartTextField,
                       height: 2,
@@ -65,11 +70,13 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               const SizedBox(
                 height: 25,
               ),
+
+              // Resend verification button
               SizedBox(
                 height: 35,
                 width: 125,
                 child: CupertinoButton(
-                  color: uniqartSecondary,
+                  color: uniqartThird,
                   disabledColor: uniqartBackgroundWhite,
                   padding: EdgeInsets.zero,
                   borderRadius: BorderRadius.circular(15),
@@ -78,9 +85,9 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                         .read<AuthBloc>()
                         .add(const AuthEventSendEmailVerification());
                   },
-                  child: const Text(
-                    "Resend Link",
-                    style: TextStyle(
+                  child: Text(
+                    context.loc.verify_email_resend_email_verification,
+                    style: const TextStyle(
                       fontSize: 14,
                       color: uniqartTextField,
                       letterSpacing: 1,
@@ -88,18 +95,22 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(0, 150, 0, 25),
+
+              // Text already verified
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 150, 0, 25),
                 child: SizedBox(
                   child: Text(
-                    "Verified email? Login to proceed.",
-                    style: TextStyle(
+                    context.loc.verify_email_view_already_verified_text,
+                    style: const TextStyle(
                       fontSize: 16,
                       color: uniqartTextField,
                     ),
                   ),
                 ),
               ),
+
+              // Login button
               SizedBox(
                 height: 35,
                 width: 125,
@@ -113,9 +124,9 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                           const AuthEventLogOut(),
                         );
                   },
-                  child: const Text(
-                    "LOGIN",
-                    style: TextStyle(
+                  child: Text(
+                    context.loc.generic_login_button,
+                    style: const TextStyle(
                       fontSize: 14,
                       color: uniqartOnSurface,
                       letterSpacing: 1,

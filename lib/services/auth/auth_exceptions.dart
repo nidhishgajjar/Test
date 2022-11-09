@@ -19,6 +19,10 @@ class UserNotLoggedInAuthException implements Exception {}
 
 // verify phone exceptions
 
-class VerificationFaildException implements Exception {}
-
 class InvalidPhoneNumberException implements Exception {}
+
+class PhoneNumberAlreadyExistsException implements Exception {}
+
+// verify code exceptions
+
+class VerificationFailedException implements Exception {}

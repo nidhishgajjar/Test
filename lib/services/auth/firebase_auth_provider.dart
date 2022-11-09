@@ -102,16 +102,14 @@ class FirebaseAuthProvider implements AuthProvider {
                 ?.linkWithCredential(credential);
           },
           verificationFailed: (FirebaseAuthException e) {
-            VerificationFaildException();
+            VerificationFailedException();
           },
           codeSent: (verificationId, forceResendingToken) {
             _verificationId = verificationId;
           },
           codeAutoRetrievalTimeout: (verificationId) {});
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'incorrect-code') {
-        throw VerificationFaildException();
-      } else if (e.code == "invalid-phone-number") {
+      if (e.code == "invalid-phone-number") {
         throw InvalidEmailAuthException();
       } else {
         throw GenericAuthException();
@@ -119,7 +117,6 @@ class FirebaseAuthProvider implements AuthProvider {
     } catch (_) {
       throw GenericAuthException();
     }
-    throw GenericAuthException();
   }
 
   @override
@@ -134,7 +131,16 @@ class FirebaseAuthProvider implements AuthProvider {
       await FirebaseAuth.instance.currentUser?.linkWithCredential(
         credential,
       );
-    } on FirebaseAuthException catch (_) {
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'credential-already-in-use':
+          throw PhoneNumberAlreadyExistsException();
+        case 'invalid-verification-code':
+          throw VerificationFailedException();
+        default:
+          throw GenericAuthException();
+      }
+    } catch (_) {
       throw GenericAuthException();
     }
   }

@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:uniqart/consants/routes.dart';
 import 'package:uniqart/design/theme_data.dart';
 import 'package:uniqart/main_navigator.dart';
-import 'package:uniqart/miscellaneous/loading/loading_screen.dart';
 import 'package:uniqart/services/auth/bloc/auth_bloc.dart';
 import 'package:uniqart/services/auth/firebase_auth_provider.dart';
 import 'package:uniqart/services/place/bloc/application_bloc.dart';
+import 'package:uniqart/views/app.dart';
 import 'package:uniqart/views/home/booking_view.dart';
-import 'package:uniqart/views/login/forgot_password.dart';
-import 'package:uniqart/views/login/login_view.dart';
-import 'package:uniqart/views/register/register_view.dart';
-import 'package:uniqart/views/register/verification/email.dart';
-import 'package:uniqart/views/register/verification/enter_code.dart';
-import 'package:uniqart/views/register/verification/phone.dart';
-import 'package:uniqart/views/register/verification/user_profile.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,48 +34,4 @@ void main() {
       ),
     ),
   );
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    context.read<AuthBloc>().add(const AuthEventInitialize());
-    return BlocConsumer<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state.isLoading) {
-          LoadingScreen().show(
-            context: context,
-            text: state.loadingText ?? 'Please wait a moment',
-          );
-        } else {
-          LoadingScreen().hide();
-        }
-      },
-      builder: (context, state) {
-        if (state is AuthStateLoggedIn) {
-          return const MainNavigator();
-        } else if (state is AuthStateVerifyEnterPhoneNumber) {
-          return const VerifyPhoneView();
-        } else if (state is AuthStateEnterCode) {
-          return const EnterCodeView();
-        } else if (state is StateAddUserProfile) {
-          return const UserProfile();
-        } else if (state is AuthStateNeedsVerification) {
-          return const VerifyEmailView();
-        } else if (state is AuthStateLoggedOut) {
-          return const LogInView();
-        } else if (state is AuthStateForgotPassword) {
-          return const ForgotPasswordView();
-        } else if (state is AuthStateRegistering) {
-          return const RegisterView();
-        } else {
-          return const Scaffold(
-            body: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
-  }
 }

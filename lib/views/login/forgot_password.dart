@@ -36,7 +36,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         if (state is AuthStateForgotPassword) {
           if (state.hasSentEmail) {
             _emailController.clear();
-            await showChangePasswordDialog(context);
+            await showResetPasswordDialog(context);
           } else if (state.exception != null) {
             await showErrorDialog(
               context,
@@ -47,7 +47,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("RESET PASSWORD"),
+          title: Text(context.loc.forgot_password),
           backgroundColor: uniqartPrimary,
           titleTextStyle: const TextStyle(
             color: uniqartOnSurface,
@@ -67,6 +67,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                // Forgot password text
                 Padding(
                   padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
                   child: SizedBox(
@@ -80,6 +81,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                     ),
                   ),
                 ),
+
+                // Enter email text field
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: CupertinoTextFormFieldRow(
@@ -88,13 +91,15 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                     autocorrect: false,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.done,
-                    placeholder: "enter your email",
+                    placeholder: context.loc.login_email_text_field_placeholder,
                     placeholderStyle: const TextStyle(
                       fontSize: 14,
                       color: CupertinoColors.inactiveGray,
                     ),
-                    style:
-                        const TextStyle(fontSize: 14, color: uniqartOnSurface),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: uniqartTextField,
+                    ),
                     padding: const EdgeInsets.fromLTRB(50, 55, 50, 50),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(7),
@@ -102,6 +107,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                     ),
                   ),
                 ),
+
+                // Send link button
                 SizedBox(
                   height: 35,
                   width: 125,
@@ -116,9 +123,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                           .read<AuthBloc>()
                           .add(AuthEventForgotPassword(email: email));
                     },
-                    child: const Text(
-                      "Send Link",
-                      style: TextStyle(
+                    child: Text(
+                      context.loc.forgot_password_send_link,
+                      style: const TextStyle(
                         fontSize: 14,
                         color: uniqartOnSurface,
                         letterSpacing: 1,

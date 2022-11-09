@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uniqart/design/color_constants.dart';
+import 'package:uniqart/miscellaneous/localizations/loc.dart';
 import 'package:uniqart/services/auth/bloc/auth_bloc.dart';
 import 'package:uniqart/utilities/dialogs/logout_dialog.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
+// Stripe user portal url
 final Uri _customerPortalStripe =
-    Uri.parse('https://billing.stripe.com/p/login/test_6oE16jc4D5PD8PC288');
+    Uri.parse('https://billing.stripe.com/p/login/aEU9Dodlod5V9dS8ww');
 
+// Future to redirect to url
 Future<void> _launchUrl() async {
   try {
     if (!await launchUrl(
@@ -32,7 +36,7 @@ class _SettingViewState extends State<SettingView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('UNIQART'),
+        title: Text(context.loc.app_name),
         centerTitle: true,
       ),
       body: Padding(
@@ -41,6 +45,8 @@ class _SettingViewState extends State<SettingView> {
           const SizedBox(
             height: 15,
           ),
+
+          // Log out row
           GestureDetector(
             onTap: () async {
               final shouldLogout = showLogOutDialog(context);
@@ -53,17 +59,18 @@ class _SettingViewState extends State<SettingView> {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Row(
-                children: const [
-                  SizedBox(
+                children: [
+                  const SizedBox(
                     width: 30,
                   ),
-                  Icon(
+                  const Icon(
                     Icons.logout_rounded,
+                    color: uniqartPrimary,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 25,
                   ),
-                  Text("Log Out")
+                  Text(context.loc.setting_logout_button)
                 ],
               ),
             ),
@@ -71,22 +78,25 @@ class _SettingViewState extends State<SettingView> {
           const Divider(
             thickness: 0.5,
           ),
+
+          // Mangage subscription row
           GestureDetector(
             onTap: _launchUrl,
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Row(
-                children: const [
-                  SizedBox(
+                children: [
+                  const SizedBox(
                     width: 30,
                   ),
-                  Icon(
+                  const Icon(
                     Icons.subscriptions_rounded,
+                    color: uniqartPrimary,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 25,
                   ),
-                  Text("Manage Subscription")
+                  Text(context.loc.setting_manage_subscription)
                 ],
               ),
             ),

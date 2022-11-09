@@ -83,15 +83,15 @@ class _LogInViewState extends State<LogInView> {
               password(),
               logInButton(context),
               const SizedBox(
-                height: 25,
+                height: 15,
               ),
               InkWell(
                 onTap: () => context.read<AuthBloc>().add(
                       const AuthEventForgotPassword(),
                     ),
-                child: const Text(
-                  'forgot password?',
-                  style: TextStyle(
+                child: Text(
+                  context.loc.login_view_forgot_password,
+                  style: const TextStyle(
                     decoration: TextDecoration.underline,
                     decorationColor: Colors.blue,
                     color: Colors.blue,
@@ -100,7 +100,7 @@ class _LogInViewState extends State<LogInView> {
                 ),
               ),
               const SizedBox(
-                height: 100,
+                height: 150,
               ),
               registerButton(context),
               const SizedBox(
@@ -113,14 +113,19 @@ class _LogInViewState extends State<LogInView> {
     );
   }
 
+// Email field
   CupertinoTextFormFieldRow email() {
     return CupertinoTextFormFieldRow(
       controller: _email,
       textInputAction: TextInputAction.next,
       enableSuggestions: true,
       autocorrect: false,
+      autofillHints: const [
+        AutofillHints.email,
+        AutofillHints.username,
+      ],
       keyboardType: TextInputType.emailAddress,
-      placeholder: "enter your email",
+      placeholder: context.loc.login_email_text_field_placeholder,
 
       placeholderStyle: const TextStyle(
         fontSize: 14,
@@ -130,7 +135,7 @@ class _LogInViewState extends State<LogInView> {
         fontSize: 14,
         color: uniqartTextField,
       ),
-      padding: const EdgeInsets.fromLTRB(60, 120, 60, 0),
+      padding: const EdgeInsets.fromLTRB(60, 75, 60, 0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(7),
         color: CupertinoColors.lightBackgroundGray,
@@ -139,6 +144,7 @@ class _LogInViewState extends State<LogInView> {
     );
   }
 
+// Register button
   SizedBox registerButton(BuildContext context) {
     return SizedBox(
       height: 25,
@@ -150,9 +156,9 @@ class _LogInViewState extends State<LogInView> {
         onPressed: () => context.read<AuthBloc>().add(
               const AuthEventShouldRegister(),
             ),
-        child: const Text(
-          'REGISTER',
-          style: TextStyle(
+        child: Text(
+          context.loc.login_view_not_registered_yet,
+          style: const TextStyle(
             fontSize: 11,
             color: uniqartOnSurface,
             letterSpacing: 1,
@@ -162,6 +168,7 @@ class _LogInViewState extends State<LogInView> {
     );
   }
 
+// Login in button
   SizedBox logInButton(BuildContext context) {
     return SizedBox(
       height: 30,
@@ -183,9 +190,9 @@ class _LogInViewState extends State<LogInView> {
                     );
               }
             : null,
-        child: const Text(
-          "ENTER IN",
-          style: TextStyle(
+        child: Text(
+          context.loc.login_enter_in,
+          style: const TextStyle(
             fontSize: 14,
             color: uniqartBackgroundWhite,
             letterSpacing: 1,
@@ -195,6 +202,7 @@ class _LogInViewState extends State<LogInView> {
     );
   }
 
+// Password text field
   Stack password() {
     return Stack(
       children: [
@@ -203,9 +211,10 @@ class _LogInViewState extends State<LogInView> {
           enableSuggestions: false,
           obscureText: _passwordVisible,
           textInputAction: TextInputAction.done,
+          autofillHints: const [AutofillHints.password],
           autocorrect: false,
           keyboardType: TextInputType.visiblePassword,
-          placeholder: "enter your password",
+          placeholder: context.loc.login_password_text_field_placeholder,
           placeholderStyle: const TextStyle(
             fontSize: 14,
             color: CupertinoColors.inactiveGray,

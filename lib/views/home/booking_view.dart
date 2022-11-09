@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uniqart/consants/routes.dart';
 import 'package:uniqart/design/color_constants.dart';
+import 'package:uniqart/miscellaneous/localizations/loc.dart';
 import 'package:uniqart/services/auth/auth_service.dart';
 import 'package:uniqart/services/cloud/rides/cloud_rides.dart';
 import 'package:uniqart/services/cloud/rides/firebase_cloud_storage_rides.dart';
@@ -33,6 +34,7 @@ class _BookingViewState extends State<BookingView> {
   late StreamSubscription locationPickUpSubscription;
   late StreamSubscription locationDropOffSubscription;
 
+// Textediting controllers
   late final FirebaseRidesCloudStorage _ridesService;
   late final FirebaseUserCloudStorage _userProfileService;
   late final TextEditingController _pickUpController;
@@ -55,6 +57,8 @@ class _BookingViewState extends State<BookingView> {
   late final ScrollController _scrollController;
 
   int remaining = 0;
+  int absOverage = 0;
+
   final _selectedDays = [];
 
   final _allUpcomingMonDates = [];
@@ -85,6 +89,7 @@ class _BookingViewState extends State<BookingView> {
 
   bool _repeatBooking = true;
 
+// Dates Algorithm to get upcoming dates on selected days
   List daysBetween(DateTime from, DateTime to, day) {
     List dates = [];
     while (from.isBefore(to)) {
@@ -97,6 +102,7 @@ class _BookingViewState extends State<BookingView> {
     return dates;
   }
 
+// Cupertino modal popup
   void _showDialog(Widget child) {
     showCupertinoModalPopup<void>(
       context: context,
@@ -133,9 +139,9 @@ class _BookingViewState extends State<BookingView> {
 
             Navigator.pop(context);
           },
-          child: const Text(
-            "Done",
-            style: TextStyle(color: uniqartTextField),
+          child: Text(
+            context.loc.generic_select,
+            style: const TextStyle(color: uniqartTextField),
           ),
         ),
       ),
@@ -151,6 +157,8 @@ class _BookingViewState extends State<BookingView> {
     _ridesService = FirebaseRidesCloudStorage();
     _userProfileService = FirebaseUserCloudStorage();
     super.initState();
+
+    // Initialize selected location listeners and gets place information from api
     locationPickUpSubscription =
         applicationBloc.selectedPickupLocation.stream.listen((place) {
       var pickUpName = place.name;
@@ -194,7 +202,8 @@ class _BookingViewState extends State<BookingView> {
     bookingRequest = createABookingRequest(context);
   }
 
-  void _locationControllerListener() async {
+// Update location fields to cloud
+  void _locationControllerUpateRide() async {
     final ride = _ride;
     if (ride == null) {
       return;
@@ -210,7 +219,8 @@ class _BookingViewState extends State<BookingView> {
     );
   }
 
-  void _singleFieldListener() async {
+// Update single ride fields to cloud
+  void _singleFieldUpdateRide() async {
     final ride = _ride;
     if (ride == null) {
       return;
@@ -235,7 +245,8 @@ class _BookingViewState extends State<BookingView> {
         numOfRides: 1);
   }
 
-  void _repeatFieldListener() async {
+// Update repeat fields to cloud
+  void _repeatFieldUpdateRide() async {
     final ride = _ride;
     if (ride == null) {
       return;
@@ -278,6 +289,7 @@ class _BookingViewState extends State<BookingView> {
     ];
 
     count = total.reduce((value, element) => value + element);
+    // remaining = count;
 
     await _ridesService.updateRepeatRide(
       documentId: ride.documentId,
@@ -290,46 +302,50 @@ class _BookingViewState extends State<BookingView> {
     );
   }
 
+// Select location fields listener (update)
   void _setupTextControllerListener() {
-    _pickUpController.removeListener(_locationControllerListener);
-    _pickUpController.addListener(_locationControllerListener);
-    _dropOffController.removeListener(_locationControllerListener);
-    _dropOffController.addListener(_locationControllerListener);
+    _pickUpController.removeListener(_locationControllerUpateRide);
+    _pickUpController.addListener(_locationControllerUpateRide);
+    _dropOffController.removeListener(_locationControllerUpateRide);
+    _dropOffController.addListener(_locationControllerUpateRide);
   }
 
+// Single ride field listener (update)
   void _setupSingleRideListener() {
-    _timeDropOffController.removeListener(_singleFieldListener);
-    _timeDropOffController.addListener(_singleFieldListener);
-    _dateDropOffController.removeListener(_singleFieldListener);
-    _dateDropOffController.addListener(_singleFieldListener);
-    _bookingBoolController.removeListener(_singleFieldListener);
-    _bookingBoolController.addListener(_singleFieldListener);
+    _timeDropOffController.removeListener(_singleFieldUpdateRide);
+    _timeDropOffController.addListener(_singleFieldUpdateRide);
+    _dateDropOffController.removeListener(_singleFieldUpdateRide);
+    _dateDropOffController.addListener(_singleFieldUpdateRide);
+    _bookingBoolController.removeListener(_singleFieldUpdateRide);
+    _bookingBoolController.addListener(_singleFieldUpdateRide);
   }
 
+// Repeat ride field listener (update)
   void _setupRepeatRideListener() {
-    _timeDropOffController.removeListener(_repeatFieldListener);
-    _timeDropOffController.addListener(_repeatFieldListener);
+    _timeDropOffController.removeListener(_repeatFieldUpdateRide);
+    _timeDropOffController.addListener(_repeatFieldUpdateRide);
 
-    _monRepeatDatesController.removeListener(_repeatFieldListener);
-    _monRepeatDatesController.addListener(_repeatFieldListener);
-    _tuesRepeatDatesController.removeListener(_repeatFieldListener);
-    _tuesRepeatDatesController.addListener(_repeatFieldListener);
-    _wedRepeatDatesController.removeListener(_repeatFieldListener);
-    _wedRepeatDatesController.addListener(_repeatFieldListener);
-    _thuRepeatDatesController.removeListener(_repeatFieldListener);
-    _thuRepeatDatesController.addListener(_repeatFieldListener);
-    _friRepeatDatesController.removeListener(_repeatFieldListener);
-    _friRepeatDatesController.addListener(_repeatFieldListener);
-    _satRepeatDatesController.removeListener(_repeatFieldListener);
-    _satRepeatDatesController.addListener(_repeatFieldListener);
-    _sunRepeatDatesController.removeListener(_repeatFieldListener);
-    _sunRepeatDatesController.addListener(_repeatFieldListener);
-    _daysSelectedController.removeListener(_repeatFieldListener);
-    _daysSelectedController.addListener(_repeatFieldListener);
-    _bookingBoolController.removeListener(_repeatFieldListener);
-    _bookingBoolController.addListener(_repeatFieldListener);
+    _monRepeatDatesController.removeListener(_repeatFieldUpdateRide);
+    _monRepeatDatesController.addListener(_repeatFieldUpdateRide);
+    _tuesRepeatDatesController.removeListener(_repeatFieldUpdateRide);
+    _tuesRepeatDatesController.addListener(_repeatFieldUpdateRide);
+    _wedRepeatDatesController.removeListener(_repeatFieldUpdateRide);
+    _wedRepeatDatesController.addListener(_repeatFieldUpdateRide);
+    _thuRepeatDatesController.removeListener(_repeatFieldUpdateRide);
+    _thuRepeatDatesController.addListener(_repeatFieldUpdateRide);
+    _friRepeatDatesController.removeListener(_repeatFieldUpdateRide);
+    _friRepeatDatesController.addListener(_repeatFieldUpdateRide);
+    _satRepeatDatesController.removeListener(_repeatFieldUpdateRide);
+    _satRepeatDatesController.addListener(_repeatFieldUpdateRide);
+    _sunRepeatDatesController.removeListener(_repeatFieldUpdateRide);
+    _sunRepeatDatesController.addListener(_repeatFieldUpdateRide);
+    _daysSelectedController.removeListener(_repeatFieldUpdateRide);
+    _daysSelectedController.addListener(_repeatFieldUpdateRide);
+    _bookingBoolController.removeListener(_repeatFieldUpdateRide);
+    _bookingBoolController.addListener(_repeatFieldUpdateRide);
   }
 
+// Creates ride in cloud
   Future<CloudRide> createABookingRequest(BuildContext context) async {
     final currentUser = AuthService.firebase().currentUser!;
     final userId = currentUser.id;
@@ -561,14 +577,16 @@ class _BookingViewState extends State<BookingView> {
               _ridesService.updateRequestStatus(
                   documentId: _ride!.documentId, requestStatus: true);
               Navigator.of(context).pop(homeRoute);
+            } else if (remaining < 0) {
+              showErrorDialog(context,
+                  "You are trying to book $absOverage trips more than it is available. ");
             } else {
-              showErrorDialog(
-                  context, "Unable to proceed without date and time");
+              showErrorDialog(context, context.loc.booking_error);
             }
           },
-          child: const Text(
-            "REQUEST RIDE",
-            style: TextStyle(
+          child: Text(
+            context.loc.booking_request_button,
+            style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: uniqartOnSurface,
@@ -580,6 +598,7 @@ class _BookingViewState extends State<BookingView> {
     );
   }
 
+// Switch stack that controls type of ride (repeat/single)
   Stack repeatSwitch() {
     return Stack(
       children: [
@@ -616,6 +635,7 @@ class _BookingViewState extends State<BookingView> {
     );
   }
 
+// Stream that helps us to show upcoming dates based on selectd days using dates algorithm and bulid a list of filter chips to allow users to customize
   StreamBuilder<Iterable<CloudUserProfile>> gettingDatesBasedOnDaysSelected() {
     return StreamBuilder(
       stream: _userProfileService.userDoc(ownerUID: userId),
@@ -630,10 +650,6 @@ class _BookingViewState extends State<BookingView> {
               final dateExpiry = retrieveDocument.subExpiryDate;
               final remainingRides = retrieveDocument.remainingRides;
 
-              remaining = remainingRides;
-
-              int absOverage = remainingRides.abs();
-
               final present = DateTime.now();
               final expiryDate = dateExpiry.toDate();
 
@@ -643,7 +659,7 @@ class _BookingViewState extends State<BookingView> {
                     Padding(
                       padding: const EdgeInsets.all(25.0),
                       child: Text(
-                          "You are trying to book $absOverage more than it is available."),
+                          "You are trying to book $absOverage trips more than it is available."),
                     ),
                   if (remaining >= -4)
                     ListView.builder(
@@ -792,6 +808,23 @@ class _BookingViewState extends State<BookingView> {
                           _sunRepeatDatesController.text =
                               _sunSelectedDates.reversed.toString();
                         }
+
+                        int count = 0;
+
+                        List total = [
+                          _monSelectedDates.length,
+                          _tueSelectedDates.length,
+                          _wedSelectedDates.length,
+                          _thuSelectedDates.length,
+                          _friSelectedDates.length,
+                          _satSelectedDates.length,
+                          _sunSelectedDates.length,
+                        ];
+                        count =
+                            total.reduce((value, element) => value + element);
+
+                        remaining = remainingRides - count;
+                        absOverage = remaining.abs();
 
                         return Stack(
                           children: [
@@ -1119,6 +1152,7 @@ class _BookingViewState extends State<BookingView> {
     );
   }
 
+// Filter chips to select days
   filterChipsDays() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(55, 0, 55, 0),
@@ -1139,14 +1173,12 @@ class _BookingViewState extends State<BookingView> {
           ].map(
             (days) {
               return FilterChip(
-                backgroundColor: uniqartOnSurface,
-                selectedColor: uniqartSecondary,
+                backgroundColor: uniqartSecondary,
+                selectedColor: uniqartPrimary,
                 showCheckmark: false,
-                // side: const BorderSide(
-                //   color: CupertinoColors.lightBackgroundGray,
-                // ),
                 label: Text(
                   days,
+                  style: const TextStyle(color: uniqartSurfaceWhite),
                 ),
                 labelStyle: const TextStyle(
                   color: uniqartDisabled,
@@ -1201,6 +1233,7 @@ class _BookingViewState extends State<BookingView> {
     );
   }
 
+// Places autocomplete list
   tempAutoCompleteList(ApplicationBloc applicationBloc) {
     return SizedBox(
       child: ListView.separated(
@@ -1239,6 +1272,7 @@ class _BookingViewState extends State<BookingView> {
     );
   }
 
+// Select time field
   timeCupertinoField() {
     return Stack(
       children: [
@@ -1254,13 +1288,13 @@ class _BookingViewState extends State<BookingView> {
             ),
           ),
         ),
-        const Positioned(
+        Positioned(
           left: 75,
           top: 13,
           child: Center(
             child: Text(
-              "Drop Off",
-              style: TextStyle(
+              context.loc.booking_dropoff_text,
+              style: const TextStyle(
                 color: uniqartTextField,
               ),
             ),
@@ -1306,6 +1340,7 @@ class _BookingViewState extends State<BookingView> {
     );
   }
 
+// Select date for single ride
   dateCupertinoField() {
     return Stack(
       children: [
@@ -1328,7 +1363,7 @@ class _BookingViewState extends State<BookingView> {
             child: CupertinoTextFormFieldRow(
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return "Please select dropoff date";
+                  return context.loc.booking_empty_date;
                 }
                 return null;
               },
@@ -1352,6 +1387,7 @@ class _BookingViewState extends State<BookingView> {
     );
   }
 
+// Select pickup location field
   pickUpLocationField(ApplicationBloc applicationBloc) {
     return Stack(
       children: [
@@ -1374,7 +1410,7 @@ class _BookingViewState extends State<BookingView> {
             child: CupertinoTextFormFieldRow(
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return "Please enter pickup location";
+                  return context.loc.booking_empty_pickup;
                 }
                 return null;
               },
@@ -1384,8 +1420,9 @@ class _BookingViewState extends State<BookingView> {
               textInputAction: TextInputAction.next,
               enableSuggestions: true,
               autocorrect: false,
-              keyboardType: TextInputType.emailAddress,
-              placeholder: "select pickup",
+              autofillHints: const [AutofillHints.fullStreetAddress],
+              keyboardType: TextInputType.streetAddress,
+              placeholder: context.loc.booking_select_pickup,
               onChanged: (value) => applicationBloc.searchPickUpPlaces(value),
 
               placeholderStyle: const TextStyle(
@@ -1410,6 +1447,7 @@ class _BookingViewState extends State<BookingView> {
     );
   }
 
+// Select dropoff location field
   dropOffLocationField(ApplicationBloc applicationBloc) {
     return Stack(
       children: [
@@ -1432,7 +1470,7 @@ class _BookingViewState extends State<BookingView> {
             child: CupertinoTextFormFieldRow(
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return "Please enter dropoff location";
+                  return context.loc.booking_empty_dropoff;
                 }
                 return null;
               },
@@ -1443,8 +1481,9 @@ class _BookingViewState extends State<BookingView> {
               textInputAction: TextInputAction.done,
               enableSuggestions: true,
               autocorrect: false,
+              autofillHints: const [AutofillHints.fullStreetAddress],
               keyboardType: TextInputType.streetAddress,
-              placeholder: "select dropoff",
+              placeholder: context.loc.booking_select_dropoff,
 
               onChanged: (value) => applicationBloc.searchDropOffPlaces(value),
               placeholderStyle: const TextStyle(
@@ -1469,6 +1508,7 @@ class _BookingViewState extends State<BookingView> {
     );
   }
 
+// Cupertino time picker
   CupertinoDatePicker selectTime() {
     return CupertinoDatePicker(
       initialDateTime: time,
@@ -1476,16 +1516,17 @@ class _BookingViewState extends State<BookingView> {
       onDateTimeChanged: (DateTime newTime) {
         setState(() => time = newTime);
 
-        _timeDropOffController.text = DateFormat.jm().format(time);
-        _timePickUpController.text = DateFormat.jm().format(
-          time.subtract(
-            const Duration(minutes: 15),
-          ),
-        );
+        // _timeDropOffController.text = DateFormat.jm().format(time);
+        // _timePickUpController.text = DateFormat.jm().format(
+        //   time.subtract(
+        //     const Duration(minutes: 15),
+        //   ),
+        // );
       },
     );
   }
 
+// Cupertino date picker
   CupertinoDatePicker selectDate() {
     return CupertinoDatePicker(
       initialDateTime: DateTime.now().add(const Duration(
@@ -1497,7 +1538,7 @@ class _BookingViewState extends State<BookingView> {
       onDateTimeChanged: (DateTime newDate) {
         setState(() => date = newDate);
 
-        _dateDropOffController.text = DateFormat.MMMEd().format(date);
+        // _dateDropOffController.text = DateFormat.MMMEd().format(date);
       },
     );
   }

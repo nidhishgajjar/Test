@@ -11,7 +11,7 @@ Future<void> showErrorDialog(
     title: context.loc.generic_error_prompt,
     content: text,
     optionsBuilder: () => {
-      context.loc.ok: null,
+      context.loc.generic_ok: null,
     },
   );
 }

@@ -14,10 +14,7 @@ ThemeData _buildUniqartTheme() {
     scaffoldBackgroundColor: uniqartBackgroundWhite,
     cardColor: uniqartOnSurface,
     errorColor: uniqartErrorRed,
-    // buttonTheme: const ButtonThemeData(
-    //   colorScheme: _uniqartColorScheme,
-    //   textTheme: ButtonTextTheme.accent,
-    // ),
+
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         // This is a custom color variable

@@ -5,11 +5,11 @@ import 'package:uniqart/utilities/dialogs/generic_dialog.dart';
 Future<bool> showDeleteDialog(BuildContext context) {
   return showGenericDialog<bool>(
     context: context,
-    title: context.loc.delete,
-    content: context.loc.delete_ride_prompt,
+    title: context.loc.generic_cancel,
+    content: context.loc.home_cancel_dialog_prompt,
     optionsBuilder: () => {
-      context.loc.cancel: false,
-      context.loc.yes: true,
+      context.loc.generic_no: false,
+      context.loc.generic_yes: true,
     },
   ).then(
     (value) => value ?? false,

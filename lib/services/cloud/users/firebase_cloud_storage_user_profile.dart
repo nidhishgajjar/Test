@@ -54,7 +54,7 @@ class FirebaseUserCloudStorage {
       userAccountTypeFieldName: 'regular',
       ridesLimitFieldName: 30,
       subscriberFieldName: false,
-      trialFieldName: false,
+      trialFieldName: true,
       subscriptionStartDateFieldName: Timestamp.now(),
       subscriptionExpiryDateFieldName:
           DateTime.now().add(const Duration(days: 7)),
@@ -72,7 +72,7 @@ class FirebaseUserCloudStorage {
       accountType: "",
       ridesLimit: 30,
       subscriber: false,
-      trial: false,
+      trial: true,
       subStartDate: Timestamp.now(),
       subExpiryDate: Timestamp.now(),
       accountCreation: Timestamp.now(),

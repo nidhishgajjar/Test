@@ -29,6 +29,7 @@ class _RegisterViewState extends State<RegisterView> {
   final domains = ["@uwaterloo.ca", "@mylaurier.ca"];
   int index = 0;
 
+// Cupertino modal popup
   void _showDialog(Widget child) {
     showCupertinoModalPopup<void>(
       context: context,
@@ -54,9 +55,9 @@ class _RegisterViewState extends State<RegisterView> {
               Navigator.pop(context);
             });
           },
-          child: const Text(
-            "Done",
-            style: TextStyle(color: uniqartTextField),
+          child: Text(
+            context.loc.generic_done,
+            style: const TextStyle(color: uniqartTextField),
           ),
         ),
       ),
@@ -128,21 +129,27 @@ class _RegisterViewState extends State<RegisterView> {
                   const SizedBox(
                     height: 25,
                   ),
-                  const Center(
+
+                  // Title register body
+                  Center(
                     child: Text(
-                      "Experience the Qness",
-                      style: TextStyle(
+                      context.loc.register_view_title,
+                      style: const TextStyle(
                         fontSize: 18,
                         color: uniqartPrimary,
                       ),
                     ),
                   ),
+
+                  // Textfields
                   displayNameField(),
                   emailField(),
                   passwordField(),
                   const SizedBox(
                     height: 50,
                   ),
+
+                  // Buttons
                   registerButton(context),
                   const SizedBox(
                     height: 165,
@@ -155,6 +162,7 @@ class _RegisterViewState extends State<RegisterView> {
         ));
   }
 
+// Already register button
   SizedBox alreadyAUserButton(BuildContext context) {
     return SizedBox(
       height: 25,
@@ -168,9 +176,9 @@ class _RegisterViewState extends State<RegisterView> {
                 const AuthEventLogOut(),
               );
         },
-        child: const Text(
-          "CLICK HERE TO LOGIN",
-          style: TextStyle(
+        child: Text(
+          context.loc.register_view_already_registered,
+          style: const TextStyle(
             fontSize: 11,
             color: uniqartOnSurface,
             letterSpacing: 1,
@@ -180,6 +188,7 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
+// Join/register button
   SizedBox registerButton(BuildContext context) {
     return SizedBox(
       height: 30,
@@ -207,9 +216,9 @@ class _RegisterViewState extends State<RegisterView> {
                 }
               }
             : null,
-        child: const Text(
-          "JOIN",
-          style: TextStyle(
+        child: Text(
+          context.loc.register_join,
+          style: const TextStyle(
             fontSize: 14,
             color: uniqartBackgroundWhite,
             letterSpacing: 1,
@@ -219,6 +228,7 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
+// Password textfield
   Stack passwordField() {
     return Stack(
       children: [
@@ -226,10 +236,11 @@ class _RegisterViewState extends State<RegisterView> {
           controller: _password,
           enableSuggestions: false,
           obscureText: _passwordVisible,
+          autofillHints: const [AutofillHints.newPassword],
           autocorrect: false,
           keyboardType: TextInputType.visiblePassword,
           textInputAction: TextInputAction.done,
-          placeholder: "password (min 8)",
+          placeholder: context.loc.register_view_password,
           placeholderStyle: const TextStyle(
             fontSize: 14,
             color: CupertinoColors.inactiveGray,
@@ -272,16 +283,18 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
+// Email text field
   Stack emailField() {
     return Stack(
       children: [
         CupertinoTextFormFieldRow(
           controller: _email,
           textInputAction: TextInputAction.next,
+          autofillHints: const [AutofillHints.email, AutofillHints.username],
           enableSuggestions: true,
           autocorrect: false,
           keyboardType: TextInputType.emailAddress,
-          placeholder: "email username",
+          placeholder: context.loc.register_view_username,
           placeholderStyle: const TextStyle(
             fontSize: 14,
             color: CupertinoColors.inactiveGray,
@@ -304,11 +317,11 @@ class _RegisterViewState extends State<RegisterView> {
               child: CupertinoTextFormFieldRow(
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Please select university domain";
+                    return context.loc.register_view_empty_domain;
                   }
                   return null;
                 },
-                placeholder: "@ click here",
+                placeholder: context.loc.register_view_select_email,
                 style: const TextStyle(
                   color: uniqartTextField,
                 ),
@@ -334,11 +347,12 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
+// Displayname textfield
   CupertinoTextFormFieldRow displayNameField() {
     return CupertinoTextFormFieldRow(
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "Please enter your name";
+          return context.loc.register_view_empty_name;
         }
         return null;
       },
@@ -346,9 +360,13 @@ class _RegisterViewState extends State<RegisterView> {
       textInputAction: TextInputAction.next,
       enableSuggestions: true,
       autocorrect: false,
+      autofillHints: const [
+        AutofillHints.name,
+        AutofillHints.namePrefix,
+      ],
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,
-      placeholder: "enter your name",
+      placeholder: context.loc.register_view_displayname,
       placeholderStyle: const TextStyle(
         fontSize: 14,
         color: CupertinoColors.inactiveGray,

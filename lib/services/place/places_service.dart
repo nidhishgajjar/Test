@@ -4,7 +4,7 @@ import 'dart:convert' as convert;
 import 'package:uniqart/models/places/places_search.dart';
 
 class PlacesService {
-  final key = "AIzaSyDelD8NnfHcMIpb093UGSSOMt2ULZoQ9OA";
+  final key = "AIzaSyCEz0XTTWUBzbc3d016ile4hW4CrRMSejg";
 
   Future<List<PlaceSearch>> getAutocomplete(String search) async {
     var url =

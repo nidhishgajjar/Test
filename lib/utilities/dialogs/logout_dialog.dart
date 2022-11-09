@@ -5,11 +5,11 @@ import 'package:uniqart/utilities/dialogs/generic_dialog.dart';
 Future<bool> showLogOutDialog(BuildContext context) {
   return showGenericDialog<bool>(
     context: context,
-    title: context.loc.logout_button,
+    title: context.loc.setting_logout_button,
     content: context.loc.logout_dialog_prompt,
     optionsBuilder: () => {
-      context.loc.cancel: false,
-      context.loc.logout_button: true,
+      context.loc.generic_no: false,
+      context.loc.setting_logout_button: true,
     },
   ).then(
     (value) => value ?? false,

@@ -113,7 +113,6 @@ class FirebaseRidesCloudStorage {
         .where(ownerUIDFieldName, isEqualTo: ownerUID)
         .where(cancellationStatusFieldName, isEqualTo: false)
         .where(completionFieldName, isEqualTo: true)
-        // .orderBy(bookingTimeFieldName, descending: true)
         .limit(30)
         .snapshots()
         .map((event) => event.docs.map((doc) => CloudRide.fromSnapshot(doc)));
@@ -147,6 +146,7 @@ class FirebaseRidesCloudStorage {
         .where(cancellationStatusFieldName, isEqualTo: false)
         .where(bookingTimeFieldName, isGreaterThanOrEqualTo: startDate)
         .where(bookingTimeFieldName, isLessThanOrEqualTo: expiryDate)
+        .where(requestStatusFieldName, isEqualTo: true)
         .snapshots()
         .map((event) => event.docs.map((doc) => CloudRide.fromSnapshot(doc)));
     return allRides;

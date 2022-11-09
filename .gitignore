@@ -8,8 +8,7 @@
 .buildlog/
 .history
 .svn/
-migrate_working_dir/
-
+key.properties
 # IntelliJ related
 *.iml
 *.ipr

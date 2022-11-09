@@ -59,6 +59,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state);
     });
     on<AuthEventRegister>((event, emit) async {
+      emit(
+        const AuthStateLoggedOut(
+          exception: null,
+          isLoading: true,
+          loadingText: 'Please wait while we register you',
+        ),
+      );
       final displayName = event.displayName;
       final email = event.email;
       final password = event.password;
@@ -108,7 +115,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         const AuthStateLoggedOut(
           exception: null,
           isLoading: true,
-          loadingText: 'Please wait while I log you in',
+          loadingText: 'Please wait while we log you in',
         ),
       );
       final email = event.email;
@@ -157,8 +164,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         await provider.sendCode(phoneNumber: phoneNumber);
         emit(const AuthStateEnterCode(isLoading: false));
-      } on Exception catch (_) {
-        emit(const AuthStateEnterCode(isLoading: false));
+      } on Exception catch (e) {
+        emit(AuthStateSendCodeFailed(exception: e, isLoading: false));
       }
     });
 
@@ -172,12 +179,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await provider.sendEmailVerification();
         emit(const AuthStateNeedsVerification(isLoading: false));
       } on Exception catch (e) {
-        emit(
-          AuthStateLoggedOut(
-            exception: e,
-            isLoading: false,
-          ),
-        );
+        emit(AuthStateInvalidCode(
+          exception: e,
+          isLoading: false,
+        ));
       }
     });
 

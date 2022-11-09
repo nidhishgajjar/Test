@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:uniqart/miscellaneous/localizations/loc.dart';
 import 'package:uniqart/utilities/dialogs/generic_dialog.dart';
 
-Future<void> showChangePasswordDialog(BuildContext context) {
+Future<void> showResetPasswordDialog(BuildContext context) {
   return showGenericDialog<void>(
     context: context,
-    title: context.loc.change_password,
-    content: context.loc.change_password_dialog_prompt,
+    title: context.loc.reset_password_dialog_titile,
+    content: context.loc.forgot_password_dialog_prompt,
     optionsBuilder: () => {
-      context.loc.ok: null,
+      context.loc.generic_ok: null,
     },
   );
 }

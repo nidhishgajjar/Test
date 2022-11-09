@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:uniqart/design/color_constants.dart';
 import 'package:uniqart/services/cloud/rides/cloud_rides.dart';
-
 import 'package:uniqart/utilities/dialogs/cancel_booking_dialog.dart';
 
 typedef RideCallback = void Function(CloudRide ride);
@@ -31,7 +31,6 @@ class UpcomingRidesView extends StatelessWidget {
         final dropoffTime = ride.timeDropOff;
         final dropoffLocation = ride.locationDropOff;
         final datesList = ride.datesDropOff;
-        // final confirmationStatus = ride.confirmationStatus;
         final bookingTime = ride.bookingTime.toDate();
         final qratorName = ride.qratorName;
         final conveyance = ride.conveyance;
@@ -40,7 +39,7 @@ class UpcomingRidesView extends StatelessWidget {
         final cancellationLimit = bookingTime.add(const Duration(hours: 12));
 
         final dates = datesList.join("");
-        // final date = dates.replaceAll(new RegExp(r"\p{P}", unicode: true), " ");
+        final date = dates.replaceAll(RegExp(r"\p{P}", unicode: true), " ");
 
         return Container(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -180,14 +179,15 @@ class UpcomingRidesView extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 15, 0, 3),
+                            padding: const EdgeInsets.fromLTRB(8, 13, 0, 3),
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 "Time:  $pickupTime ",
                                 style: const TextStyle(
                                   fontSize: 11,
-                                  color: uniqartOnSurface,
+                                  fontWeight: FontWeight.w800,
+                                  color: uniqartTextField,
                                   height: 1.3,
                                 ),
                               ),
@@ -251,14 +251,15 @@ class UpcomingRidesView extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 15, 0, 3),
+                            padding: const EdgeInsets.fromLTRB(8, 13, 0, 3),
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 "Time:  $dropoffTime ",
                                 style: const TextStyle(
                                   fontSize: 11,
-                                  color: uniqartOnSurface,
+                                  fontWeight: FontWeight.w800,
+                                  color: uniqartTextField,
                                   height: 1.3,
                                 ),
                               ),
@@ -326,7 +327,7 @@ class UpcomingRidesView extends StatelessWidget {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                "$dates ",
+                                "$date ",
                                 style: const TextStyle(
                                   fontSize: 10,
                                   color: uniqartTextField,
@@ -367,7 +368,7 @@ class UpcomingRidesView extends StatelessWidget {
                                   top: 0,
                                   child: Center(
                                     child: Text(
-                                      "Qrator: $qratorName",
+                                      "Q-rator: $qratorName",
                                       style: const TextStyle(
                                         fontSize: 13,
                                         color: uniqartTextField,

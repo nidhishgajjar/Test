@@ -21,6 +21,9 @@ class AuthService implements AuthProvider {
       );
 
   @override
+  Future<void> deleteUser() => provider.deleteUser();
+
+  @override
   AuthUser? get currentUser => provider.currentUser;
 
   @override

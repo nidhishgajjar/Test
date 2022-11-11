@@ -1,7 +1,7 @@
 const ownerUIDFieldName = "UID";
 const ownerEmailFieldName = "email";
-const ownerPhoneNumberFieldName = "phone-number";
-const ownerDisplayNameFieldName = "name";
+// const ownerPhoneNumberFieldName = "phone-number";
+// const ownerDisplayNameFieldName = "name";
 const userAccountTypeFieldName = "account-type";
 const ridesLimitFieldName = "rides-limit";
 const subscriberFieldName = "subscriber";

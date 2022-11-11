@@ -73,6 +73,14 @@ class AuthStateSendCodeFailed extends AuthState {
   }) : super(isLoading: isLoading);
 }
 
+class AuthStateReAuthRequired extends AuthState {
+  final Exception? exception;
+  const AuthStateReAuthRequired({
+    required this.exception,
+    required bool isloading,
+  }) : super(isLoading: isloading);
+}
+
 class AuthStateVerificationSuccessful extends AuthState {
   const AuthStateVerificationSuccessful({required bool isLoading})
       : super(isLoading: isLoading);
@@ -96,4 +104,19 @@ class AuthStateLoggedOut extends AuthState with EquatableMixin {
 
   @override
   List<Object?> get props => [exception, isLoading];
+}
+
+class AuthStateDelete extends AuthState {
+  final Exception? exception;
+  const AuthStateDelete({
+    required this.exception,
+    required bool isLoading,
+    String? loadingText,
+  }) : super(
+          isLoading: isLoading,
+          loadingText: loadingText,
+        );
+
+  // @override
+  // List<Object?> get props => [exception, isLoading];
 }

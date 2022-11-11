@@ -7,8 +7,8 @@ class CloudUserProfile {
   final String documentId;
   final String ownerUID;
   final String ownerEmail;
-  final String? ownerPhoneNumber;
-  final String? ownerDisplayName;
+  // final String? ownerPhoneNumber;
+  // final String? ownerDisplayName;
   final String accountType;
   final int ridesLimit;
   final bool subscriber;
@@ -21,8 +21,8 @@ class CloudUserProfile {
     required this.documentId,
     required this.ownerUID,
     required this.ownerEmail,
-    required this.ownerPhoneNumber,
-    required this.ownerDisplayName,
+    // required this.ownerPhoneNumber,
+    // required this.ownerDisplayName,
     required this.accountType,
     required this.ridesLimit,
     required this.subscriber,
@@ -38,8 +38,8 @@ class CloudUserProfile {
       : documentId = snapshot.id,
         ownerUID = snapshot.data()[ownerUIDFieldName],
         ownerEmail = snapshot.data()[ownerEmailFieldName],
-        ownerPhoneNumber = snapshot.data()[ownerPhoneNumberFieldName],
-        ownerDisplayName = snapshot.data()[ownerDisplayNameFieldName],
+        // ownerPhoneNumber = snapshot.data()[ownerPhoneNumberFieldName],
+        // ownerDisplayName = snapshot.data()[ownerDisplayNameFieldName],
         accountType = snapshot.data()[userAccountTypeFieldName],
         ridesLimit = snapshot.data()[ridesLimitFieldName],
         subscriber = snapshot.data()[subscriberFieldName],

@@ -77,7 +77,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           password: password,
         );
         emit(const AuthStateVerifyEnterPhoneNumber(isLoading: false));
-        // await provider.sendEmailVerification();
       } on Exception catch (e) {
         emit(AuthStateRegistering(
           exception: e,
@@ -203,6 +202,31 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             isLoading: false,
           ),
         );
+      }
+    });
+
+    // delete user
+    on<AuthEventDelete>((event, emit) async {
+      emit(
+        const AuthStateLoggedOut(
+          exception: null,
+          isLoading: true,
+          loadingText: 'Please wait while we delete your account',
+        ),
+      );
+      try {
+        await provider.deleteUser();
+        emit(
+          const AuthStateDelete(
+            exception: null,
+            isLoading: false,
+          ),
+        );
+      } on Exception catch (e) {
+        emit(AuthStateReAuthRequired(
+          exception: e,
+          isloading: false,
+        ));
       }
     });
   }

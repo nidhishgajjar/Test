@@ -41,6 +41,19 @@ class FirebaseUserCloudStorage {
     return allUserInfo;
   }
 
+  Stream<Iterable<CloudUserProfile>> userEmail({
+    required String ownerEmail,
+  }) {
+    final allUserInfo = userInfo
+        .where(ownerEmailFieldName, isEqualTo: ownerEmail)
+        .orderBy(accountCreationTimeStampFieldName, descending: true)
+        .limit(5)
+        .snapshots()
+        .map((event) =>
+            event.docs.map((doc) => CloudUserProfile.fromSnapshot(doc)));
+    return allUserInfo;
+  }
+
   Future<CloudUserProfile> createNewUser(
       {required String ownerUID,
       required String ownerEmail,
@@ -49,8 +62,8 @@ class FirebaseUserCloudStorage {
     final document = await userInfo.add({
       ownerUIDFieldName: ownerUID,
       ownerEmailFieldName: ownerEmail,
-      ownerPhoneNumberFieldName: ownerPhoneNumber,
-      ownerDisplayNameFieldName: ownerDisplayName,
+      // ownerPhoneNumberFieldName: ownerPhoneNumber,
+      // ownerDisplayNameFieldName: ownerDisplayName,
       userAccountTypeFieldName: 'regular',
       ridesLimitFieldName: 30,
       subscriberFieldName: false,
@@ -67,8 +80,8 @@ class FirebaseUserCloudStorage {
       documentId: fetchUser.id,
       ownerUID: ownerUID,
       ownerEmail: ownerEmail,
-      ownerPhoneNumber: ownerPhoneNumber,
-      ownerDisplayName: "",
+      // ownerPhoneNumber: ownerPhoneNumber,
+      // ownerDisplayName: "",
       accountType: "",
       ridesLimit: 30,
       subscriber: false,

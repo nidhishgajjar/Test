@@ -10,11 +10,19 @@
     "generic_select": "Select",
     "generic_error_prompt": "An Error Occurred",
     "generic_login_button": "LOG IN",
+    "generic_delete": "Delete",
+    "generic_unknown_error_body": "Unknown error occurred. Please try again.",
+
 
 
     "setting_logout_button": "Log Out",
+    "setting_logout_dialog_prompt": "Are you sure you want to log out?",
     "setting_manage_subscription": "Manage Subscription",
-
+    "setting_delete_user": "DELETE ACCOUNT",
+    "setting_delete_user_dialog_prompt": "Are you sure you want to DELETE your account? You will lose access to all your data and services.  To avoid unwanted renewal CHARGES please use MANAGE SUBSCRIPTION to cancel any ACTIVE SUBSCRIPTION before you proceed.             THIS ACTION CANNOT BE UNDONE.",
+    "setting_delete_error_dialog": "This operation is sensitive and requires recent authentication. Log in again before retrying this request.",
+    "setting_support_title": "Need additional help?",
+    "setting_support_button": "Contact Support",
 
     "main_navigator_home": "Home",
     "main_navigator_setting": "Setting",
@@ -22,7 +30,7 @@
 
     "subscribe_button": "SUBSCRIBE",
     "subscribe_package_name": "Standard Conveyance",
-    "subscribe_subtitle": "Re-Subscribe",
+    "subscribe_subtitle": "Subscribe",
     "subscribe_body_text": "Includes 60 trips within a three-kilometer radius of your university.",
     "subscribe_monthly_price": "99 CAD/Month",
     "subscribe_per_ride_price": "1.65 CAD/trip ONLY",
@@ -45,7 +53,6 @@
 
 
     "login_enter_in": "ENTER IN",
-    "logout_dialog_prompt": "Are you sure you want to log out?",
     "login_error_cannot_find_user": "Cannot find a user with the entered credentials!",
     "login_error_wrong_credentials": "Wrong Credentials",
     "login_error_auth_error": "Authentication Error",
@@ -94,7 +101,6 @@
 
     "enter_phone_send_code": "Send Code",
     "enter_phone_error_invalid_number": "The phone number you entered is invalid. Please enter a correct phone number.",
-    "enter_phone_unknown_error": "Unknown error occurred. Please try again.",
     "enter_phone_body_text": "Please enter your phone number below to receive a verification code.",
     "enter_phone_phone_field_text": "enter your phone number"
  

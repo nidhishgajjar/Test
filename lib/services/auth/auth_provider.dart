@@ -14,6 +14,8 @@ abstract class AuthProvider {
     required String password,
   });
 
+  Future<void> deleteUser();
+
   Future<void> sendCode({
     required String phoneNumber,
   });

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:uniqart/design/color_constants.dart';
 import 'package:uniqart/services/cloud/rides/cloud_rides.dart';
 import 'package:uniqart/utilities/dialogs/cancel_booking_dialog.dart';

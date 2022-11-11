@@ -26,3 +26,7 @@ class PhoneNumberAlreadyExistsException implements Exception {}
 // verify code exceptions
 
 class VerificationFailedException implements Exception {}
+
+// delete user exceptions
+
+class ReAuthException implements Exception {}

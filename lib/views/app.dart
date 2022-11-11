@@ -33,19 +33,19 @@ class HomePage extends StatelessWidget {
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
           return const MainNavigator();
-        } else if (state is AuthStateVerifyEnterPhoneNumber) {
+        } else if (state is AuthStateVerifyEnterPhoneNumber ||
+            state is AuthStateSendCodeFailed) {
           return const VerifyPhoneView();
-        } else if (state is AuthStateSendCodeFailed) {
-          return const VerifyPhoneView();
-        } else if (state is AuthStateEnterCode) {
-          return const EnterCodeView();
-        } else if (state is AuthStateInvalidCode) {
+        } else if (state is AuthStateEnterCode ||
+            state is AuthStateInvalidCode) {
           return const EnterCodeView();
         } else if (state is StateAddUserProfile) {
           return const UserProfile();
         } else if (state is AuthStateNeedsVerification) {
           return const VerifyEmailView();
-        } else if (state is AuthStateLoggedOut) {
+        } else if (state is AuthStateDelete ||
+            state is AuthStateReAuthRequired ||
+            state is AuthStateLoggedOut) {
           return const LogInView();
         } else if (state is AuthStateForgotPassword) {
           return const ForgotPasswordView();

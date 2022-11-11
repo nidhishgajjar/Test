@@ -50,7 +50,7 @@ class _VerifyPhoneViewState extends State<VerifyPhoneView> {
           } else if (state.exception is GenericAuthException) {
             await showErrorDialog(
               context,
-              context.loc.enter_phone_unknown_error,
+              context.loc.generic_unknown_error_body,
             );
           }
         }

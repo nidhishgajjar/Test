@@ -16,19 +16,34 @@ import 'package:uniqart/services/place/bloc/application_bloc.dart';
 import 'package:uniqart/views/home/listbuilder/upcoming_rides_list.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-// Stripe customer portal
-final Uri _subscribeStripeUrl =
-    Uri.parse('https://billing.stripe.com/p/login/aEU9Dodlod5V9dS8ww');
+final Uri _customerPortalStripe =
+    Uri.parse('https://checkout.uniqart.app/p/login/aEU9Dodlod5V9dS8ww');
 
-// Future to redirect to url
-Future<void> _launchUrl() async {
+// Stripe user portal url
+final Uri _subscribeStripe =
+    Uri.parse('https://buy.stripe.com/3cscQAbviciO1SoeUU');
+
+Future<void> _portalLaunchUrl() async {
   try {
     if (!await launchUrl(
-      _subscribeStripeUrl,
+      _customerPortalStripe,
       mode: LaunchMode.inAppWebView,
     )) {
     } else {
-      throw "could not launch $_subscribeStripeUrl";
+      throw "could not launch $_customerPortalStripe";
+    }
+  } catch (_) {}
+}
+
+// Future to redirect to url
+Future<void> _subscribeLaunchUrl() async {
+  try {
+    if (!await launchUrl(
+      _customerPortalStripe,
+      mode: LaunchMode.inAppWebView,
+    )) {
+    } else {
+      throw "could not launch $_customerPortalStripe";
     }
   } catch (_) {}
 }
@@ -44,8 +59,10 @@ class _HomeViewState extends State<HomeView> {
   late final FirebaseRidesCloudStorage _ridesService;
   late final FirebaseUserCloudStorage _userProfileService;
 
-  String get userId => AuthService.firebase().currentUser!.id;
+  // int userCount = 1;
 
+  String get userId => AuthService.firebase().currentUser!.id;
+  String get userEmail => AuthService.firebase().currentUser!.email;
   @override
   void initState() {
     _ridesService = FirebaseRidesCloudStorage();
@@ -127,8 +144,8 @@ class _HomeViewState extends State<HomeView> {
   StreamBuilder<Iterable<CloudUserProfile>> nestedStreamsTopHalf(
       ApplicationBloc applicationBloc) {
     return StreamBuilder(
-      stream: _userProfileService.userDoc(
-        ownerUID: userId,
+      stream: _userProfileService.userEmail(
+        ownerEmail: userEmail,
       ),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
@@ -136,7 +153,9 @@ class _HomeViewState extends State<HomeView> {
           case ConnectionState.active:
             if (snapshot.hasData) {
               final allUser = snapshot.data as Iterable<CloudUserProfile>;
+
               final doc = allUser.where((element) => true);
+              final userCount = doc.length;
               final retrieveDocument = doc.elementAt(0);
               final allowedRides = retrieveDocument.ridesLimit;
               final expiryDate = retrieveDocument.subExpiryDate.toDate();
@@ -187,7 +206,8 @@ class _HomeViewState extends State<HomeView> {
 
                               // Circle box container
                               if (remainder > 0 &&
-                                  DateTime.now().isBefore(expiryDate))
+                                  DateTime.now().isBefore(expiryDate) &&
+                                  userCount == 1)
                                 Positioned(
                                   top: 0,
                                   left: 0,
@@ -223,12 +243,20 @@ class _HomeViewState extends State<HomeView> {
 
                               // subscribe section with condition
                               if (remainder <= 0 ||
-                                  DateTime.now().isAfter(expiryDate))
+                                  DateTime.now().isAfter(expiryDate) ||
+                                  userCount > 1)
                                 subscribeSection(),
+
+                              // Subscribe button with condition
+                              if (remainder <= 0 ||
+                                  DateTime.now().isAfter(expiryDate) ||
+                                  userCount > 1)
+                                subscribeButton(),
 
                               // Remaining rides with condition (text)
                               if (remainder > 0 &&
-                                  DateTime.now().isBefore(expiryDate))
+                                  DateTime.now().isBefore(expiryDate) &&
+                                  userCount == 1)
                                 Positioned(
                                   top: 0,
                                   left: 0,
@@ -246,7 +274,8 @@ class _HomeViewState extends State<HomeView> {
 
                               // Text
                               if (remainder > 0 &&
-                                  DateTime.now().isBefore(expiryDate))
+                                  DateTime.now().isBefore(expiryDate) &&
+                                  userCount == 1)
                                 Positioned(
                                   top: 175,
                                   left: 0,
@@ -262,16 +291,12 @@ class _HomeViewState extends State<HomeView> {
                                   ),
                                 ),
 
-                              // Subscribe button with condition
-                              if (remainder <= 0 ||
-                                  DateTime.now().isAfter(expiryDate))
-                                subscribeButton(),
-
                               // Trial ends reminder with condition
                               if (DateTime.now().isAfter(expiryDate
                                       .subtract(const Duration(days: 3))) &&
                                   DateTime.now().isBefore(expiryDate) &&
-                                  trial == true)
+                                  trial == true &&
+                                  userCount == 1)
                                 Positioned(
                                   child: Center(
                                     child: SizedBox(
@@ -284,7 +309,7 @@ class _HomeViewState extends State<HomeView> {
                                           bottomLeft: Radius.circular(20),
                                           bottomRight: Radius.circular(20),
                                         ),
-                                        onPressed: _launchUrl,
+                                        onPressed: _portalLaunchUrl,
                                         child: Text(
                                           'Trial ends on $formattedExpiry. Please update your payment information. CLICK HERE! (please ignore if already updated)',
                                           style: const TextStyle(
@@ -299,7 +324,8 @@ class _HomeViewState extends State<HomeView> {
 
                               // Book ride button stack with condition
                               if (remainder > 0 &&
-                                  DateTime.now().isBefore(expiryDate))
+                                  DateTime.now().isBefore(expiryDate) &&
+                                  userCount == 1)
                                 Positioned(
                                   top: 350,
                                   left: 0,
@@ -392,7 +418,7 @@ class _HomeViewState extends State<HomeView> {
             color: uniqartThird,
             padding: EdgeInsets.zero,
             borderRadius: BorderRadius.circular(20),
-            onPressed: _launchUrl,
+            onPressed: _subscribeLaunchUrl,
             child: Stack(children: [
               const Positioned(
                 left: 85,
@@ -506,14 +532,14 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     ),
                   ),
-                  const Positioned(
+                  Positioned(
                     top: 17,
                     left: 0,
                     right: 0,
                     child: Center(
                       child: Text(
-                        "Re-Subscribe",
-                        style: TextStyle(
+                        context.loc.subscribe_subtitle,
+                        style: const TextStyle(
                           color: uniqartPrimary,
                           fontSize: 13,
                         ),

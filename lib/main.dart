@@ -10,6 +10,7 @@ import 'package:uniqart/services/auth/firebase_auth_provider.dart';
 import 'package:uniqart/services/place/bloc/application_bloc.dart';
 import 'package:uniqart/views/app.dart';
 import 'package:uniqart/views/home/booking_view.dart';
+import 'package:uniqart/views/settings/delete/reauth_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +29,7 @@ void main() {
         routes: {
           createABookingRoute: (context) => const BookingView(),
           homeRoute: (context) => const MainNavigator(),
+          // reAuthRoute: (context) => const ReAuthView(),
         },
         theme: uniqartTheme,
         // darkTheme: ThemeData.dark(),

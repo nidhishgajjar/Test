@@ -39,11 +39,11 @@ Future<void> _portalLaunchUrl() async {
 Future<void> _subscribeLaunchUrl() async {
   try {
     if (!await launchUrl(
-      _customerPortalStripe,
+      _subscribeStripe,
       mode: LaunchMode.inAppWebView,
     )) {
     } else {
-      throw "could not launch $_customerPortalStripe";
+      throw "could not launch $_subscribeStripe";
     }
   } catch (_) {}
 }

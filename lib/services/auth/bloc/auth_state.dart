@@ -107,16 +107,6 @@ class AuthStateLoggedOut extends AuthState with EquatableMixin {
 }
 
 class AuthStateDelete extends AuthState {
-  final Exception? exception;
-  const AuthStateDelete({
-    required this.exception,
-    required bool isLoading,
-    String? loadingText,
-  }) : super(
-          isLoading: isLoading,
-          loadingText: loadingText,
-        );
-
-  // @override
-  // List<Object?> get props => [exception, isLoading];
+  const AuthStateDelete({required bool isLoading})
+      : super(isLoading: isLoading);
 }

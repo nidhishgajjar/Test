@@ -43,13 +43,12 @@ class HomePage extends StatelessWidget {
           return const UserProfile();
         } else if (state is AuthStateNeedsVerification) {
           return const VerifyEmailView();
-        } else if (state is AuthStateDelete ||
-            state is AuthStateReAuthRequired ||
-            state is AuthStateLoggedOut) {
+        } else if (state is AuthStateLoggedOut ||
+            state is AuthStateReAuthRequired) {
           return const LogInView();
         } else if (state is AuthStateForgotPassword) {
           return const ForgotPasswordView();
-        } else if (state is AuthStateRegistering) {
+        } else if (state is AuthStateRegistering || state is AuthStateDelete) {
           return const RegisterView();
         } else {
           return const Scaffold(

@@ -62,9 +62,7 @@ class _SettingViewState extends State<SettingView> {
             );
           } else if (state.exception is GenericAuthException) {
             await showErrorDialog(
-              context,
-              context.loc.generic_unknown_error_body,
-            );
+                context, context.loc.generic_unknown_error_body);
           }
         }
       },

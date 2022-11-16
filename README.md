@@ -1,6 +1,5 @@
-# test
 
 Uniqart
 
-Testing channel.
+main channel.
 # uniqart

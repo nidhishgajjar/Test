@@ -1,5 +1,5 @@
+# Uniqart by Q
 
-Uniqart
+### Door-to-door transportation for students
 
-main channel.
-# uniqart
+- Cross-platform applicaton to manage their booking, planning/scheduling rides
